@@ -1,13 +1,13 @@
-# LibStructedCamera
+# ***LibStructedCamera***
 ***
 StructedCamera SDK to easy use.Mutiply solve phase algorithm and accelerate method can be used,  
 ofcause you can choose only cpu can be used if you don't have a NVIDIA GPU.  
 # Related Works
 ***
 Please cite this work if you make use of this system in any of your own endeavors:  
-> @File：libStructedCamera  
-> @Authour: Liu Yunhuang  
-> @Data: 2022.5.16  
+> ***@File：libStructedCamera***  
+> ***@Authour: Liu Yunhuang***  
+> ***@Data: 2022.5.16***  
 # 1. What do I need to build it?  
 ## 1.1 Windows  
 ***
@@ -28,17 +28,17 @@ Then,your CMakeLists.txt can add these:
 > find_package(StrutedLightCamera REQUIRED)  
 > include_directory(${StructedLightCamera_INCLUDE_DIRS})  
 > target_link_libraries(${StructedLightCamera_Libs})  
-Please be aware of that you should add CUDA defination to use CUDA.Like this:  
+***Please be aware of that you should add CUDA defination to use CUDA.Like this:***  
 > find_package(CUDA REQUIRED)  
 > if(CUDA_FOUND)  
-    > add_defination(-DCUDA)  
->endif()  
+> add_defination(-DCUDA)  
+> endif()  
 The system is contrusted like this:  
 ![StructedLightCamera System](./StructedLightCamera.png)  
-You can be aware of that our phasesolve and restructor is a Factory mode,so you can get what you want though  
-Polymorphism.  
+***You can be aware of that our phasesolve and restructor is a Factory mode,so you can get what you want though  
+Polymorphism.***  
 ***  
-A example is like this:  
+***A example is like this:***  
 > //Load calibration file  
 > MatrixsInfo* matrixInfo = new MatrixsInfo("../systemFile/calibrationFiles/intrinsic.yml","../systemFile/  calibrationFiles/extrinsic.yml");  
 > const Info& calibrationInfo = matrixInfo->getInfo();  
