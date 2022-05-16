@@ -1,4 +1,4 @@
-#LibStructedCamera
+# LibStructedCamera
 ***
 StructedCamera SDK to easy use.Mutiply solve phase algorithm and accelerate method can be used,
 ofcause you can choose only cpu can be used if you don't have a NVIDIA GPU.
@@ -8,9 +8,9 @@ Please cite this work if you make use of this system in any of your own endeavor
 >@File：libStructedCamera
 >@Authour: Liu Yunhuang
 >@Data: 2022.5.16
-#1.What do I need to build it?
+# 1. What do I need to build it?
 ***
-##1.1 Windows
+## 1.1 Windows
 ***
 -CMake
 -AVX
@@ -21,7 +21,7 @@ Firstly,please make sure your cpu is supported by AVX.
 Then install cmake,Eigen and OpenCV(built with Eigen).
 If you want to a higher performance, make sure your computer have a NVIDIA GPU and install CUDA.
 Finally,cmake, built and install it.
-#2.How do I use it?
+# 2. How do I use it?
 ***
 You can find a StructedlightCameraConfig.cmake file in your install path.
 So you only to add your install path to your system path.
