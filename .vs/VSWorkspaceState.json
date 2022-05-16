@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\include",
+    "\\include\\CameraControl",
+    "\\include\\CameraControl\\CameraUtility",
+    "\\src",
+    "\\src\\CameraControl",
+    "\\src\\CameraControl\\CameraUtility",
+    "\\src\\CameraControl\\ProjectorSDK",
+    "\\src\\Restructor",
+    "\\src\\Restructor\\cuda"
+  ],
+  "PreviewInSolutionExplorer": false
+}
