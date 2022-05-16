@@ -22,7 +22,7 @@ If you want to a higher performance, make sure your computer have a NVIDIA GPU a
 Finally,cmake, built and install it.  
 ## 1.2 Ubuntu  
 **as same as windows install step,but you shoud install usbseral SDK and huaray SDK which based on the Linux system.  
-because of that our code is only provid Windows lib kit.
+because of that our code is only provid Windows lib kit.**  
 # 2. How do I use it?  
 ***
 You can find a StructedlightCameraConfig.cmake file in your install path.  
