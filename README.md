@@ -7,6 +7,7 @@ ofcause you can choose only cpu can be used if you don't have a NVIDIA GPU.
 Please cite this work if you make use of this system in any of your own endeavors:  
 > **@File：libStructedCamera**  
 > **@Authour: Liu Yunhuang**  
+> **@Email: 1369215984@qq.com**  
 > **@Data: 2022.5.16**  
 # 1. What do I need to build it?  
 ## 1.1 Windows  
@@ -17,7 +18,7 @@ Please cite this work if you make use of this system in any of your own endeavor
 - OpenCV  
 - CUDA(optional)  
 Firstly,please make sure your cpu is supported by AVX.  
-Then install cmake,Eigen and OpenCV(built with Eigen).  
+Then install cmake,Eigen and OpenCV(built with Eigen、CUDA).  
 If you want to a higher performance, make sure your computer have a NVIDIA GPU and install CUDA.  
 Finally,cmake, built and install it.  
 ## 1.2 Ubuntu  
@@ -38,8 +39,7 @@ Then,your CMakeLists.txt can add these:
 > endif()  
 The system is contrusted like this:  
 ![StructedLightCamera System](./StructedLightCamera.png)  
-**You can be aware of that our phasesolve and restructor is a Factory mode,so you can get what you want though  
-Polymorphism.**  
+**You can be aware of that our phasesolve and restructor is a Factory mode,so you can get what you want though Polymorphism.**  
 ***  
 **A example is like this:**  
 > //Load calibration file  
