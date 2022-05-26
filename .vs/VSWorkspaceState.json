@@ -2,14 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\include",
-    "\\include\\CameraControl",
-    "\\include\\CameraControl\\CameraUtility",
+    "\\include\\Restructor",
     "\\src",
     "\\src\\CameraControl",
     "\\src\\CameraControl\\CameraUtility",
-    "\\src\\CameraControl\\ProjectorSDK",
-    "\\src\\Restructor",
-    "\\src\\Restructor\\cuda"
+    "\\src\\Restructor"
   ],
+  "SelectedNode": "\\src\\Restructor\\FourStepSixGrayCodeMaster_CPU.cpp",
   "PreviewInSolutionExplorer": false
 }

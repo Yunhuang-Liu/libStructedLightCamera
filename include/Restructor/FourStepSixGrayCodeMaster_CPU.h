@@ -21,11 +21,18 @@ namespace PhaseSolverType {
     class FourStepSixGrayCodeMaster_CPU : public PhaseSolver{
         public:
             /**
+            * @brief 默认构造函数
+            * @param refImg 输入，参考相位用于虚拟平面扩展格雷码，若无需，则将其置为空Mat
+            * @param threads 输入，线程数
+            */
+            FourStepSixGrayCodeMaster_CPU(const cv::Mat& refImg = cv::Mat(0, 0, CV_32FC1), const int threads = 16);
+            /**
              * @brief 构造函数
+             * @param imgs 输入，图片
              * @param refImg 输入，参考相位用于虚拟平面扩展格雷码，若无需，则将其置为空Mat
              * @param threads 输入，线程数
              */
-            FourStepSixGrayCodeMaster_CPU(const cv::Mat& refImg = cv::Mat(0,0,CV_32FC1), const int threads = 16);
+            FourStepSixGrayCodeMaster_CPU(std::vector<cv::Mat>& imgs, const cv::Mat& refImg = cv::Mat(0,0,CV_32FC1), const int threads = 16);
             /**
              * @brief 析构函数
              */

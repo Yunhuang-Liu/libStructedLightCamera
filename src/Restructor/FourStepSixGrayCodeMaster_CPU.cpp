@@ -220,10 +220,7 @@ namespace PhaseSolverType {
     }
 
     void FourStepSixGrayCodeMaster_CPU::changeSourceImg(std::vector<cv::Mat>& imgs_){
-        imgs.resize(imgs_.size());
-        for (int i = 0; i < imgs.size();i++) {
-            imgs[i] = imgs_[i];
-        }
+        imgs = imgs_;
     }
 
     void FourStepSixGrayCodeMaster_CPU::atan2M(const cv::Mat& lhs,const cv::Mat& rhs,cv::Mat& wrapImg,const int threads){
@@ -260,5 +257,10 @@ namespace PhaseSolverType {
             }
         }
     }
+
+    FourStepSixGrayCodeMaster_CPU::FourStepSixGrayCodeMaster_CPU(std::vector<cv::Mat>& imgs_, const cv::Mat& refImg_, const int threads_) : imgs(imgs_), refAbsImg(refImg_), threads(threads_) {
+
+    }
 }
+
 
