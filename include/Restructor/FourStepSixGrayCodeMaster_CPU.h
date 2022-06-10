@@ -47,6 +47,17 @@ namespace PhaseSolverType {
              * @param imgs 输入，原始图片
              */
             void changeSourceImg(std::vector<cv::Mat>& imgs) override;
+            /**
+             * @brief 获取包裹相位
+             * @param wrapImg 输入，包裹相位
+             * @param conditionImg 输入，调制图片
+             */
+            void getWrapPhaseImg(cv::Mat& wrapImg, cv::Mat& conditionImg) override;
+            /**
+             * @brief 获取纹理图片（灰度浮点型）
+             * @param textureImg 输入/输出，纹理图片
+             */
+            void getTextureImg(cv::Mat& textureImg) override;
         protected:
             /**
              * @brief 获取包裹相位
@@ -57,6 +68,8 @@ namespace PhaseSolverType {
             /** \继承方法 **/
             void changeSourceImg(std::vector<cv::Mat>& imgs, cv::cuda::Stream& stream) override{}
             void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>&, cv::cuda::Stream& stream) override{}
+            void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override {}
+            void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override {}
             #endif
             /** \阈值图像 **/
             cv::Mat averageImg;

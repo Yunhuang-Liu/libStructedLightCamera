@@ -41,8 +41,7 @@ namespace RestructorType {
              * @param depthImgOut 输入/输出，深度图
              * @param colorImgOut 输入/输出，纹理图
              */
-            void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, const cv::Mat& colorImg,
-                             cv::Mat& depthImgOut, cv::Mat& colorImgOut) override;
+            void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const cv::Mat& colorImg = cv::Mat(1, 1, CV_8UC3), cv::Mat& colorImgOut = cv::Mat(1, 1, CV_8UC3)) override;
         protected:
             /**
              * @brief 映射深度纹理
@@ -57,9 +56,9 @@ namespace RestructorType {
         private:
             #ifdef CUDA
             //GPU端函数
-            void download(const int, cv::cuda::GpuMat&, cv::cuda::GpuMat&) {};
-            void restruction(const cv::cuda::GpuMat&, const cv::cuda::GpuMat&, const cv::Mat&,
-                             const int, cv::cuda::Stream&) override {}
+            void download(const int index, cv::cuda::GpuMat& depthImg, cv::cuda::GpuMat& colorImg = cv::cuda::GpuMat(1, 1, CV_8UC3)) {};
+            void restruction(const cv::cuda::GpuMat& leftAbsImg, const cv::cuda::GpuMat& rightAbsImg,
+                const int sysIndex, cv::cuda::Stream& stream, const cv::Mat& colorImg = cv::Mat(1, 1, CV_8UC3)) override {}
             #endif
             /** \标定信息 **/
             const Info& calibrationInfo;

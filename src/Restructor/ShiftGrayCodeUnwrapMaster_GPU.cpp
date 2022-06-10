@@ -111,7 +111,26 @@ namespace PhaseSolverType {
         imgG_4_device.upload(imgs[9], cvStream);
     }
 
+    void ShiftGrayCodeUnwrapMaster_GPU::changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) {
+        img1_1_device = imgs[0];
+        img1_2_device = imgs[1];
+        img1_3_device = imgs[2];
+        img2_1_device = imgs[4];
+        img2_2_device = imgs[5];
+        img2_3_device = imgs[6];
+        imgG_1_device = imgs[3];
+        imgG_2_device = imgs[7];
+        imgG_3_device = imgs[8];
+        imgG_4_device = imgs[9];
+    }
+
     ShiftGrayCodeUnwrapMaster_GPU::ShiftGrayCodeUnwrapMaster_GPU(const dim3 block_, const cv::Mat& refImgWhite) : rows(0), cols(0), block(block_), refImgWhite_device(refImgWhite){
         //refImgWhite_device.upload(refImgWhite);
+    }
+
+    void ShiftGrayCodeUnwrapMaster_GPU::getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) {
+        textureImg.clear();
+        textureImg.resize(1, cv::cuda::GpuMat(averageImg_device.size(), averageImg_device.type()));
+        textureImg[0] = averageImg_device;
     }
 }

@@ -35,7 +35,8 @@ find_package(CUDA)
 if(CUDA_FOUND)
    add_definitions(-DCUDA)
    include_directories(${CUDA_INCLUDE_DIRS})
-   #[[cuda_add_executable(
+   #[[
+   cuda_add_executable(
        ${PROJECT_NAME}
        ${MAIN}
        ${CPUHeader}
@@ -49,7 +50,9 @@ if(CUDA_FOUND)
        ${CUDA_LIBRARIES}
        MVSDKmd
        cyusbserial
-       )]]
+       setupapi
+       )
+    #]]
    CUDA_COMPILE(CUDA_OBJS ${GPUHeader} ${GPUSource})
    set(CMAKE_DEBUG_POSTFIX "d")
    add_library(libStructedLightCamera SHARED  ${CPUSource} ${GPUSource} ${CUDA_OBJS} ${CPUHeader} ${GPUHeader})
@@ -62,6 +65,7 @@ if(CUDA_FOUND)
        ${CUDA_LIBRARIES}
        MVSDKmd
        cyusbserial
+       setupapi
        )
 
    add_library(libStructedLightCameraStatic STATIC  ${CPUSource} ${GPUSource} ${CUDA_OBJS} ${CPUHeader} ${GPUHeader})
@@ -77,13 +81,15 @@ if(CUDA_FOUND)
        ${CUDA_LIBRARIES}
        MVSDKmd
        cyusbserial
+       setupapi
        )
 else()
-    #[[add_executable(
+    add_executable(
         ${PROJECT_NAME}
         ${CPUHeader}
         ${CPUSource}
-        )]]
+        )
+
    add_library(libStructedLightCamera SHARED  ${CPUSource}  ${CPUHeader})
    add_library(libStructedLightCameraStatic STATIC  ${CPUSource} ${CPUHeader})
    set(CMAKE_DEBUG_POSTFIX "d")
@@ -101,14 +107,17 @@ else()
         ${OpenCV_LIBRARIES}
         MVSDKmd
         cyusbserial
+        setupapi
         )
    target_link_libraries(
         libStructedLightCameraStatic
         ${OpenCV_LIBRARIES}
         MVSDKmd
         cyusbserial
+        setupapi
         )
 endif()
+
 
 install(
     TARGETS 
@@ -118,6 +127,7 @@ install(
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include
     )
+
 #[[Install include file]]
 
 file(GLOB CameraControl ./include/CameraControl/*.h)

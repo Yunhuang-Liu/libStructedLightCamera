@@ -256,10 +256,10 @@ namespace PhaseSolverType {
                         unwrapImg_1_.ptr(y)[x] = wrapImg_2_.ptr(y)[x] + CV_2PI * K;
                     }
                     else if (refValue < refValue_1_compare) {
-                        unwrapImg_1_.ptr(y)[x] = wrapImg_3_.ptr(y)[x] + CV_2PI * K - CV_2PI_DIV_3;
+                        unwrapImg_1_.ptr(y)[x] = wrapImg_1_.ptr(y)[x] + CV_2PI * K - CV_2PI_DIV_3;
                     }
                     else {
-                        unwrapImg_1_.ptr(y)[x] = wrapImg_1_.ptr(y)[x] + CV_2PI * K + CV_2PI_DIV_3;
+                        unwrapImg_1_.ptr(y)[x] = wrapImg_3_.ptr(y)[x] + CV_2PI * K + CV_2PI_DIV_3;
                     }
                 }
                 if (conditionImg_2_.ptr(y)[x] < 20.0) {
@@ -283,10 +283,10 @@ namespace PhaseSolverType {
                         unwrapImg_2_.ptr(y)[x] = wrapImg_5_.ptr(y)[x] + CV_2PI * K;
                     }
                     else if (refValue < refValue_2_compare) {
-                        unwrapImg_2_.ptr(y)[x] = wrapImg_6_.ptr(y)[x] + CV_2PI * K - CV_2PI_DIV_3;
+                        unwrapImg_2_.ptr(y)[x] = wrapImg_4_.ptr(y)[x] + CV_2PI * K - CV_2PI_DIV_3;
                     }
                     else {
-                        unwrapImg_2_.ptr(y)[x] = wrapImg_4_.ptr(y)[x] + CV_2PI * K + CV_2PI_DIV_3;
+                        unwrapImg_2_.ptr(y)[x] = wrapImg_6_.ptr(y)[x] + CV_2PI * K + CV_2PI_DIV_3;
                     }
 
                 }
@@ -310,10 +310,10 @@ namespace PhaseSolverType {
                         unwrapImg_3_.ptr(y)[x] = wrapImg_8_.ptr(y)[x] + CV_2PI * K;
                     }
                     else if (refValue < refValue_3_compare) {
-                        unwrapImg_3_.ptr(y)[x] = wrapImg_9_.ptr(y)[x] + CV_2PI * K - CV_2PI_DIV_3;
+                        unwrapImg_3_.ptr(y)[x] = wrapImg_7_.ptr(y)[x] + CV_2PI * K - CV_2PI_DIV_3;
                     }
                     else {
-                        unwrapImg_3_.ptr(y)[x] = wrapImg_7_.ptr(y)[x] + CV_2PI * K + CV_2PI_DIV_3;
+                        unwrapImg_3_.ptr(y)[x] = wrapImg_9_.ptr(y)[x] + CV_2PI * K + CV_2PI_DIV_3;
                     }
                 }
                 if (conditionImg_4_.ptr(y)[x] < 20.0) {
@@ -336,10 +336,10 @@ namespace PhaseSolverType {
                         unwrapImg_4_.ptr(y)[x] = wrapImg_11_.ptr(y)[x] + CV_2PI * K;
                     }
                     else if (refValue < refValue_4_compare) {
-                        unwrapImg_4_.ptr(y)[x] = wrapImg_12_.ptr(y)[x] + CV_2PI * K - CV_2PI_DIV_3;
+                        unwrapImg_4_.ptr(y)[x] = wrapImg_10_.ptr(y)[x] + CV_2PI * K - CV_2PI_DIV_3;
                     }
                     else {
-                        unwrapImg_4_.ptr(y)[x] = wrapImg_10_.ptr(y)[x] + CV_2PI * K + CV_2PI_DIV_3;
+                        unwrapImg_4_.ptr(y)[x] = wrapImg_12_.ptr(y)[x] + CV_2PI * K + CV_2PI_DIV_3;
                     }
                 }
             }

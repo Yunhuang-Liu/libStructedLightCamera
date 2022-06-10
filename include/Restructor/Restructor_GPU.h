@@ -40,19 +40,19 @@ namespace RestructorType {
          * @brief 重建
          * @param leftAbsImg 输入，左绝对相位
          * @param rightAbsImg 输入，右绝对相位
-         * @param colorImg 输入，彩色纹理
          * @param sysIndex 输入，图片索引
          * @param stream 输入，异步流
+         * @param colorImg 输入，彩色纹理
          */
-        void restruction(const cv::cuda::GpuMat& leftAbsImg, const cv::cuda::GpuMat& rightAbsImg, const cv::Mat& colorImg,
-                         const int sysIndex, cv::cuda::Stream& stream) override;
+        void restruction(const cv::cuda::GpuMat& leftAbsImg, const cv::cuda::GpuMat& rightAbsImg,
+            const int sysIndex, cv::cuda::Stream& stream, const cv::Mat& colorImg = cv::Mat(1, 1, CV_8UC3)) override;
         /**
          * @brief 获取深度纹理
          * @param index 输入，图片索引
          * @param depthImg 输入/输出，深度图
          * @param colorImg 输入/输出，纹理图
          */
-        void download(const int index, cv::cuda::GpuMat& depthImg, cv::cuda::GpuMat& colorImg) override;
+        void download(const int index, cv::cuda::GpuMat& depthImg, cv::cuda::GpuMat& colorImg = cv::cuda::GpuMat(1, 1, CV_8UC3)) override;
     protected:
         /**
          * @brief 映射深度纹理
@@ -64,10 +64,17 @@ namespace RestructorType {
          * @param pStream 输入，异步流
          */
         void getDepthColorMap(const cv::cuda::GpuMat& leftImg, const cv::cuda::GpuMat& rightImg, const cv::cuda::GpuMat& colorImg, cv::cuda::GpuMat& depthImg, cv::cuda::GpuMat& mapColorImg, cv::cuda::Stream& pStream);
+        /**
+         * @brief 映射深度纹理
+         * @param leftImg 输入，左绝对相位
+         * @param rightImg 输入，右绝对相位
+         * @param depthImg 输入/输出，深度图
+         * @param pStream 输入，异步流
+         */
+        void getDepthMap(const cv::cuda::GpuMat& leftImg, const cv::cuda::GpuMat& rightImg, cv::cuda::GpuMat& depthImg, cv::cuda::Stream& pStream);
     private:
         //CPU端函数
-        void restruction(const cv::Mat&, const cv::Mat&, const cv::Mat&,
-                         cv::Mat&, cv::Mat&) override{}
+        void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const cv::Mat& colorImg = cv::Mat(1, 1, CV_8UC3), cv::Mat& colorImgOut = cv::Mat(1, 1, CV_8UC3)) override{}
         /** \深度图 **/
         std::vector<cv::cuda::GpuMat> depthImg_device;
         /** \纹理映射图 **/

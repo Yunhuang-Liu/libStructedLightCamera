@@ -1,6 +1,7 @@
 #include "StructedLightCamera.h"
 
 int main(){
+    /*
     MatrixsInfo* matrixInfo = new MatrixsInfo("../systemFile/calibrationFiles/intrinsic.yml","../systemFile/calibrationFiles/extrinsic.yml");
     const Info& calibrationInfo = matrixInfo->getInfo();
     cv::cuda::setDevice(0);
@@ -13,4 +14,11 @@ int main(){
     std::vector<cv::cuda::GpuMat> depthImgs;
     std::vector<cv::cuda::GpuMat> colorImgs;
     camera->getOneFrame(depthImgs, colorImgs);
+    */
+    cv::cuda::setDevice(0);
+    CameraControl* camera = new CameraControl(8, CameraControl::CameraUsedState::LeftColorRightGray);
+    camera->setCameraExposure(2000, 2000);
+    camera->setCaptureImgsNum(8, 8);
+    RestructedFrame frame;
+    camera->getOneFrameImgs(frame);
 }

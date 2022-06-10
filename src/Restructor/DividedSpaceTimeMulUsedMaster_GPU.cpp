@@ -143,4 +143,32 @@ namespace PhaseSolverType {
         img4_3_device.upload(imgs[14], stream);
         img4_4_device.upload(imgs[15], stream);
     }
+
+    void DividedSpaceTimeMulUsedMaster_GPU::changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) {
+        img1_1_device = imgs[0];
+        img1_2_device = imgs[1];
+        img1_3_device = imgs[2];
+        img1_4_device = imgs[3];
+        img2_1_device = imgs[4];
+        img2_2_device = imgs[5];
+        img2_3_device = imgs[6];
+        img2_4_device = imgs[7];
+        img3_1_device = imgs[8];
+        img3_2_device = imgs[9];
+        img3_3_device = imgs[10];
+        img3_4_device = imgs[11];
+        img4_1_device = imgs[12];
+        img4_2_device = imgs[13];
+        img4_3_device = imgs[14];
+        img4_4_device = imgs[15];
+    }
+
+    void DividedSpaceTimeMulUsedMaster_GPU::getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) {
+        textureImg.clear();
+        textureImg.resize(4, cv::cuda::GpuMat(averageImg_1_device.size(), averageImg_1_device.type()));
+        textureImg[0] = averageImg_1_device;
+        textureImg[1] = averageImg_2_device;
+        textureImg[2] = averageImg_3_device;
+        textureImg[3] = averageImg_4_device;
+    }
 }

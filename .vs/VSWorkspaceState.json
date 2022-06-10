@@ -3,11 +3,13 @@
     "",
     "\\include",
     "\\include\\Restructor",
+    "\\include\\Restructor\\cuda",
     "\\src",
     "\\src\\CameraControl",
     "\\src\\CameraControl\\CameraUtility",
-    "\\src\\Restructor"
+    "\\src\\CameraControl\\ProjectorSDK",
+    "\\src\\Restructor",
+    "\\src\\Restructor\\cuda"
   ],
-  "SelectedNode": "\\src\\Restructor\\FourStepSixGrayCodeMaster_CPU.cpp",
   "PreviewInSolutionExplorer": false
 }

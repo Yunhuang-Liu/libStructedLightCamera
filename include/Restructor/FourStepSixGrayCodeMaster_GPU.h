@@ -48,6 +48,16 @@ namespace PhaseSolverType {
          * @param pStream 输入，异步流
          */
         void changeSourceImg(std::vector<cv::Mat>& imgs, cv::cuda::Stream& stream) override;
+        /**
+         * @brief 上传原始图片
+         * @param imgs 输入，设备端图片（CV_8UC1)
+         */
+        void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override;
+        /**
+         * @brief 获取纹理图片（灰度浮点型）
+         * @param textureImg 输入/输出，纹理图片
+         */
+        void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override;
     protected:
         /**
          * @brief 上传图片
@@ -59,11 +69,9 @@ namespace PhaseSolverType {
          */
         void getWrapPhaseImg();
     private:
-        /**
-         * @brief 解相
-         * @param absolutePhaseImg
-         */
         void getUnwrapPhaseImg(cv::Mat&) override{}
+        void getWrapPhaseImg(cv::Mat&, cv::Mat&) override {}
+        void getTextureImg(cv::Mat& textureImg) override {}
         /** \GPU图像 
          *  \全部拍摄图片 0——3：相移 4——9：格雷 10？颜色
          **/

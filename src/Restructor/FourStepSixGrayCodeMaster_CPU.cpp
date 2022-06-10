@@ -11,8 +11,8 @@ namespace PhaseSolverType {
     }
 
     void FourStepSixGrayCodeMaster_CPU::getWrapPhaseImg(){
-        wrapImg=cv::Mat(imgs[0].size(),CV_32FC1,cv::Scalar(0.0));
-        atan2M(imgs[3]-imgs[1],imgs[0]-imgs[2],wrapImg,threads);
+        wrapImg = cv::Mat(imgs[0].size(),CV_32FC1,cv::Scalar(0.0));
+        atan2M(imgs[3]-imgs[1], imgs[0]-imgs[2], wrapImg, threads);
     }
 
     void FourStepSixGrayCodeMaster_CPU::caculateAverageImgs(){
@@ -73,7 +73,7 @@ namespace PhaseSolverType {
         __m256 leftMove_1_ = _mm256_set1_ps(2);
         __m256 add_1_ = _mm256_set1_ps(1);
         __m256 div_2_ = _mm256_set1_ps(2);
-        __m256 compare_Condition_10 =_mm256_set1_ps(10.0);
+        __m256 compare_Condition_10 =_mm256_set1_ps(5.0);
         __m256 K1;
         __m256 K2;
         __m256 _Counter_PI_Div_2_ = _mm256_set1_ps(-CV_PI/2);
@@ -260,6 +260,30 @@ namespace PhaseSolverType {
 
     FourStepSixGrayCodeMaster_CPU::FourStepSixGrayCodeMaster_CPU(std::vector<cv::Mat>& imgs_, const cv::Mat& refImg_, const int threads_) : imgs(imgs_), refAbsImg(refImg_), threads(threads_) {
 
+    }
+
+    void FourStepSixGrayCodeMaster_CPU::getWrapPhaseImg(cv::Mat& wrapImg_, cv::Mat& conditionImg_) {
+        std::vector<std::thread> convertFloatThreads(imgs.size());
+        for (int i = 0; i < convertFloatThreads.size(); i++) {
+            convertFloatThreads[i] = std::thread([&, i] {
+                imgs[i].convertTo(imgs[i], CV_32FC1);
+                });
+        }
+        for (auto& thread : convertFloatThreads) {
+            if (thread.joinable()) {
+                thread.join();
+            }
+        }
+        getWrapPhaseImg();
+        conditionImg = cv::Mat(imgs[0].size(), CV_32FC1, cv::Scalar(0));
+        averageImg = cv::Mat(imgs[0].size(), CV_32FC1, cv::Scalar(0));
+        caculateAverageImgs();
+        wrapImg_ = wrapImg;
+        conditionImg_ = conditionImg;
+    }
+
+    void FourStepSixGrayCodeMaster_CPU::getTextureImg(cv::Mat& textureImg) {
+        textureImg = averageImg;
     }
 }
 

@@ -87,30 +87,53 @@ namespace PhaseSolverType {
              * @param absolutePhaseImg 输入/输出，绝对相位
              */
             virtual void getUnwrapPhaseImg(cv::Mat& absolutePhaseImg) = 0;
+            /**
+             * @brief 获取纹理图片
+             * @param textureImg 输入/输出，纹理图片
+             */
+            virtual void getTextureImg(cv::Mat& textureImg) = 0;
             #ifdef CUDA
             /**
              * @brief 上传图片
-             * @param imgs 输入，原始图片
+             * @param imgs 输入，原始图片（CV_8UC1)
              * @param stream 输入，异步流
              */
             virtual void changeSourceImg(std::vector<cv::Mat>& imgs, cv::cuda::Stream& stream) = 0;
+            /**
+             * @brief 上传图片
+             * @param imgs 输入，设备端图片（CV_8UC1)
+             */
+            virtual void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) = 0;
             /**
              * @brief 解相
              * @param absolutePhaseImg 输入/输出，绝对相位
              * @param stream 输入，异步流
              */
             virtual void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>& absolutePhaseImg, cv::cuda::Stream& stream) = 0;
+            /**
+             * @brief 获取包裹相位
+             * @param wrapImg 输入，包裹相位
+             * @param stream 输入，异步流
+             */
+            //virtual void getWrapPhaseImg(cv::cuda::GpuMat& wrapImg, cv::cuda::Stream& stream) = 0;
+            /**
+             * @brief 获取纹理图片
+             * @param textureImg 输入/输出，纹理图片
+             */
+            virtual void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) = 0;
             #endif
             /**
              * @brief 上传图片
              * @param imgs 输入，原始图片
              */
             virtual void changeSourceImg(std::vector<cv::Mat>& imgs) = 0;
-        protected:
             /**
-             * @brief 解调制
+             * @brief 获取包裹相位
+             * @param wrapImg 输入，包裹相位
              */
-             void getWrapPhaseImg();
+            virtual void getWrapPhaseImg(cv::Mat& wrapImg,cv::Mat& conditionImg) = 0;
+        protected:
+
         private:
     };
 }

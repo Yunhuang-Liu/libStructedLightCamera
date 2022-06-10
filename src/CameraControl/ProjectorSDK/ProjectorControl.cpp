@@ -54,7 +54,7 @@ uint32_t ReadI2C(uint16_t              WriteDataLength,
     return SUCCESS;
 }
 
-ProjectorControl::ProjectorControl(const DLPC34XX_ControllerDeviceId_e projectorType){
+ProjectorControl::ProjectorControl(const DLPC34XX_ControllerDeviceId_e projectorType) : isDLPC900(false) {
     InitConnectionAndCommandLayer();
     bool Status = CYPRESS_I2C_RequestI2CBusAccess();
     DLPC34XX_ControllerDeviceId_e DeviceId = projectorType;
@@ -71,8 +71,26 @@ ProjectorControl::ProjectorControl(const DLPC34XX_ControllerDeviceId_e projector
     DLPC34XX_WriteInternalPatternControl(DLPC34XX_PC_START, 0x00);
 }
 
+ProjectorControl::ProjectorControl(const int numLutEntries): isDLPC900(true){
+    USB_Init();
+    int SLmode = 0;
+    bool standBy = 0;
+
+    if (USB_IsConnected() == false) {
+        USB_Open();
+    }
+    if (LCR_SetPowerMode(0) < 0)
+        std::cout << "DLPC900 Error:Unable to power on the board" << std::endl;
+    if (LCR_SetMode(0x1) < 0)
+        std::cout << "DLPC900 Error:Unable to switch to pattern mode" << std::endl;
+    LCR_SetPatternConfig(numLutEntries, numLutEntries);
+}
+
 void ProjectorControl::projecteOnce(){
-    DLPC34XX_WriteInternalPatternControl(DLPC34XX_PC_START, 0x00);
+    if (!isDLPC900)
+        DLPC34XX_WriteInternalPatternControl(DLPC34XX_PC_START, 0x00);
+    else
+        if (LCR_PatternDisplay(0x2) < 0);
 }
 
 /**

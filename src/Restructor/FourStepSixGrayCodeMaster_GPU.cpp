@@ -57,7 +57,20 @@ namespace PhaseSolverType {
         }
     }
 
+    void FourStepSixGrayCodeMaster_GPU::changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) {
+        imgs_device.resize(imgs.size());
+        for (int i = 0; i < imgs_device.size(); i++) {
+            imgs_device[i] = imgs[i];
+        }
+    }
+
     FourStepSixGrayCodeMaster_GPU::FourStepSixGrayCodeMaster_GPU(const dim3 block_) : block(block_){
 
+    }
+
+    void FourStepSixGrayCodeMaster_GPU::getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) {
+        textureImg.clear();
+        textureImg.resize(1, cv::cuda::GpuMat(averageImg_device.size(), averageImg_device.type()));
+        textureImg[0] = averageImg_device;
     }
 }

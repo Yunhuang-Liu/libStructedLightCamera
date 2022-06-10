@@ -17,7 +17,10 @@
 #include "./dlpc34xx.h"
 #include "./dlpc347x_internal_patterns.h"
 #include "./cypress_i2c.h"
+#include "./API.h"
+#include "./usb.h"
 #include <string>
+#include <iostream>
 
 #define FLASH_WRITE_BLOCK_SIZE            1024
 #define FLASH_READ_BLOCK_SIZE             256
@@ -32,6 +35,7 @@ static uint8_t s_ReadBuffer[MAX_READ_CMD_PAYLOAD];
 /** \file pointer **/
 static FILE* s_FilePointer;
 
+/** \投影仪控制类，应当注意的是，DLP3010将得到全面的支持，无需GUI进行辅助，如意DLP6500的需求将迫使你不得不使用GUI事先进行图片的烧入 **/
 class ProjectorControl{
 public:
     /**
@@ -39,8 +43,14 @@ public:
      * @param projectorType 输入，投影仪类别
      */
     ProjectorControl(const DLPC34XX_ControllerDeviceId_e projectorType);
+    /** 
+     * @brief 构造函数
+     * @param projectorType 输入，投影仪类别
+     */
+    ProjectorControl(const int numLutEntries);
     /**
-     * @brief 投影一次
+     * @brief 投影一次 
+     * @param numLutEntries 输入，图片数目
      */
     void projecteOnce();
     /**
@@ -62,5 +72,7 @@ private:
      * @brief 从闪存加载图片
      */
     void LoadPatternOrderTableEntryfromFlash();
+    /** \是否为DLPC900控制芯片 **/
+    const bool isDLPC900;
 };
 #endif

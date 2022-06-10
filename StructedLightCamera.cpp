@@ -104,7 +104,7 @@ void StructedLightCamera::getOneFrame(std::vector<cv::cuda::GpuMat>& depthImg, s
     colorImg.resize(imgNums);
     for (int i = 0; i < imgNums; i++) {
         stream_Restructor[i] = cv::cuda::Stream(cudaStreamNonBlocking);
-        restructor->restruction(unwrapRec_dev_L[i], unwrapRec_dev_R[i], restructedFrame.colorImgs[i], i, stream_Restructor[i]);
+        restructor->restruction(unwrapRec_dev_L[i], unwrapRec_dev_R[i], i, stream_Restructor[i], restructedFrame.colorImgs[i]);
     }
     for (int i = 0; i < imgNums; i++) {
         stream_Restructor[i].waitForCompletion();
@@ -138,7 +138,7 @@ void StructedLightCamera::getOneFrame(std::vector<cv::Mat>& depthImg, std::vecto
     }
     depthImg.resize(1);
     colorImg.resize(1);
-    restructor->restruction(unwrapLeftImg, unwrapRightImg, restructedFrame.colorImgs[0], depthImg[0], colorImg[0]);
+    restructor->restruction(unwrapLeftImg, unwrapRightImg, depthImg[0], colorImg[0], restructedFrame.colorImgs[0]);
 }
 
 void StructedLightCamera::setExposureTime(const int grayExposureTime, const int colorExposureTime) {
