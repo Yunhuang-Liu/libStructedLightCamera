@@ -11,11 +11,14 @@ namespace RestructorType {
         block(block_){
         cv::Mat Q_CV;
         cv::Mat R1_inv_CV;
+        cv::Mat M1_CV;
+        calibrationInfo_.M1.convertTo(M1_CV, CV_32FC1);
         calibrationInfo_.Q.convertTo(Q_CV, CV_32FC1);
         calibrationInfo_.R1.convertTo(R1_inv_CV, CV_32FC1);
         R1_inv_CV = R1_inv_CV.inv();
         cv::cv2eigen(Q_CV,Q);
         cv::cv2eigen(R1_inv_CV,R1_inv);
+        cv::cv2eigen(M1_CV, M1);
         depthImg_device.resize(4);
         cv::Mat M3_CV;
         cv::Mat R_CV;
@@ -27,7 +30,14 @@ namespace RestructorType {
             cv::cv2eigen(M3_CV,M3);
             cv::cv2eigen(R_CV,R);
             cv::cv2eigen(T_CV,T);
-            colorImg_device.resize(4);
+        }
+        //如果深度值被修改且视差值保持默认，则自动进行视差值的计算
+        if (-500 == minDisparity && 500 == maxDisparity && 170 != minDepth && 220 != maxDepth) {
+            float tx = -1.f / Q_CV.at<float>(3, 2);
+            float crj = tx * Q_CV.at<float>(3, 3);
+            float f = Q_CV.at<float>(2, 3);
+            minDisparity = -tx * f / minDepth - crj;
+            minDisparity = -tx * f / maxDepth - crj;
         }
     }
 
@@ -35,34 +45,29 @@ namespace RestructorType {
     }
 
     void Restructor_GPU::restruction(const cv::cuda::GpuMat& leftAbsImg, const cv::cuda::GpuMat& rightAbsImg,
-        const int sysIndex, cv::cuda::Stream& stream, const cv::Mat& colorImg) {
+        const int sysIndex, cv::cuda::Stream& stream, const bool isColor) {
         const int rows =leftAbsImg.rows;
         const int cols = leftAbsImg.cols;
         if (depthImg_device[sysIndex].empty()) {
-            depthImg_device[sysIndex].create(rows, cols, CV_16UC1);
-            if(colorImg.rows > 2)
-                colorImg_device[sysIndex].create(rows, cols, CV_8UC3);
+            depthImg_device[sysIndex].create(rows, cols, CV_32FC1);
         }
         else {
             depthImg_device[sysIndex].setTo(0);
-            if(colorImg.rows > 2)
-                colorImg_device[sysIndex].setTo(cv::Vec3b(0, 0, 0));
         }
-        if (colorImg.rows > 2) {
-            cv::cuda::GpuMat colorImg_srcDev(colorImg);
-            getDepthColorMap(leftAbsImg,rightAbsImg, colorImg_srcDev, depthImg_device[sysIndex], colorImg_device[sysIndex],stream);
+        if (isColor) {
+            getDepthColorMap(leftAbsImg,rightAbsImg, depthImg_device[sysIndex],stream);
         }
         else {
             getDepthMap(leftAbsImg, rightAbsImg, depthImg_device[sysIndex], stream);
         }
     }
 
-    void Restructor_GPU::getDepthColorMap(const cv::cuda::GpuMat& leftImg, const cv::cuda::GpuMat& rightImg, const cv::cuda::GpuMat& colorImg, cv::cuda::GpuMat& depthImg, cv::cuda::GpuMat& mapColorImg, cv::cuda::Stream& pStream) {
+    void Restructor_GPU::getDepthColorMap(const cv::cuda::GpuMat& leftImg, const cv::cuda::GpuMat& rightImg, cv::cuda::GpuMat& depthImg, cv::cuda::Stream& pStream) {
         const int rows =leftImg.rows;
         const int cols = leftImg.cols;
-        RestructorType::cudaFunc::depthColorMap(leftImg, rightImg, colorImg, rows, cols,
+        RestructorType::cudaFunc::depthColorMap(leftImg, rightImg, rows, cols,
             minDisparity, maxDisparity, minDepth, maxDepth, Q,
-            M3, R, T, R1_inv, depthImg,mapColorImg, block, pStream);
+            M3, R, T, R1_inv, depthImg, block, pStream);
     }
 
     void Restructor_GPU::getDepthMap(const cv::cuda::GpuMat& leftImg, const cv::cuda::GpuMat& rightImg, cv::cuda::GpuMat& depthImg, cv::cuda::Stream& pStream) {
@@ -70,13 +75,11 @@ namespace RestructorType {
         const int cols = leftImg.cols;
         RestructorType::cudaFunc::depthMap(leftImg, rightImg, rows, cols,
             minDisparity, maxDisparity, minDepth, maxDepth, Q,
-            R1_inv, depthImg, block, pStream);
+            M1, R1_inv, depthImg, block, pStream);
     }
 
-    void Restructor_GPU::download(const int index, cv::cuda::GpuMat& depthImg, cv::cuda::GpuMat& colorImg) {
+    void Restructor_GPU::download(const int index, cv::cuda::GpuMat& depthImg) {
         depthImg = depthImg_device[index];
-        if(colorImg.rows > 2)
-            colorImg = colorImg_device[index];
     }
 }
 

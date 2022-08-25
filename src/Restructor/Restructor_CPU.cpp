@@ -9,34 +9,38 @@ namespace RestructorType {
         minDepth(minDepth_),
         maxDepth(maxDepth_),
         threads(threads_){
+        cv::Mat Q_CV;
+        calibrationInfo_.Q.convertTo(Q_CV, CV_32FC1);
+        //如果深度值被修改且视差值保持默认，则自动进行视差值的计算
+        if (-500 == minDisparity && 500 == maxDisparity && 170 != minDepth && 220 != maxDepth) {
+            float tx = -1.f / Q_CV.at<float>(3, 2);
+            float crj = tx * Q_CV.at<float>(3, 3);
+            float f = Q_CV.at<float>(2, 3);
+            minDisparity = -tx * f / minDepth - crj;
+            minDisparity = -tx * f / maxDepth - crj;
+        }
     }
 
     Restructor_CPU::~Restructor_CPU(){
     }
 
-    void Restructor_CPU::restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const cv::Mat& colorImg, cv::Mat& colorImgOut){
-        if (depthImgOut.empty()) {
+    void Restructor_CPU::restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const bool isColor){
+        if (depthImgOut.empty())
             depthImgOut.create(leftAbsImg.size(),CV_32FC1);
-            if(colorImg.rows > 2)
-                colorImgOut.create(leftAbsImg.size(),CV_8UC3);
-        }
-        else {
+        else 
             depthImgOut.setTo(0);
-            if(colorImgOut.rows > 2)
-                colorImgOut.setTo(cv::Vec3b(0, 0, 0));
-        }
-        getDepthColorMap(leftAbsImg,rightAbsImg,colorImg,depthImgOut,colorImgOut);
+        getDepthColorMap(leftAbsImg,rightAbsImg,depthImgOut, isColor);
     }
 
-    void Restructor_CPU::getDepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, const cv::Mat& colorImg,
-        cv::Mat& depthImgOut, cv::Mat& colorImgOut){
+    void Restructor_CPU::getDepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg,
+        cv::Mat& depthImgOut, const bool isColor){
         std::vector<std::thread> tasks;
         tasks.resize(threads);
         const int rows = leftAbsImg.rows / threads;
         for(int i=0;i<threads-1;i++){
-            tasks[i] = std::thread(&RestructorType::Restructor_CPU::thread_DepthColorMap, this, std::ref(leftAbsImg), std::ref(rightAbsImg), std::ref(colorImg), std::ref(depthImgOut), std::ref(colorImgOut), cv::Point2i(rows * i, rows * (i + 1)));
+            tasks[i] = std::thread(&RestructorType::Restructor_CPU::thread_DepthColorMap, this, std::ref(leftAbsImg), std::ref(rightAbsImg), std::ref(depthImgOut), cv::Point2i(rows * i, rows * (i + 1)), isColor);
         }
-        tasks[threads-1] = std::thread(&RestructorType::Restructor_CPU::thread_DepthColorMap, this, std::ref(leftAbsImg), std::ref(rightAbsImg), std::ref(colorImg), std::ref(depthImgOut), std::ref(colorImgOut), cv::Point2i(rows * (threads - 1), leftAbsImg.rows));
+        tasks[threads-1] = std::thread(&RestructorType::Restructor_CPU::thread_DepthColorMap, this, std::ref(leftAbsImg), std::ref(rightAbsImg), std::ref(depthImgOut), cv::Point2i(rows * (threads - 1), leftAbsImg.rows), isColor);
         for(int i=0;i<threads;i++){
             if(tasks[i].joinable()){
                 tasks[i].join();
@@ -44,8 +48,8 @@ namespace RestructorType {
         }
     }
 
-    void Restructor_CPU::thread_DepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& righAbstImg,const cv::Mat& colorImg,
-        cv::Mat& depthImgOut, cv::Mat& colorImgOut, const cv::Point2i region){
+    void Restructor_CPU::thread_DepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& righAbstImg,
+        cv::Mat& depthImgOut, const cv::Point2i region, const bool isColor){
         const cv::Mat& Q = calibrationInfo.Q;
         const float f = Q.at<double>(2,3);
         const float tx = -1.0 / Q.at<double>(3,2);
@@ -55,7 +59,6 @@ namespace RestructorType {
         const float threshod = 0.1;
         const int rows = leftAbsImg.rows;
         const int cols = leftAbsImg.cols;
-        const bool isColorMap = colorImg.rows > 2;
         //存放线性回归的实际值
         std::vector<cv::Point2f> linear_return = { cv::Point2f(1,1), cv::Point2f(1, 1), cv::Point2f(1, 1), cv::Point2f(1, 1) };
         //存放回归拟合结果：0：dx，1：dy，2：x，3：y
@@ -74,16 +77,9 @@ namespace RestructorType {
         {
             const float* ptr_Left = leftAbsImg.ptr<float>(i);
             const float* ptr_Right = righAbstImg.ptr<float>(i);
-            float* ptr_DepthImgOut = depthImgOut.ptr<float>(i);
-            cv::Vec3b* ptr_ColorImgOut = nullptr;
-            if(isColorMap)
-                ptr_ColorImgOut = colorImgOut.ptr<cv::Vec3b>(i);
             for (int j = 0; j < cols; j++)
             {
                 if(ptr_Left[j] <= 0){
-                    ptr_DepthImgOut[j] = 0;
-                    if (isColorMap)
-                        ptr_ColorImgOut[j] = cv::Vec3b(0, 0, 0);
                     continue;
                 }
                 minCost = FLT_MAX;
@@ -98,9 +94,6 @@ namespace RestructorType {
                     }
                 }
                 if(minCost > threshod){
-                    ptr_DepthImgOut[j] = 0;
-                    if (isColorMap)
-                        ptr_ColorImgOut[j] = cv::Vec3b(0, 0, 0);
                     continue;
                 }
                 //以左边一位开始连续四点拟合
@@ -113,33 +106,34 @@ namespace RestructorType {
                 a = result_Linear[1] / result_Linear[0];
                 b = result_Linear[3] - a * result_Linear[2];
                 disparity =(ptr_Left[j] - b) / a;//获取到的亚像素匹配点
+
                 if(disparity<minDisparity || disparity>maxDisparity){
-                    ptr_DepthImgOut[j] = 0;
-                    if (isColorMap)
-                        ptr_ColorImgOut[j] = cv::Vec3b(0, 0, 0);
                     continue;
                 }
+
                 cv::Mat recCameraPoints = (cv::Mat_<double>(3, 1) << -1.0 * tx * (j - cx)/(disparity - cxlr) , -1.0 * tx * (i - cy)/(disparity - cxlr), -1.0 * tx * f/(disparity - cxlr));
                 cv::Mat cameraPoints = r1Inv * recCameraPoints;
-                const float depth = cameraPoints.at<double>(2, 0);
-                if (depth < minDepth || depth > maxDepth) {
-                    ptr_DepthImgOut[j] = 0;
-                    if (isColorMap)
-                        ptr_ColorImgOut[j] = cv::Vec3b(0, 0, 0);
+                cv::Mat result;
+
+                if (isColor)
+                    result = calibrationInfo.R * cameraPoints + calibrationInfo.T;
+                else
+                    result = cameraPoints;
+
+                const float depth = result.at<double>(2, 0);
+
+                if (depth < minDepth || depth > maxDepth)
                     continue;
-                }
-                if (isColorMap) {
-                    cv::Mat result = calibrationInfo.M3 * (calibrationInfo.R * cameraPoints + calibrationInfo.T);
-                    int x_maped = std::round(result.at<double>(0, 0) / result.at<double>(2, 0));
-                    int y_maped = std::round(result.at<double>(1, 0) / result.at<double>(2, 0));
-                    if ((0 < x_maped) && (y_maped < rows) && (0 < y_maped) && (x_maped < cols)) {
-                        ptr_DepthImgOut[j] = cameraPoints.at<double>(2, 0);
-                        ptr_ColorImgOut[j] = colorImg.ptr<cv::Vec3b>(y_maped)[x_maped];
-                    }
-                }
-                else {
-                    ptr_DepthImgOut[j] = cameraPoints.at<double>(2, 0);
-                }
+
+                cv::Mat mapPicture = calibrationInfo.M1 * result;
+                int x_maped = std::round(mapPicture.at<double>(0, 0) / mapPicture.at<double>(2, 0));
+                int y_maped = std::round(mapPicture.at<double>(1, 0) / mapPicture.at<double>(2, 0));
+
+                if ((0 > x_maped) || (y_maped > rows - 1) || (0 > y_maped) || (x_maped > cols - 1))
+                    continue;
+
+                std::lock_guard<std::mutex> lock(mutexMap);
+                depthImgOut.ptr<float>(y_maped)[x_maped] = depth;
             }
         }
     }

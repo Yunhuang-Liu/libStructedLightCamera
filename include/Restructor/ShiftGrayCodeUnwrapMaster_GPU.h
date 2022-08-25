@@ -74,15 +74,29 @@ namespace PhaseSolverType {
         /** \参考平面绝对相位 **/
         const cv::cuda::GpuMat refImgWhite_device;
         /** \第一帧阈值图像 **/
-        cv::cuda::GpuMat averageImg_device;
+        cv::cuda::GpuMat averageImg_1_device;
+        /** \第二帧阈值图像 **/
+        cv::cuda::GpuMat averageImg_2_device;
+        /** \第三帧阈值图像 **/
+        cv::cuda::GpuMat averageImg_3_device;
+        /** \第四帧阈值图像 **/
+        cv::cuda::GpuMat averageImg_4_device;
         /** \第一帧调制图像 **/
         cv::cuda::GpuMat conditionImg_1_device;
         /** \第二帧调制图像 **/
         cv::cuda::GpuMat conditionImg_2_device;
+        /** \第三帧调制图像 **/
+        cv::cuda::GpuMat conditionImg_3_device;
+        /** \第四帧调制图像 **/
+        cv::cuda::GpuMat conditionImg_4_device;
         /** \第一帧包裹相位图像—1 **/
         cv::cuda::GpuMat wrapImg1_device;
         /** \第二帧包裹相位图像—1 **/
         cv::cuda::GpuMat wrapImg2_device;
+        /** \第三帧包裹相位图像—1 **/
+        cv::cuda::GpuMat wrapImg3_device;
+        /** \第四帧包裹相位图像—1 **/
+        cv::cuda::GpuMat wrapImg4_device;
         /** \第一帧图像:Phase **/
         cv::cuda::GpuMat img1_1_device;
         /** \第一帧图像:Phase **/
@@ -95,6 +109,18 @@ namespace PhaseSolverType {
         cv::cuda::GpuMat img2_2_device;
         /** \第二帧图像:Phase **/
         cv::cuda::GpuMat img2_3_device;
+        /** \第三帧图像:Phase **/
+        cv::cuda::GpuMat img3_1_device;
+        /** \第三帧图像:Phase **/
+        cv::cuda::GpuMat img3_2_device;
+        /** \第三帧图像:Phase **/
+        cv::cuda::GpuMat img3_3_device;
+        /** \第四帧图像:Phase **/
+        cv::cuda::GpuMat img4_1_device;
+        /** \第四帧图像:Phase **/
+        cv::cuda::GpuMat img4_2_device;
+        /** \第四帧图像:Phase **/
+        cv::cuda::GpuMat img4_3_device;
         /** \GrayCode 1**/
         cv::cuda::GpuMat imgG_1_device;
         /** \GrayCode 2 **/
@@ -107,6 +133,10 @@ namespace PhaseSolverType {
         cv::cuda::GpuMat unwrapImg_1_device;
         /** \第二帧绝对相位 **/
         cv::cuda::GpuMat unwrapImg_2_device;
+        /** \第三帧绝对相位 **/
+        cv::cuda::GpuMat unwrapImg_3_device;
+        /** \第四帧绝对相位 **/
+        cv::cuda::GpuMat unwrapImg_4_device;
         /** \解相阶级 **/
         cv::cuda::GpuMat floor_K_device;
         /** \block尺寸 **/

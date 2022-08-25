@@ -3,13 +3,14 @@
     "",
     "\\include",
     "\\include\\Restructor",
-    "\\include\\Restructor\\cuda",
     "\\src",
     "\\src\\CameraControl",
     "\\src\\CameraControl\\CameraUtility",
     "\\src\\CameraControl\\ProjectorSDK",
     "\\src\\Restructor",
-    "\\src\\Restructor\\cuda"
+    "\\src\\Restructor\\cuda",
+    "\\systemFile"
   ],
+  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

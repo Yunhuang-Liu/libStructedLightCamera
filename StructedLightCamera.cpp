@@ -1,14 +1,18 @@
 #include <StructedLightCamera.h>
 
-StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, AlgorithmType algorithmType_, AcceleratedMethod acceleratedMethod_, const RestructorType::RestructParamater params, const cv::Mat& leftRefImg, const cv::Mat& rightRefImg) :
+StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, const AlgorithmType algorithmType_, const AcceleratedMethod acceleratedMethod_, const SLCameraSet cameraSet, const RestructorType::RestructParamater params, const cv::Mat& leftRefImg, const cv::Mat& rightRefImg) :
     restructor(nullptr),phaseSolverLeft(nullptr),phaseSolverRight(nullptr),camera(nullptr),calibrationInfo(infoCalibraion),
     algorithmType(algorithmType_),acceleratedMethod(acceleratedMethod_){
-    camera = new CameraControl(DLPC34XX_ControllerDeviceId_e::DLPC34XX_CDI_DLPC3478);
+    int grayCaptureImgNum;
+    int colorCaptureImgNum;
+    int trigNum;
     switch (algorithmType) {
         case AlgorithmType::ThreeStepFiveGrayCode : {
             phaseSolverLeft = new PhaseSolverType::ThreeStepFiveGrayCodeMaster_CPU();
             phaseSolverRight = new PhaseSolverType::ThreeStepFiveGrayCodeMaster_CPU();
-            camera->setCaptureImgsNum(8,1);
+            grayCaptureImgNum = 8;
+            colorCaptureImgNum = 1;
+            trigNum = 8;
             break;
         }
         case AlgorithmType::FourStepSixGrayCode : {
@@ -22,24 +26,35 @@ StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, AlgorithmTy
                 phaseSolverRight = new PhaseSolverType::FourStepSixGrayCodeMaster_GPU(params.block);
             }
             #endif
-            camera->setCaptureImgsNum(10,1);
+            grayCaptureImgNum = 10;
+            colorCaptureImgNum = 1;
+            trigNum = 10;
             break;
         }
         #ifdef CUDA
         case AlgorithmType::DevidedSpaceTimeMulUsed : {
             phaseSolverLeft = new PhaseSolverType::DividedSpaceTimeMulUsedMaster_GPU(leftRefImg,params.block);
             phaseSolverRight = new PhaseSolverType::DividedSpaceTimeMulUsedMaster_GPU(rightRefImg,params.block);
-            camera->setCaptureImgsNum(16,4);
+            grayCaptureImgNum = 16;
+            colorCaptureImgNum = 4;
+            trigNum = 16;
             break;
         }
         case AlgorithmType::ShiftGrayCodeTimeMulUsed : {
             phaseSolverLeft = new PhaseSolverType::ShiftGrayCodeUnwrapMaster_GPU(params.block);
             phaseSolverRight = new PhaseSolverType::ShiftGrayCodeUnwrapMaster_GPU(params.block);
-            camera->setCaptureImgsNum(10,3);
+            grayCaptureImgNum = 16;
+            colorCaptureImgNum = 4;
+            trigNum = 16;
             break;
         }
         #endif
     }
+    if (cameraSet.chipCore == DLP3010)
+        camera = new CameraControl(DLPC34XX_ControllerDeviceId_e::DLPC34XX_CDI_DLPC3478, cameraSet.cameraSet);
+    else
+        camera = new CameraControl(trigNum, cameraSet.cameraSet);
+    camera->setCaptureImgsNum(grayCaptureImgNum, colorCaptureImgNum);
     switch (acceleratedMethod){
         case AcceleratedMethod::CPU : {
             restructor = new RestructorType::Restructor_CPU(calibrationInfo, params.minDisparity, params.maxDisparity,
@@ -104,11 +119,11 @@ void StructedLightCamera::getOneFrame(std::vector<cv::cuda::GpuMat>& depthImg, s
     colorImg.resize(imgNums);
     for (int i = 0; i < imgNums; i++) {
         stream_Restructor[i] = cv::cuda::Stream(cudaStreamNonBlocking);
-        restructor->restruction(unwrapRec_dev_L[i], unwrapRec_dev_R[i], i, stream_Restructor[i], restructedFrame.colorImgs[i]);
+        restructor->restruction(unwrapRec_dev_L[i], unwrapRec_dev_R[i], i, stream_Restructor[i],true);
     }
     for (int i = 0; i < imgNums; i++) {
         stream_Restructor[i].waitForCompletion();
-        restructor->download(i, depthImg[i], colorImg[i]);
+        restructor->download(i, depthImg[i]);
     }
 }
 #endif
@@ -138,7 +153,7 @@ void StructedLightCamera::getOneFrame(std::vector<cv::Mat>& depthImg, std::vecto
     }
     depthImg.resize(1);
     colorImg.resize(1);
-    restructor->restruction(unwrapLeftImg, unwrapRightImg, depthImg[0], colorImg[0], restructedFrame.colorImgs[0]);
+    restructor->restruction(unwrapLeftImg, unwrapRightImg, depthImg[0],true);
 }
 
 void StructedLightCamera::setExposureTime(const int grayExposureTime, const int colorExposureTime) {

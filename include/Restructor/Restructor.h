@@ -64,14 +64,14 @@ namespace RestructorType {
     #ifdef CUDA
     namespace cudaFunc {
         //深度和纹理映射，CUDA主机端调用函数,使用专用彩色相机捕获纹理（进行纹理映射）
-        void depthColorMap(const cv::cuda::GpuMat& leftImg_, const cv::cuda::GpuMat& rightImg_, const cv::cuda::GpuMat& colorImg_, const int rows, const int cols,
+        void depthColorMap(const cv::cuda::GpuMat& leftImg_, const cv::cuda::GpuMat& rightImg_, const int rows, const int cols,
                            const int minDisparity, const int maxDisparity, const float minDepth, const float maxDepth, const Eigen::Matrix4f& Q,
                            const Eigen::Matrix3f& M3, const Eigen::Matrix3f& R, const Eigen::Vector3f& T, const Eigen::Matrix3f& R1_inv,
-                           cv::cuda::GpuMat& depthMap, cv::cuda::GpuMat& mapColor, const dim3 block, cv::cuda::Stream& cvStream);
+                           cv::cuda::GpuMat& depthMap, const dim3 block, cv::cuda::Stream& cvStream);
         //深度映射，CUDA主机端调用函数，不进行纹理映射
         void depthMap(const cv::cuda::GpuMat& leftImg_, const cv::cuda::GpuMat& rightImg_, const int rows, const int cols,
             const int minDisparity, const int maxDisparity, const float minDepth, const float maxDepth, const Eigen::Matrix4f& Q,
-            const Eigen::Matrix3f& R1_inv, cv::cuda::GpuMat& depthMap, const dim3 block, cv::cuda::Stream& cvStream);
+            const Eigen::Matrix3f& M1, const Eigen::Matrix3f& R1_inv, cv::cuda::GpuMat& depthMap, const dim3 block, cv::cuda::Stream& cvStream);
     }
     #endif
     /** \brief 重建器 */
@@ -83,21 +83,18 @@ namespace RestructorType {
              * @brief 重建
              * @param leftAbsImg 输入，左绝对相位
              * @param rightAbsImg 输入，右绝对相位
-             * @param colorImg 输入，原始彩色纹理
              * @param depthImgOut 输入/输出，深度图
-             * @param colorImgOut 输入/输出，纹理图
              */
-            virtual void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const cv::Mat& colorImg = cv::Mat(1,1,CV_8UC3), cv::Mat& colorImgOut = cv::Mat(1,1,CV_8UC3)) = 0;
+            virtual void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const bool isColor = false) = 0;
             #ifdef CUDA
             /**
-             * @brief 获取深度和纹理图
+             * @brief 获取深度图
              * @param index 输入，图片索引
              * @param depthImg 输入，深度图
-             * @param colorImg 输入，纹理图
              */
-            virtual void download(const int index, cv::cuda::GpuMat& depthImg, cv::cuda::GpuMat& colorImg = cv::cuda::GpuMat(1,1,CV_8UC3)) = 0;
+            virtual void download(const int index, cv::cuda::GpuMat& depthImg) = 0;
             /**
-             * @brief 重建
+             * @brief 重建,仅获取深度图的状态下将不会进行逆极线校正
              * @param leftAbsImg 输入，左绝对相位
              * @param rightAbsImg 输入，右绝对相位
              * @param colorImg 输入，原始纹理
@@ -105,7 +102,7 @@ namespace RestructorType {
              * @param stream 输入，异步流
              */
             virtual void restruction(const cv::cuda::GpuMat& leftAbsImg, const cv::cuda::GpuMat& rightAbsImg, 
-                                     const int sysIndex, cv::cuda::Stream& stream, const cv::Mat& colorImg = cv::Mat(1,1,CV_8UC3)) = 0;
+                                     const int sysIndex, cv::cuda::Stream& stream, const bool isColor = false) = 0;
             #endif
         protected:
             /**

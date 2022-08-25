@@ -39,9 +39,9 @@ find_library(
 set(StructedLightCamera_INCLUDE_DIRS ${StructedLightCamera_INCLUDE_DIR})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(StructedLightCamera_LIBRARIES ${StructedLightCamera_LIBRARY_Debug} ${DAHUASDK_DIR} ${TISDK_DIR})
+    set(StructedLightCamera_LIBRARIES ${StructedLightCamera_LIBRARY_Debug} ${DAHUASDK_DIR} ${TISDK_DIR} setupapi)
 else()
-    set(StructedLightCamera_LIBRARIES ${StructedLightCamera_LIBRARY_Release} ${DAHUASDK_DIR} ${TISDK_DIR})
+    set(StructedLightCamera_LIBRARIES ${StructedLightCamera_LIBRARY_Release} ${DAHUASDK_DIR} ${TISDK_DIR} setupapi)
 endif()
 
 include(FindPackageHandleStandardArgs)

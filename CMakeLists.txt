@@ -52,7 +52,8 @@ if(CUDA_FOUND)
        cyusbserial
        setupapi
        )
-    #]]
+    ]]
+   
    CUDA_COMPILE(CUDA_OBJS ${GPUHeader} ${GPUSource})
    set(CMAKE_DEBUG_POSTFIX "d")
    add_library(libStructedLightCamera SHARED  ${CPUSource} ${GPUSource} ${CUDA_OBJS} ${CPUHeader} ${GPUHeader})
@@ -75,7 +76,7 @@ if(CUDA_FOUND)
    # 使动态库和静态库同时存在
    set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
    set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./StructedLightCamera.h)
-    target_link_libraries(
+   target_link_libraries(
        libStructedLightCameraStatic
        ${OpenCV_LIBRARIES}
        ${CUDA_LIBRARIES}
@@ -118,7 +119,6 @@ else()
         )
 endif()
 
-
 install(
     TARGETS 
     ${PROJECT_NAME}
@@ -128,8 +128,8 @@ install(
     PUBLIC_HEADER DESTINATION include
     )
 
-#[[Install include file]]
 
+#[[Install include file]]
 file(GLOB CameraControl ./include/CameraControl/*.h)
 file(GLOB CameraControl_CameraSDK ./include/CameraControl/CameraSDK/*.h)
 file(GLOB CameraControl_CameraUtility ./include/CameraControl/CameraUtility/*.h)

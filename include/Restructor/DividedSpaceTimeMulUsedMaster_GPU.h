@@ -116,37 +116,37 @@ namespace PhaseSolverType {
         cv::cuda::GpuMat wrapImg4_3_device;
         /** \参考平面绝对相位 **/
         const cv::cuda::GpuMat refImgWhite_device;
-        /** \第一帧图像:Phase **/
+        /** \第一帧图像:GrayCode **/
         cv::cuda::GpuMat img1_1_device;
         /** \第一帧图像:Phase **/
         cv::cuda::GpuMat img1_2_device;
         /** \第一帧图像:Phase **/
         cv::cuda::GpuMat img1_3_device;
-        /** \第一帧图像:GrayCode **/
+        /** \第一帧图像:Phase**/
         cv::cuda::GpuMat img1_4_device;
-        /** \第二帧图像:Phase **/
+        /** \第二帧图像:GrayCode **/
         cv::cuda::GpuMat img2_1_device;
         /** \第二帧图像:Phase **/
         cv::cuda::GpuMat img2_2_device;
         /** \第二帧图像:Phase **/
         cv::cuda::GpuMat img2_3_device;
-        /** \第二帧图像:GrayCode **/
+        /** \第二帧图像:Phase **/
         cv::cuda::GpuMat img2_4_device;
-        /** \第三帧图像:Phase **/
+        /** \第三帧图像:GrayCode **/
         cv::cuda::GpuMat img3_1_device;
         /** \第三帧图像:Phase **/
         cv::cuda::GpuMat img3_2_device;
         /** \第三帧图像:Phase **/
         cv::cuda::GpuMat img3_3_device;
-        /** \第三帧图像:GrayCode **/
+        /** \第三帧图像:Phase **/
         cv::cuda::GpuMat img3_4_device;
-        /** \第四帧图像:Phase **/
+        /** \第四帧图像:GrayCode **/
         cv::cuda::GpuMat img4_1_device;
         /** \第四帧图像:Phase **/
         cv::cuda::GpuMat img4_2_device;
         /** \第四帧图像:Phase **/
         cv::cuda::GpuMat img4_3_device;
-        /** \第四帧图像:GrayCode **/
+        /** \第四帧图像:Phase **/
         cv::cuda::GpuMat img4_4_device;
         /** \第一帧绝对相位 **/
         cv::cuda::GpuMat unwrapImg_1_device;

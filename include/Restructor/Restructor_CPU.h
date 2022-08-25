@@ -37,11 +37,9 @@ namespace RestructorType {
              * @brief 重建
              * @param leftAbsImg 输入，左绝对相位
              * @param rightAbsImg 输入，右绝对相位
-             * @param colorImg 输入，原始彩色纹理
              * @param depthImgOut 输入/输出，深度图
-             * @param colorImgOut 输入/输出，纹理图
              */
-            void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const cv::Mat& colorImg = cv::Mat(1, 1, CV_8UC3), cv::Mat& colorImgOut = cv::Mat(1, 1, CV_8UC3)) override;
+            void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const bool isColor = false) override;
         protected:
             /**
              * @brief 映射深度纹理
@@ -51,30 +49,32 @@ namespace RestructorType {
              * @param depthImgOut 输入/输出 深度图
              * @param colorImgOut 输入/输出 纹理图
              */
-            void getDepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, const cv::Mat& colorImg,
-                                  cv::Mat& depthImgOut, cv::Mat& colorImgOut);
+            void getDepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg,
+                                  cv::Mat& depthImgOut, const bool isColor = false);
         private:
             #ifdef CUDA
             //GPU端函数
-            void download(const int index, cv::cuda::GpuMat& depthImg, cv::cuda::GpuMat& colorImg = cv::cuda::GpuMat(1, 1, CV_8UC3)) {};
+            void download(const int index, cv::cuda::GpuMat& depthImg) {};
             void restruction(const cv::cuda::GpuMat& leftAbsImg, const cv::cuda::GpuMat& rightAbsImg,
-                const int sysIndex, cv::cuda::Stream& stream, const cv::Mat& colorImg = cv::Mat(1, 1, CV_8UC3)) override {}
+                const int sysIndex, cv::cuda::Stream& stream, const bool isColor = false) override {}
             #endif
+            /** \存储线程锁 **/
+            std::mutex mutexMap;
             /** \标定信息 **/
             const Info& calibrationInfo;
             /** \使用线程数 **/
             const int threads;
             /** \最小视差值 **/
-            const int minDisparity;
+            int minDisparity;
+            /** \最大视差值 **/
+            int maxDisparity;
             /** \最小深度 **/
             const float minDepth;
             /** \最大深度 **/
             const float maxDepth;
-            /** \最大视差值 **/
-            const int maxDisparity;
             /** \重投影直接获取点云(多线程入口函数) **/
-            void thread_DepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& righAbstImg,const cv::Mat& colorImg,
-                                       cv::Mat& depthImgOut, cv::Mat& colorImgOut, const cv::Point2i region);
+            void thread_DepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& righAbstImg,
+                                       cv::Mat& depthImgOut, const cv::Point2i region, const bool isColor = false);
     };
 }
 #endif // !Restructor_CPU_H

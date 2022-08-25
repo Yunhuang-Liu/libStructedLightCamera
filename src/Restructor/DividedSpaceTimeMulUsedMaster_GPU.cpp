@@ -52,10 +52,10 @@ namespace PhaseSolverType {
     }
 
     void DividedSpaceTimeMulUsedMaster_GPU::getWrapPhaseImg(cv::cuda::Stream& stream) {
-        PhaseSolverType::cudaFunc::solvePhasePrepare_DevidedSpace(img1_1_device, img1_2_device, img1_3_device, img1_4_device,
-            img2_1_device, img2_2_device, img2_3_device, img2_4_device,
-            img3_1_device, img3_2_device, img3_3_device, img3_4_device,
-            img4_1_device, img4_2_device, img4_3_device, img4_4_device,
+        PhaseSolverType::cudaFunc::solvePhasePrepare_DevidedSpace(img1_4_device, img1_2_device, img1_3_device, img1_1_device,
+            img2_4_device, img2_2_device, img2_3_device, img2_1_device,
+            img3_4_device, img3_2_device, img3_3_device, img3_1_device,
+            img4_4_device, img4_2_device, img4_3_device, img4_1_device,
             rows, cols,
             wrapImg1_1_device, wrapImg1_2_device, wrapImg1_3_device, conditionImg_1_device,
             wrapImg2_1_device, wrapImg2_2_device, wrapImg2_3_device, conditionImg_2_device,

@@ -19,6 +19,7 @@ MatrixsInfo::MatrixsInfo(std::string intrinsicDir,std::string extrinsicDir)
     readYml["Q"] >> myInfo.Q;
     readYml["R"] >> myInfo.R;
     readYml["T"] >> myInfo.T;
+    readYml["S"] >> myInfo.S;
     readYml.release();
 }
 

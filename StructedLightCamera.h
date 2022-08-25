@@ -23,6 +23,7 @@
 #include "./Restructor/FourStepSixGrayCodeMaster_GPU.h"
 #include "./Restructor/DividedSpaceTimeMulUsedMaster_GPU.h"
 #include "./Restructor/ShiftGrayCodeUnwrapMaster_GPU.h"
+#include "./Restructor/FourFloorFouStepMaster_GPU.h"
 #endif
 
 class StructedLightCamera{
@@ -39,16 +40,29 @@ public:
         CPU = 0,
         GPU = 1
     };
+    /** \结构光相机配置 **/
+    enum ChipControlCore {
+        DLP3010 = 0,
+        DLP6500 = 1,
+    };
+    struct SLCameraSet{
+        SLCameraSet() : chipCore(ChipControlCore::DLP3010), cameraSet(CameraControl::CameraUsedState::LeftGrayRightGrayExColor){}
+        SLCameraSet(ChipControlCore chipCore_, CameraControl::CameraUsedState cameraSet_) : chipCore(chipCore_), cameraSet(cameraSet) {}
+        ChipControlCore chipCore;   //芯片类型
+        CameraControl::CameraUsedState cameraSet;   //相机设置
+    };
     /**
      * @brief 构造函数
      * @param infoCalibraion 输入，标定信息
      * @param algorithmType 输入，算法类型
      * @param acceleratedMethod 输入，加速方法
+     * @param cameraSet 输入，相机设置，应当注意的是本类只接收第三相机作为彩色纹理相机
      * @param params 输入，重建器控制参数
      * @param leftRefImg 输入，左参考绝对相位
      * @param rightRefImg 输入，右参考绝对相位
      */
-    StructedLightCamera(const Info& infoCalibraion, AlgorithmType algorithmType = AlgorithmType::ShiftGrayCodeTimeMulUsed, AcceleratedMethod acceleratedMethod = AcceleratedMethod::CPU, const RestructorType::RestructParamater params = RestructorType::RestructParamater(),
+    StructedLightCamera(const Info& infoCalibraion, const AlgorithmType algorithmType = AlgorithmType::ShiftGrayCodeTimeMulUsed, const AcceleratedMethod acceleratedMethod = AcceleratedMethod::CPU,const SLCameraSet cameraSet = SLCameraSet(),
+                        const RestructorType::RestructParamater params = RestructorType::RestructParamater(),
                         const cv::Mat& leftRefImg = cv::Mat(0,0,CV_32FC1), const cv::Mat& rightRefImg = cv::Mat(0,0,CV_32FC1));
     /**
      * @brief 获取深度纹理图

@@ -11,12 +11,17 @@
 #ifndef CUDA_TYPE_DEFINE_H
 #define CUDA_TYPE_DEFINE_H
 
-#include <cuda_runtime.h>
+#ifndef CUDACC
+#define CUDACC
+#endif
+
+#include <cuda_runtime_api.h>
+#include <cuda.h>
+#include <device_functions.h>
 #include <device_launch_parameters.h>
 #include <opencv2/core/cuda_stream_accessor.hpp>
 #include <cuda/std/functional>
 #include <cuda/std/cmath>
-#include <device_functions.h>
 #include <Eigen/Core>
 #include <opencv2/core/eigen.hpp>
 #include <opencv2/opencv.hpp>
@@ -25,5 +30,7 @@
 #include <opencv2/cudaarithm.hpp>
 #include <opencv2/cudalegacy.hpp>
 #include <opencv2/cudawarping.hpp>
+#include <opencv2/cudafilters.hpp>
+#include <vector_functions.h>
 
 #endif

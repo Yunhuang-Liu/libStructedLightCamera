@@ -45,10 +45,12 @@ struct Info
     cv::Mat R;
     /** \左相机至彩色相机平移矩阵 **/
     cv::Mat T;
-    /** \Base 2 Camera R**/
+    /** \Base 2 Camera R **/
     cv::Mat RW2C;
-    /** \Base 2 Camera T**/
+    /** \Base 2 Camera T **/
     cv::Mat TW2C;
+    /** \相机幅面 **/
+    cv::Mat S;
 };
 
 /** @brief 相机标定信息类    */

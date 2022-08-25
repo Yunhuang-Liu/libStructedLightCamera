@@ -79,11 +79,14 @@ ProjectorControl::ProjectorControl(const int numLutEntries): isDLPC900(true){
     if (USB_IsConnected() == false) {
         USB_Open();
     }
+    /*
     if (LCR_SetPowerMode(0) < 0)
         std::cout << "DLPC900 Error:Unable to power on the board" << std::endl;
     if (LCR_SetMode(0x1) < 0)
         std::cout << "DLPC900 Error:Unable to switch to pattern mode" << std::endl;
+    */
     LCR_SetPatternConfig(numLutEntries, numLutEntries);
+    LCR_SetLedCurrents(255, 255, 255);
 }
 
 void ProjectorControl::projecteOnce(){
