@@ -7,11 +7,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX C:/Users/LiuYunhuang/Desktop/softWare/WindowsVCLib/libStructedLightCamera)
 
 file(GLOB_RECURSE CPUHeader ./StructedLightCamera.h ./include/*CPU.h ./include/CameraControl/*.h
-    ./include/MatrixsInfo.h ./include/PhaseSolver.h ./include/Restructor.h)
+    ./include/WrapCreator.h ./include/MatrixsInfo.h ./include/PhaseSolver.h ./include/Restructor.h)
 file(GLOB_RECURSE GPUHeader ./include/*GPU.h ./include/*.cuh)
 file(GLOB MAIN ./Example.cpp)
 file(GLOB_RECURSE CPUSource ./StructedLightCamera.cpp ./src/*CPU.cpp ./src/*.c
-    ./src/CameraControl/*.cpp ./src/MatrixsInfo.cpp ./src/PhaseSolver.cpp ./src/Restructor.cpp)
+    ./src/CameraControl/*.cpp ./src/MatrixsInfo.cpp ./src/PhaseSolver.cpp ./src/Restructor.cpp
+    ./src/WrapRestructor_CPU.cpp)
 file(GLOB_RECURSE GPUSource ./src/*.cu ./src/*GPU.cpp)
 source_group("CPUHeader" FILES ${CPUHeader})
 source_group("GPUHeader" FILES ${GPUHeader})
@@ -35,7 +36,7 @@ find_package(CUDA)
 if(CUDA_FOUND)
    add_definitions(-DCUDA)
    include_directories(${CUDA_INCLUDE_DIRS})
-   #[[
+    #[[
    cuda_add_executable(
        ${PROJECT_NAME}
        ${MAIN}
@@ -53,7 +54,6 @@ if(CUDA_FOUND)
        setupapi
        )
     ]]
-   
    CUDA_COMPILE(CUDA_OBJS ${GPUHeader} ${GPUSource})
    set(CMAKE_DEBUG_POSTFIX "d")
    add_library(libStructedLightCamera SHARED  ${CPUSource} ${GPUSource} ${CUDA_OBJS} ${CPUHeader} ${GPUHeader})
@@ -117,7 +117,9 @@ else()
         cyusbserial
         setupapi
         )
+        
 endif()
+
 
 install(
     TARGETS 
@@ -128,8 +130,6 @@ install(
     PUBLIC_HEADER DESTINATION include
     )
 
-
-#[[Install include file]]
 file(GLOB CameraControl ./include/CameraControl/*.h)
 file(GLOB CameraControl_CameraSDK ./include/CameraControl/CameraSDK/*.h)
 file(GLOB CameraControl_CameraUtility ./include/CameraControl/CameraUtility/*.h)
@@ -202,3 +202,4 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_PREFIX}
 )
+
