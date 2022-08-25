@@ -15,6 +15,7 @@ int main(){
     std::vector<cv::cuda::GpuMat> colorImgs;
     camera->getOneFrame(depthImgs, colorImgs);
     */
+    
     cv::cuda::setDevice(0);
     CameraControl* camera = new CameraControl(8, CameraControl::CameraUsedState::LeftColorRightGray);
     camera->setCameraExposure(2000, 2000);

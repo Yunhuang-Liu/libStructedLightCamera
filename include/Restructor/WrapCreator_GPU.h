@@ -16,7 +16,7 @@
 
 namespace WrapCreat{
     //GPU加速包裹求解器
-    class WrapCreator_GPU : protected WraperCreator{
+    class WrapCreator_GPU : public WrapCreator{
         public:
             WrapCreator_GPU();
             ~WrapCreator_GPU();

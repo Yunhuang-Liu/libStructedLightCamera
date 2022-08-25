@@ -9,34 +9,38 @@
  * 
  */
 
+#ifndef WraperCreator_H
+#define WraperCreator_H
+
 #include <opencv2/opencv.hpp>
 #ifdef CUDA
     #include <cuda_runtime.h>
 #endif
 
 namespace WrapCreat{
-    namespace cudaFunc{
-        void getWrapImgSync(const std::vector<cv::cuda::GpuMat>& imgs, cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& conditionImg,const cv::cuda::Stream& cvStream, const dim3 block);
-        void getWrapImg(const std::vector<cv::cuda::GpuMat>& imgs, cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& conditionImg, const dim3 block);
-    }
-
-    //包裹求解器参数
-    struct WrapParameter
-    {
-       WrapParameter() : threads(16){}
-       WrapParameter(const int threads_) : threads(threads_){} 
-       int threads;
-        #ifdef CUDA
-            WrapParameter(const dim3 block_) : block(block_){}
-            dim3 block;
-        #endif
-    };
-    
+    #ifdef CUDA
+        namespace cudaFunc{
+            void getWrapImgSync(const std::vector<cv::cuda::GpuMat>& imgs, cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& conditionImg,const cv::cuda::Stream& cvStream, const dim3 block);
+            void getWrapImg(const std::vector<cv::cuda::GpuMat>& imgs, cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& conditionImg, const dim3 block);
+        }
+    #endif
     //包裹求解器
-    class WraperCreator{
+    class WrapCreator{
         public:
-            WraperCreator(){}
-            virtual ~WraperCreator(){}
+            //包裹求解器参数
+            struct WrapParameter
+            {
+                WrapParameter() : threads(16) {}
+                WrapParameter(const int threads_) : threads(threads_) {}
+                int threads;
+                #ifdef CUDA
+                    WrapParameter(const dim3 block_) : block(block_) {}
+                    dim3 block;
+                #endif
+            };
+
+            WrapCreator(){}
+            virtual ~WrapCreator(){}
             virtual void getWrapImg(const std::vector<cv::Mat>& imgs, cv::Mat& wrapImg, cv::Mat& conditionImg, const WrapParameter parameter = WrapParameter()) = 0;
             #ifdef CUDA
                 virtual void getWrapImg(const std::vector<cv::Mat>& imgs, cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& conditionImg, const cv::cuda::Stream& cvStream, const WrapParameter parameter = WrapParameter()) = 0;
@@ -45,3 +49,5 @@ namespace WrapCreat{
         private:
     };
 }
+
+#endif // !WrapCreator_H

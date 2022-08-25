@@ -14,7 +14,7 @@ namespace WrapCreat{
         const int cols = imgs[0].cols; 
 
         //This maybe not safe,yet cv::Mat is a count pointer,so that it will works safe.
-        std::vector<cv::cuda::GpuMat> imgs_device;
+        std::vector<cv::cuda::GpuMat> imgs_device(imgs.size());
         for(int i=0;i<imgs.size();i++)
             imgs_device[i].upload(imgs[i]);
 

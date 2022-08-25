@@ -1,15 +1,15 @@
 #include "../../include/Restructor/WrapCreator_CPU.h"
 
 namespace WrapCreat{
-    WraperCreator_CPU::WraperCreator_CPU(){
+    WrapCreator_CPU::WrapCreator_CPU(){
 
     }
 
-    WraperCreator_CPU::~WraperCreator_CPU(){
+    WrapCreator_CPU::~WrapCreator_CPU(){
 
     }
 
-    void WraperCreator_CPU::getWrapImg(const std::vector<cv::Mat>& imgs, cv::Mat& wrapImg, cv::Mat& conditionImg, const WrapParameter parameter){
+    void WrapCreator_CPU::getWrapImg(const std::vector<cv::Mat>& imgs, cv::Mat& wrapImg, cv::Mat& conditionImg, const WrapParameter parameter){
         if(imgs[0].empty()){
             std::cout << "img is invalid" << std::endl;
             return;
@@ -21,10 +21,10 @@ namespace WrapCreat{
         const int threadsUsed = parameter.threads;
 
         std::vector<cv::Mat> copyImg(numImg);
-        std::vector<std::thread> threadsConvertImg(threadsUsed);
-        for(int i=0;i<threadsUsed;i++){
+        std::vector<std::thread> threadsConvertImg(numImg);
+        for(int i=0;i< numImg;i++){
             threadsConvertImg[i] = std::thread([&,i]{
-                if(imgs[i].channels() == 3){
+                if(CV_8UC3 == imgs[i].type()){
                     cv::cvtColor(imgs[i],copyImg[i],cv::COLOR_BGR2GRAY);
                     copyImg[i].convertTo(copyImg[i],CV_32FC1);
                 }
@@ -45,10 +45,9 @@ namespace WrapCreat{
         const int blockRows = wrapImg.rows / threadsUsed;
         for(int i=0;i<threadsUsed;i++){
             if(imgs.size() == 3)
-                threads[i] = std::thread(&WraperCreator_CPU::thread_ThreeStepWrap, this, std::ref(copyImg), std::ref(wrapImg), std::ref(conditionImg), cv::Size(cols, blockRows * i));
-            if(imgs.size() == 4)
-                threads[i] = std::thread(&WraperCreator_CPU::thread_FourStepWrap, this, std::ref(copyImg), std::ref(wrapImg), std::ref(conditionImg), cv::Size(cols, blockRows * i));
-
+                threads[i] = std::thread(&WrapCreat::WrapCreator_CPU::thread_ThreeStepWrap, this, std::ref(copyImg), std::ref(wrapImg), std::ref(conditionImg), cv::Size(cols, blockRows * (i + 1)));
+            else if(imgs.size() == 4)
+                threads[i] = std::thread(&WrapCreat::WrapCreator_CPU::thread_FourStepWrap, this, std::ref(copyImg), std::ref(wrapImg), std::ref(conditionImg), cv::Size(cols, blockRows * (i + 1)));
             else
                 std::cout << "The " << numImg <<" step is not support in current!" << std::endl;
         }
@@ -59,7 +58,7 @@ namespace WrapCreat{
         }
     }
 
-    void WraperCreator_CPU::thread_ThreeStepWrap(const std::vector<cv::Mat>& imgs,cv::Mat& wrapImg, cv::Mat& conditionImg, const cv::Size region){
+    void WrapCreator_CPU::thread_ThreeStepWrap(const std::vector<cv::Mat>& imgs,cv::Mat& wrapImg, cv::Mat& conditionImg, const cv::Size region){
         if(wrapImg.type() != CV_32FC1){
             std::cout << "WRAP ERROR: This avx accelerate algorith is only support for CV_32FC1 image!" << std::endl;
             return;
@@ -97,7 +96,7 @@ namespace WrapCreat{
         }
     }
 
-    void WraperCreator_CPU::thread_FourStepWrap(const std::vector<cv::Mat>& imgs,cv::Mat& wrapImg, cv::Mat& conditionImg, const cv::Size region){
+    void WrapCreator_CPU::thread_FourStepWrap(const std::vector<cv::Mat>& imgs,cv::Mat& wrapImg, cv::Mat& conditionImg, const cv::Size region){
         if(wrapImg.type() != CV_32FC1){
             std::cout << "WRAP ERROR: This avx accelerate algorith is only support for CV_32FC1 image!" << std::endl;
             return;

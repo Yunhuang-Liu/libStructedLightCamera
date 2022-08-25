@@ -17,6 +17,7 @@
 #include "./Restructor/FourStepSixGrayCodeMaster_CPU.h"
 #include "./Restructor/ThreeStepFiveGrayCodeMaster_CPU.h"
 #include "./Restructor/Restructor_CPU.h"
+#include "./Restructor/WrapCreator_CPU.h"
 
 #ifdef CUDA
 #include "./Restructor/Restructor_GPU.h"
@@ -24,6 +25,7 @@
 #include "./Restructor/DividedSpaceTimeMulUsedMaster_GPU.h"
 #include "./Restructor/ShiftGrayCodeUnwrapMaster_GPU.h"
 #include "./Restructor/FourFloorFouStepMaster_GPU.h"
+#include "./Restructor/WrapCreator_GPU.h"
 #endif
 
 class StructedLightCamera{

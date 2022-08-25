@@ -36,7 +36,7 @@ find_package(CUDA)
 if(CUDA_FOUND)
    add_definitions(-DCUDA)
    include_directories(${CUDA_INCLUDE_DIRS})
-    #[[
+   #[[
    cuda_add_executable(
        ${PROJECT_NAME}
        ${MAIN}
@@ -117,9 +117,8 @@ else()
         cyusbserial
         setupapi
         )
-        
+       
 endif()
-
 
 install(
     TARGETS 
@@ -202,4 +201,3 @@ install(
     DESTINATION
     ${CMAKE_INSTALL_PREFIX}
 )
-

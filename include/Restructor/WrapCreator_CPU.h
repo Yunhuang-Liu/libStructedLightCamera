@@ -18,10 +18,10 @@
 
 namespace WrapCreat{
     //CPU加速包裹相位求解器
-    class WraperCreator_CPU : protected WraperCreator{
+    class WrapCreator_CPU : public WrapCreator{
         public:
-            WraperCreator_CPU();
-            ~WraperCreator_CPU();
+            WrapCreator_CPU();
+            ~WrapCreator_CPU();
             /**
              * @brief                   获取包裹相位
              * 
