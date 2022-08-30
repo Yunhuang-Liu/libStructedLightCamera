@@ -1,10 +1,10 @@
-#include <Restructor/PhaseSolver.h>
+#include "Restructor/PhaseSolver.h"
 
-PhaseSolverType::PhaseSolver::PhaseSolver(){
+PhaseSolverType::PhaseSolver::PhaseSolver() {
 
 }
 
-PhaseSolverType::PhaseSolver::~PhaseSolver(){
+PhaseSolverType::PhaseSolver::~PhaseSolver() {
     
 }
 

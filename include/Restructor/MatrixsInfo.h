@@ -8,15 +8,16 @@
  * @copyright Copyright (c) 2021
  * 
  */
-#ifndef MatrixInfo_H
-#define MatrixInfo_H
+#ifndef RESTRUCTOR_MATRIXINFO_H
+#define RESTRUCTOR_MATRIXINFO_H
 
-#include<opencv2/opencv.hpp>
 #include<string>
 
+#include<opencv2/opencv.hpp>
+
+
 /** @brief 信息结构体    */
-struct Info
-{
+struct Info{
     /** \左相机内参矩阵 **/
     cv::Mat M1;  
     /** \右相机内参矩阵 **/
@@ -54,8 +55,7 @@ struct Info
 };
 
 /** @brief 相机标定信息类    */
-class MatrixsInfo
-{
+class MatrixsInfo{
 public: 
     /**
      * @brief 类的初始化，完成内外参数信息的导入
@@ -81,4 +81,4 @@ private:
     Info myInfo;
 };
 
-#endif // !MatrixInfo_H
+#endif // RESTRUCTOR_MATRIXINFO_H

@@ -1,104 +1,122 @@
 /**
  * @file Restruction_GPU_Divided_Time.cuh
  * @author Liu Yunhuang(1369215984@qq.com)
- * @brief  GPUÖØ½¨Æ÷
+ * @brief  GPUé‡å»ºå™¨
  * @version 0.1
  * @date 2021-12-10
  *
  * @copyright Copyright (c) 2021
  *
  */
-#ifndef Restruction_GPU_H
-#define Restruction_GPU_H
-#include "Restructor.h"
-#include "MatrixsInfo.h"
+#ifndef RESTRUCTOR_RESTRUCTOR_GPU_H
+#define RESTRUCTOR_RESTRUCTOR_GPU_H
+
+#include "Restructor/Restructor.h"
+#include "Restructor/MatrixsInfo.h"
+
 #include <limits>
-#include <device_launch_parameters.h>
-#include <cuda_runtime.h>
+
 #include <Eigen/Core>
 #include <opencv2/core/eigen.hpp>
+#include <device_launch_parameters.h>
+#include <cuda_runtime.h>
 
 namespace RestructorType {
-    class Restructor_GPU : public Restructor {
-    public:
-        /**
-         * @brief ¹¹Ôìº¯Êı
-         * @param calibrationInfo ÊäÈë£¬±ê¶¨ĞÅÏ¢
-         * @param minDisparity ÊäÈë£¬×îĞ¡ÊÓ²î
-         * @param maxDisparity ÊäÈë£¬×î´óÊÓ²î
-         * @param minDepth ÊäÈë£¬×îĞ¡Éî¶ÈÖµ
-         * @param maxDepth ÊäÈë£¬×î´óÉî¶ÈÖµ
-         * @param block ÊäÈë£¬Block³ß´ç
-         */
-        Restructor_GPU(const Info& calibrationInfo, const int minDisparity = -500, const int maxDisparity = 500,
-                       const float minDepth = 170, const float maxDepth = 220, const dim3 block = dim3(32, 8));
-        /**
-         * @brief Îö¹¹º¯Êı
-         */
-        ~Restructor_GPU();
-        /**
-         * @brief ÖØ½¨
-         * @param leftAbsImg ÊäÈë£¬×ó¾ø¶ÔÏàÎ»
-         * @param rightAbsImg ÊäÈë£¬ÓÒ¾ø¶ÔÏàÎ»
-         * @param sysIndex ÊäÈë£¬Í¼Æ¬Ë÷Òı
-         * @param stream ÊäÈë£¬Òì²½Á÷
-         * @param colorImg ÊäÈë£¬²ÊÉ«ÎÆÀí
-         */
-        void restruction(const cv::cuda::GpuMat& leftAbsImg, const cv::cuda::GpuMat& rightAbsImg,
-            const int sysIndex, cv::cuda::Stream& stream, const bool isColor = false) override;
-        /**
-         * @brief »ñÈ¡Éî¶ÈÎÆÀí
-         * @param index ÊäÈë£¬Í¼Æ¬Ë÷Òı
-         * @param depthImg ÊäÈë/Êä³ö£¬Éî¶ÈÍ¼
-         * @param colorImg ÊäÈë/Êä³ö£¬ÎÆÀíÍ¼
-         */
-        void download(const int index, cv::cuda::GpuMat& depthImg) override;
-    protected:
-        /**
-         * @brief Ó³ÉäÉî¶ÈÎÆÀí
-         * @param leftImg ÊäÈë£¬×ó¾ø¶ÔÏàÎ»
-         * @param rightImg ÊäÈë£¬ÓÒ¾ø¶ÔÏàÎ»
-         * @param depthImg ÊäÈë/Êä³ö£¬Éî¶ÈÍ¼
-         * @param pStream ÊäÈë£¬Òì²½Á÷
-         */
-        void getDepthColorMap(const cv::cuda::GpuMat& leftImg, const cv::cuda::GpuMat& rightImg, cv::cuda::GpuMat& depthImg, cv::cuda::Stream& pStream);
-        /**
-         * @brief Ó³ÉäÉî¶ÈÎÆÀí
-         * @param leftImg ÊäÈë£¬×ó¾ø¶ÔÏàÎ»
-         * @param rightImg ÊäÈë£¬ÓÒ¾ø¶ÔÏàÎ»
-         * @param depthImg ÊäÈë/Êä³ö£¬Éî¶ÈÍ¼
-         * @param pStream ÊäÈë£¬Òì²½Á÷
-         */
-        void getDepthMap(const cv::cuda::GpuMat& leftImg, const cv::cuda::GpuMat& rightImg, cv::cuda::GpuMat& depthImg, cv::cuda::Stream& pStream);
-    private:
-        //CPU¶Ëº¯Êı
-        void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut,const bool isColor = false) override{}
-        /** \Éî¶ÈÍ¼ **/
-        std::vector<cv::cuda::GpuMat> depthImg_device;
-        /** \±ê¶¨ĞÅÏ¢ **/
-        const Info& calibrationInfo;
-        /** \Éî¶ÈÓ³Éä¾ØÕó **/
-        Eigen::Matrix4f Q;
-        /** \Éî¶ÈÓ³Éä¾ØÕó **/
-        Eigen::Matrix3f R1_inv;
-        /** \»Ò¶ÈÏà»úµ½²ÊÉ«Ïà»úĞı×ª¾ØÕó **/
-        Eigen::Matrix3f R;
-        /** \»Ò¶ÈÏà»úµ½²ÊÉ«Ïà»úÎ»ÒÆ¾ØÕó **/
-        Eigen::Vector3f T;
-        /** \µãÔÆÏà»úÄÚ²Î¾ØÕó **/
-        Eigen::Matrix3f M1;
-        /** \²ÊÉ«Ïà»úÄÚ²Î¾ØÕó **/
-        Eigen::Matrix3f M3;
-        /** \×îĞ¡ÊÓ²îÖµ **/
-        int minDisparity;
-        /** \×î´óÊÓ²îÖµ **/
-        int maxDisparity;
-        /** \×îĞ¡Éî¶ÈÖµ **/
-        const float minDepth;
-        /** \×î´óÉî¶ÈÖµ **/
-        const float maxDepth;
-        /** \block³ß´ç **/
-        const dim3 block;
-    };
+class Restructor_GPU : public Restructor {
+public:
+    /**
+     * @brief æ„é€ å‡½æ•°
+     * @param calibrationInfo è¾“å…¥ï¼Œæ ‡å®šä¿¡æ¯
+     * @param minDisparity è¾“å…¥ï¼Œæœ€å°è§†å·®
+     * @param maxDisparity è¾“å…¥ï¼Œæœ€å¤§è§†å·®
+     * @param minDepth è¾“å…¥ï¼Œæœ€å°æ·±åº¦å€¼
+     * @param maxDepth è¾“å…¥ï¼Œæœ€å¤§æ·±åº¦å€¼
+     * @param block è¾“å…¥ï¼ŒBlockå°ºå¯¸
+     */
+    Restructor_GPU(const Info& calibrationInfo, const int minDisparity = -500, 
+        const int maxDisparity = 500,const float minDepth = 170, 
+        const float maxDepth = 220, const dim3 block = dim3(32, 8));
+    /**
+     * @brief ææ„å‡½æ•°
+     */
+    ~Restructor_GPU();
+    /**
+     * @brief é‡å»º
+     * @param leftAbsImg è¾“å…¥ï¼Œå·¦ç»å¯¹ç›¸ä½
+     * @param rightAbsImg è¾“å…¥ï¼Œå³ç»å¯¹ç›¸ä½
+     * @param sysIndex è¾“å…¥ï¼Œå›¾ç‰‡ç´¢å¼•
+     * @param stream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     * @param colorImg è¾“å…¥ï¼Œå½©è‰²çº¹ç†
+     */
+    void restruction(const cv::cuda::GpuMat& leftAbsImg, 
+        const cv::cuda::GpuMat& rightAbsImg,
+        const int sysIndex, 
+        cv::cuda::Stream& stream, 
+        const bool isColor = false) override;
+    /**
+     * @brief è·å–æ·±åº¦çº¹ç†
+     * @param index è¾“å…¥ï¼Œå›¾ç‰‡ç´¢å¼•
+     * @param depthImg è¾“å…¥/è¾“å‡ºï¼Œæ·±åº¦å›¾
+     * @param colorImg è¾“å…¥/è¾“å‡ºï¼Œçº¹ç†å›¾
+     */
+    void download(const int index, cv::cuda::GpuMat& depthImg) override;
+protected:
+    /**
+     * @brief æ˜ å°„æ·±åº¦çº¹ç†
+     * @param leftImg è¾“å…¥ï¼Œå·¦ç»å¯¹ç›¸ä½
+     * @param rightImg è¾“å…¥ï¼Œå³ç»å¯¹ç›¸ä½
+     * @param depthImg è¾“å…¥/è¾“å‡ºï¼Œæ·±åº¦å›¾
+     * @param pStream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void getDepthColorMap(const cv::cuda::GpuMat& leftImg, 
+        const cv::cuda::GpuMat& rightImg, 
+        cv::cuda::GpuMat& depthImg, 
+        cv::cuda::Stream& pStream);
+    /**
+     * @brief æ˜ å°„æ·±åº¦çº¹ç†
+     * @param leftImg è¾“å…¥ï¼Œå·¦ç»å¯¹ç›¸ä½
+     * @param rightImg è¾“å…¥ï¼Œå³ç»å¯¹ç›¸ä½
+     * @param depthImg è¾“å…¥/è¾“å‡ºï¼Œæ·±åº¦å›¾
+     * @param pStream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void getDepthMap(const cv::cuda::GpuMat& leftImg, 
+        const cv::cuda::GpuMat& rightImg, 
+        cv::cuda::GpuMat& depthImg, 
+        cv::cuda::Stream& pStream);
+private:
+    /** \æœ€å°æ·±åº¦å€¼ **/
+    const float minDepth;
+    /** \æœ€å¤§æ·±åº¦å€¼ **/
+    const float maxDepth;
+    /** \blockå°ºå¯¸ **/
+    const dim3 block;
+    /** \æ ‡å®šä¿¡æ¯ **/
+    const Info& calibrationInfo;
+    //CPUç«¯å‡½æ•°
+    void restruction(const cv::Mat& leftAbsImg, 
+        const cv::Mat& rightAbsImg, 
+        cv::Mat& depthImgOut,
+        const bool isColor = false) override{}
+    /** \æ·±åº¦å›¾ **/
+    std::vector<cv::cuda::GpuMat> depthImg_device;
+    /** \æ·±åº¦æ˜ å°„çŸ©é˜µ **/
+    Eigen::Matrix4f Q;
+    /** \æ·±åº¦æ˜ å°„çŸ©é˜µ **/
+    Eigen::Matrix3f R1_inv;
+    /** \ç°åº¦ç›¸æœºåˆ°å½©è‰²ç›¸æœºæ—‹è½¬çŸ©é˜µ **/
+    Eigen::Matrix3f R;
+    /** \ç°åº¦ç›¸æœºåˆ°å½©è‰²ç›¸æœºä½ç§»çŸ©é˜µ **/
+    Eigen::Vector3f T;
+    /** \ç‚¹äº‘ç›¸æœºå†…å‚çŸ©é˜µ **/
+    Eigen::Matrix3f M1;
+    /** \å½©è‰²ç›¸æœºå†…å‚çŸ©é˜µ **/
+    Eigen::Matrix3f M3;
+    /** \æœ€å°è§†å·®å€¼ **/
+    int minDisparity;
+    /** \æœ€å¤§è§†å·®å€¼ **/
+    int maxDisparity;
+
+};
 }
-#endif // Restruction_GPU_H
+
+#endif // RESTRUCTOR_RESTRUCTOR_GPU_H

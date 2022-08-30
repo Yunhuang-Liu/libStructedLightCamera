@@ -1,7 +1,7 @@
 /**
  * @file FourFloorFouStepMaster_GPU.cuh
  * @author Liu Yunhuang(1369215984@qq.com)
- * @brief  GPU¼ÓËÙ½âÏàÆ÷(ËÄ²½ËÄ»Ò¶ÈÊ±¼ä¸´ÓÃ¸ñÀ×Âë)
+ * @brief  GPUåŠ é€Ÿè§£ç›¸å™¨(å››æ­¥å››ç°åº¦æ—¶é—´å¤ç”¨æ ¼é›·ç )
  * @version 0.1
  * @date 2022-8-8
  *
@@ -9,103 +9,108 @@
  *
  */
 
-#ifndef FourFloorFourStepMaster_GPU_H
-#define FourFloorFourStepMaster_GPU_H
-#include "./PhaseSolver.h"
+#ifndef RESTRUCTOR_FOURFLOORSTEPMASTER_GPU_H
+#define RESTRUCTOR_FOURFLOORSTEPMASTER_GPU_H
+
+#include "Restructor/PhaseSolver.h"
 
 namespace PhaseSolverType {
+/**
+ * @brief å››æ­¥å››ç°åº¦æ—¶é—´å¤ç”¨æ ¼é›·ç è§£ç›¸å™¨(1+2 - 1+2 --- | CUDA)
+ *
+ */
+class FourFloorFourStepMaster_GPU : public PhaseSolver {
+public:
     /**
-     * @brief ËÄ²½ËÄ»Ò¶ÈÊ±¼ä¸´ÓÃ¸ñÀ×Âë½âÏàÆ÷(1+2 - 1+2 --- | CUDA)
-     *
+     * @brief æ„é€ å‡½æ•°
+     * @param block_ è¾“å…¥ï¼ŒBlockå°ºå¯¸
      */
-    class FourFloorFourStepMaster_GPU : public PhaseSolver {
-    public:
-        /**
-         * @brief ¹¹Ôìº¯Êı
-         * @param block_ ÊäÈë£¬Block³ß´ç
-         */
-        FourFloorFourStepMaster_GPU(const dim3 block_ = dim3(32, 8));
-        /**
-         * @brief ¹¹Ôìº¯Êı
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         * @param block_ ÊäÈë£¬Block³ß´ç
-         */
-        FourFloorFourStepMaster_GPU(std::vector<cv::Mat>& imgs, const dim3 block_ = dim3(32, 8));
-        /**
-         * @brief Îö¹¹º¯Êı
-         */
-        ~FourFloorFourStepMaster_GPU();
-        /**
-         * @brief ½âÏà
-         *
-         * @param unwrapImg ÊäÈë/Êä³ö£¬¾ø¶ÔÏàÎ»Í¼
-         * @param pStream ÊäÈë£¬Òì²½Á÷
-         */
-        void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>& unwrapImg, cv::cuda::Stream& pStream) override;
-        /**
-         * @brief ÉÏ´«Í¼Æ¬
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         * @param pStream ÊäÈë£¬Òì²½Á÷
-         */
-        void changeSourceImg(std::vector<cv::Mat>& imgs, cv::cuda::Stream& stream) override;
-        /**
-         * @brief ÉÏ´«Ô­Ê¼Í¼Æ¬
-         * @param imgs ÊäÈë£¬Éè±¸¶ËÍ¼Æ¬£¨CV_8UC1)
-         */
-        void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override;
-        /**
-         * @brief »ñÈ¡ÎÆÀíÍ¼Æ¬£¨»Ò¶È¸¡µãĞÍ£©
-         * @param textureImg ÊäÈë/Êä³ö£¬ÎÆÀíÍ¼Æ¬
-         */
-        void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override;
-    protected:
-        /**
-         * @brief ÉÏ´«Í¼Æ¬
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         */
-        void changeSourceImg(std::vector<cv::Mat>& imgs) override;
-        /**
-         * @brief »ñÈ¡°ü¹üÏàÎ»
-         */
-        void getWrapPhaseImg();
-    private:
-        void getUnwrapPhaseImg(cv::Mat&) override {}
-        void getWrapPhaseImg(cv::Mat&, cv::Mat&) override {}
-        void getTextureImg(cv::Mat& textureImg) override {}
-        /** \GPUÍ¼Ïñ
-         *  \È«²¿ÅÄÉãÍ¼Æ¬ 0¡ª¡ª3£ºÏàÒÆ 4¡ª¡ª9£º¸ñÀ× 10£¿ÑÕÉ«
-         **/
-        std::vector<cv::cuda::GpuMat> imgs_device;
-        /** \½×ÊıÍ¼Ïñ **/
-        cv::cuda::GpuMat floorImg_device;
-        /** \½×ÊıÍ¼Ïñ- 0 - **/
-        cv::cuda::GpuMat floorImg_0_device;
-        /** \½×ÊıÍ¼Ïñ- 1 - **/
-        cv::cuda::GpuMat floorImg_1_device; 
-        /** \ÖĞÖµÂË²¨Í¼Ïñ- 0 - **/
-        cv::cuda::GpuMat medianFilter_0_;
-        /** \ÖĞÖµÂË²¨Í¼Ïñ- 1 - **/
-        cv::cuda::GpuMat medianFilter_1_;
-        /** \µ÷ÖÆÍ¼Ïñ **/
-        cv::cuda::GpuMat conditionImg_device;
-        /** \°ü¹üÏàÎ»Í¼Ïñ **/
-        cv::cuda::GpuMat wrapImg_device;
-        /** \KmeansãĞÖµ **/
-        cv::cuda::GpuMat threshodVal;
-        /** \KmeansÈºÖ®ºÍ **/
-        cv::cuda::GpuMat threshodAdd;
-        /** \KmeansÈºÊıÁ¿ **/
-        cv::cuda::GpuMat count;
-        /** \°ü¹üÏàÎ»Í¼Ïñ **/
-        cv::cuda::GpuMat conditionImgCopy;
-        /** \block³ß´ç **/
-        const dim3 block;
-        /** \ĞĞÊı **/
-        int rows;
-        /** \ÁĞÊı **/
-        int cols;
-        /** \µ±Ç°Á¬ĞøÖ¡Êı **/
-        int currentFrame;
-    };
+    FourFloorFourStepMaster_GPU(const dim3 block_ = dim3(32, 8));
+    /**
+     * @brief æ„é€ å‡½æ•°
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     * @param block_ è¾“å…¥ï¼ŒBlockå°ºå¯¸
+     */
+    FourFloorFourStepMaster_GPU(std::vector<cv::Mat>& imgs, 
+        const dim3 block_ = dim3(32, 8));
+    /**
+     * @brief ææ„å‡½æ•°
+     */
+    ~FourFloorFourStepMaster_GPU();
+    /**
+     * @brief è§£ç›¸
+     *
+     * @param unwrapImg è¾“å…¥/è¾“å‡ºï¼Œç»å¯¹ç›¸ä½å›¾
+     * @param pStream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>& unwrapImg, 
+        cv::cuda::Stream& pStream) override;
+    /**
+     * @brief ä¸Šä¼ å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     * @param pStream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void changeSourceImg(std::vector<cv::Mat>& imgs, 
+        cv::cuda::Stream& stream) override;
+    /**
+     * @brief ä¸Šä¼ åŸå§‹å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼Œè®¾å¤‡ç«¯å›¾ç‰‡ï¼ˆCV_8UC1)
+     */
+    void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override;
+    /**
+     * @brief è·å–çº¹ç†å›¾ç‰‡ï¼ˆç°åº¦æµ®ç‚¹å‹ï¼‰
+     * @param textureImg è¾“å…¥/è¾“å‡ºï¼Œçº¹ç†å›¾ç‰‡
+     */
+    void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override;
+protected:
+    /**
+     * @brief ä¸Šä¼ å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     */
+    void changeSourceImg(std::vector<cv::Mat>& imgs) override;
+    /**
+     * @brief è·å–åŒ…è£¹ç›¸ä½
+     */
+    void getWrapPhaseImg();
+private:
+    /** \blockå°ºå¯¸ **/
+    const dim3 block;
+    void getUnwrapPhaseImg(cv::Mat&) override {}
+    void getWrapPhaseImg(cv::Mat&, cv::Mat&) override {}
+    void getTextureImg(cv::Mat& textureImg) override {}
+    /** \GPUå›¾åƒ
+     *  \å…¨éƒ¨æ‹æ‘„å›¾ç‰‡ 0â€”â€”3ï¼šç›¸ç§» 4â€”â€”9ï¼šæ ¼é›· 10ï¼Ÿé¢œè‰²
+     **/
+    std::vector<cv::cuda::GpuMat> imgs_device;
+    /** \é˜¶æ•°å›¾åƒ **/
+    cv::cuda::GpuMat floorImg_device;
+    /** \é˜¶æ•°å›¾åƒ- 0 - **/
+    cv::cuda::GpuMat floorImg_0_device;
+    /** \é˜¶æ•°å›¾åƒ- 1 - **/
+    cv::cuda::GpuMat floorImg_1_device; 
+    /** \ä¸­å€¼æ»¤æ³¢å›¾åƒ- 0 - **/
+    cv::cuda::GpuMat medianFilter_0_;
+    /** \ä¸­å€¼æ»¤æ³¢å›¾åƒ- 1 - **/
+    cv::cuda::GpuMat medianFilter_1_;
+    /** \è°ƒåˆ¶å›¾åƒ **/
+    cv::cuda::GpuMat conditionImg_device;
+    /** \åŒ…è£¹ç›¸ä½å›¾åƒ **/
+    cv::cuda::GpuMat wrapImg_device;
+    /** \Kmeansé˜ˆå€¼ **/
+    cv::cuda::GpuMat threshodVal;
+    /** \Kmeansç¾¤ä¹‹å’Œ **/
+    cv::cuda::GpuMat threshodAdd;
+    /** \Kmeansç¾¤æ•°é‡ **/
+    cv::cuda::GpuMat count;
+    /** \åŒ…è£¹ç›¸ä½å›¾åƒ **/
+    cv::cuda::GpuMat conditionImgCopy;
+    /** \è¡Œæ•° **/
+    int rows;
+    /** \åˆ—æ•° **/
+    int cols;
+    /** \å½“å‰è¿ç»­å¸§æ•° **/
+    int currentFrame;
+};
 }
-#endif // !FourFloorFourStepMaster_GPU_H
+
+#endif // RESTRUCTOR_FOURFLOORSTEPMASTER_GPU_H

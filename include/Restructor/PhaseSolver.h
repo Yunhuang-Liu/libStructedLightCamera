@@ -1,19 +1,26 @@
 /**
  * @file UnwrapMaster.h
  * @author Liu Yunhuang(1369215984@qq.com)
- * @brief  ½âÏàÆ÷
+ * @brief  è§£ç›¸å™¨
  * @version 0.1
  * @date 2021-12-10
  *
  * @copyright Copyright (c) 2021
  *
  */
-#ifndef PhaseSolver_H
-#define PhaseSolver_H
+
+#ifndef RESTRUCTOR_PHASESOLVER_H
+#define RESTRUCTOR_PHASESOLVER_H
+
+#include <immintrin.h>
+
+#include <fstream>
+#include <thread>
+#include <vector>
+
 #include <Eigen/Core>
 #include <opencv2/core/eigen.hpp>
 #include <opencv2/opencv.hpp>
-
 #ifdef  CUDA
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
@@ -27,144 +34,196 @@
 #include <device_functions.h>
 #endif
 
-#include <fstream>
-#include <thread>
-#include <immintrin.h>
-#include <vector>
 
 namespace PhaseSolverType {
-    #ifdef CUDA
-    namespace cudaFunc {
-        //·ÖÇø¼äÏàÎ»Õ¹¿ª½âµ÷ÖÆCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhasePrepare_DevidedSpace(const cv::cuda::GpuMat& shift_0_0_, const cv::cuda::GpuMat & shift_0_1_, const cv::cuda::GpuMat & shift_0_2_, const cv::cuda::GpuMat & gray_0_,
-                                            const cv::cuda::GpuMat& shift_1_0_, const cv::cuda::GpuMat & shift_1_1_, const cv::cuda::GpuMat & shift_1_2_, const cv::cuda::GpuMat & gray_1_,
-                                            const cv::cuda::GpuMat& shift_2_0_, const cv::cuda::GpuMat & shift_2_1_, const cv::cuda::GpuMat & shift_2_2_, const cv::cuda::GpuMat & gray_2_,
-                                            const cv::cuda::GpuMat& shift_3_0_, const cv::cuda::GpuMat & shift_3_1_, const cv::cuda::GpuMat & shift_3_2_, const cv::cuda::GpuMat & gray_3_,
-                                            const int rows, const int cols,
-                                            cv::cuda::GpuMat & wrapImg1_1_, cv::cuda::GpuMat & wrapImg1_2_, cv::cuda::GpuMat & wrapImg1_3_, cv::cuda::GpuMat & conditionImg_1_,
-                                            cv::cuda::GpuMat & wrapImg2_1_, cv::cuda::GpuMat & wrapImg2_2_, cv::cuda::GpuMat & wrapImg2_3_, cv::cuda::GpuMat & conditionImg_2_,
-                                            cv::cuda::GpuMat & wrapImg3_1_, cv::cuda::GpuMat & wrapImg3_2_, cv::cuda::GpuMat & wrapImg3_3_, cv::cuda::GpuMat & conditionImg_3_,
-                                            cv::cuda::GpuMat & wrapImg4_1_, cv::cuda::GpuMat & wrapImg4_2_, cv::cuda::GpuMat & wrapImg4_3_, cv::cuda::GpuMat & conditionImg_4_,
-                                            cv::cuda::GpuMat & floor_K, const dim3 block, cv::cuda::Stream& cvStream);
-        //·ÖÇø¼äÏàÎ»Õ¹¿ª½âÏàCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhase_DevidedSpace(const cv::cuda::GpuMat & absolutImgWhite, const int rows, const int cols,
-                                     const cv::cuda::GpuMat & wrapImg_1_0_, const cv::cuda::GpuMat & wrapImg_1_1_, const cv::cuda::GpuMat & wrapImg_1_2_, const cv::cuda::GpuMat & conditionImg_1_, cv::cuda::GpuMat & unwrapImg_1_,
-                                     const cv::cuda::GpuMat & wrapImg_2_0_, const cv::cuda::GpuMat & wrapImg_2_1_, const cv::cuda::GpuMat & wrapImg_2_2_, const cv::cuda::GpuMat & conditionImg_2_, cv::cuda::GpuMat & unwrapImg_2_,
-                                     const cv::cuda::GpuMat & wrapImg_3_0_, const cv::cuda::GpuMat & wrapImg_3_1_, const cv::cuda::GpuMat & wrapImg_3_2_, const cv::cuda::GpuMat & conditionImg_3_, cv::cuda::GpuMat & unwrapImg_3_,
-                                     const cv::cuda::GpuMat & wrapImg_4_0_, const cv::cuda::GpuMat & wrapImg_4_1_, const cv::cuda::GpuMat & wrapImg_4_2_, const cv::cuda::GpuMat & conditionImg_4_, cv::cuda::GpuMat & unwrapImg_4_, cv::cuda::GpuMat & floor_K, const dim3 block, cv::cuda::Stream& cvStream);
-        //Î»ÒÆ¸ñÀ×Âë½âµ÷ÖÆCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhasePrepare_ShiftGray(const cv::cuda::GpuMat & shift_0_0_, const cv::cuda::GpuMat & shift_0_1_, const cv::cuda::GpuMat & shift_0_2_,
-                                         const cv::cuda::GpuMat & shift_1_0_, const cv::cuda::GpuMat & shift_1_1_, const cv::cuda::GpuMat & shift_1_2_,
-                                         const cv::cuda::GpuMat & gray_0_, const cv::cuda::GpuMat & gray_1_, const cv::cuda::GpuMat & gray_2_, const cv::cuda::GpuMat & gray_3_,
-                                         const int rows, const int cols,
-                                         cv::cuda::GpuMat & wrapImg1, cv::cuda::GpuMat & conditionImg_1_,
-                                         cv::cuda::GpuMat & wrapImg2, cv::cuda::GpuMat & conditionImg_2_,
-                                         cv::cuda::GpuMat & floor_K, const dim3 block, cv::cuda::Stream& cvStream);
-        //Î»ÒÆ¸ñÀ×Âë½âÏàCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhase_ShiftGray(const cv::cuda::GpuMat & absolutImgWhite,const int rows, const int cols,
-                                  const cv::cuda::GpuMat & wrapImg_1_, const cv::cuda::GpuMat & conditionImg_1_, cv::cuda::GpuMat & unwrapImg_1_,
-                                  const cv::cuda::GpuMat & wrapImg_2_, const cv::cuda::GpuMat & conditionImg_2_, cv::cuda::GpuMat & unwrapImg_2_,cv::cuda::GpuMat & floor_K, const dim3 block, cv::cuda::Stream& cvStream);
-        //ËÄÖ¡Ê±¼ä¸´ÓÃÎ»ÒÆ¸ñÀ×Âë½âµ÷ÖÆCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhasePrepare_ShiftGrayFourFrame(const cv::cuda::GpuMat& shift_0_0_, const cv::cuda::GpuMat& shift_0_1_, const cv::cuda::GpuMat& shift_0_2_,
-            const cv::cuda::GpuMat& shift_1_0_, const cv::cuda::GpuMat& shift_1_1_, const cv::cuda::GpuMat& shift_1_2_,
-            const cv::cuda::GpuMat& shift_2_0_, const cv::cuda::GpuMat& shift_2_1_, const cv::cuda::GpuMat& shift_2_2_,
-            const cv::cuda::GpuMat& shift_3_0_, const cv::cuda::GpuMat& shift_3_1_, const cv::cuda::GpuMat& shift_3_2_,
-            const cv::cuda::GpuMat& gray_0_, const cv::cuda::GpuMat& gray_1_, const cv::cuda::GpuMat& gray_2_, const cv::cuda::GpuMat& gray_3_,
-            const int rows, const int cols,
-            cv::cuda::GpuMat& wrapImg1, cv::cuda::GpuMat& conditionImg_1_,
-            cv::cuda::GpuMat& wrapImg2, cv::cuda::GpuMat& conditionImg_2_,
-            cv::cuda::GpuMat& wrapImg3, cv::cuda::GpuMat& conditionImg_3_,
-            cv::cuda::GpuMat& wrapImg4, cv::cuda::GpuMat& conditionImg_4_,
-            cv::cuda::GpuMat& floor_K, const dim3 block, cv::cuda::Stream& cvStream);
-        //ËÄÖ¡Ê±¼ä¸´ÓÃÎ»ÒÆ¸ñÀ×Âë½âÏàCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhase_ShiftGrayFourFrame(const cv::cuda::GpuMat& absolutImgWhite, const int rows, const int cols,
-            const cv::cuda::GpuMat& wrapImg_1_, const cv::cuda::GpuMat& conditionImg_1_, cv::cuda::GpuMat& unwrapImg_1_,
-            const cv::cuda::GpuMat& wrapImg_2_, const cv::cuda::GpuMat& conditionImg_2_, cv::cuda::GpuMat& unwrapImg_2_,
-            const cv::cuda::GpuMat& wrapImg_3_, const cv::cuda::GpuMat& conditionImg_3_, cv::cuda::GpuMat& unwrapImg_3_,
-            const cv::cuda::GpuMat& wrapImg_4_, const cv::cuda::GpuMat& conditionImg_4_, cv::cuda::GpuMat& unwrapImg_4_,
-            cv::cuda::GpuMat& floor_K, const dim3 block, cv::cuda::Stream& cvStream);
-        //ËÄ²½ÎåÎ»»¥²¹¸ñÀ×Âë½âµ÷ÖÆCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhasePrepare_FourStepSixGray(const cv::cuda::GpuMat& shift_0_, const cv::cuda::GpuMat& shift_1_, const cv::cuda::GpuMat& shift_2_, const cv::cuda::GpuMat& shift_3_,
-                                               const int rows, const int cols, cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& averageImg, cv::cuda::GpuMat& conditionImg, const dim3 block, cv::cuda::Stream& cvStream);
-        //ËÄ²½ÎåÎ»»¥²¹¸ñÀ×Âë½âÏàCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhase_FourStepSixGray(const cv::cuda::GpuMat& Gray_0_, const cv::cuda::GpuMat& Gray_1_, const cv::cuda::GpuMat& Gray_2_, const cv::cuda::GpuMat& Gray_3_, const cv::cuda::GpuMat& Gray_4_, const cv::cuda::GpuMat& Gray_5_,
-                                        const int rows, const int cols, const cv::cuda::GpuMat& averageImg, const cv::cuda::GpuMat& conditionImg, const cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& unwrapImg, const dim3 block, cv::cuda::Stream& cvStream);
-        //ËÄ²½ËÄ»Ò¶ÈÊ±¼ä¸´ÓÃ¸ñÀ×Âë½âÏàCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhasePrepare_FourFloorFourStep(const cv::cuda::GpuMat& shift_0_, const cv::cuda::GpuMat& shift_1_, const cv::cuda::GpuMat& shift_2_, const cv::cuda::GpuMat& shift_3_,
-            const cv::cuda::GpuMat& gray_0_, const cv::cuda::GpuMat& gray_1_,
-            cv::cuda::GpuMat& threshodVal, cv::cuda::GpuMat& threshodAdd, cv::cuda::GpuMat& count,
-            const int rows, const int cols, cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& conditionImg, cv::cuda::GpuMat& medianFilter_0_, cv::cuda::GpuMat& medianFilter_1_, cv::cuda::GpuMat& kFloorImg_0_, cv::cuda::GpuMat& kFloorImg_1_, cv::cuda::GpuMat& kFloorImg, 
-            const bool isOdd, const bool isFirstStart,
-            const dim3 block, cv::cuda::Stream& cvStream);
-        //ËÄ²½ËÄ»Ò¶È¸ñÀ×Âë½âÏàCUDAÖ÷»ú¶Ëµ÷ÓÃº¯Êı
-        void solvePhase_FourFloorFourStep(const cv::cuda::GpuMat& kFloorImg, const cv::cuda::GpuMat& conditionImg, const cv::cuda::GpuMat& wrapImg,
-            const int rows, const int cols, cv::cuda::GpuMat& unwrapImg,
-            const dim3 block, cv::cuda::Stream& cvStream);
-    }
-    #endif
-    class PhaseSolver{
-        public:
-            /**
-             * @brief Ä¬ÈÏ¹¹Ôìº¯Êı
-             */
-            PhaseSolver();
-            /**
-             * @brief Îö¹¹º¯Êı
-             */
-            virtual ~PhaseSolver();
-            /**
-             * @brief ½âÏà
-             * @param absolutePhaseImg ÊäÈë/Êä³ö£¬¾ø¶ÔÏàÎ»
-             */
-            virtual void getUnwrapPhaseImg(cv::Mat& absolutePhaseImg) = 0;
-            /**
-             * @brief »ñÈ¡ÎÆÀíÍ¼Æ¬
-             * @param textureImg ÊäÈë/Êä³ö£¬ÎÆÀíÍ¼Æ¬
-             */
-            virtual void getTextureImg(cv::Mat& textureImg) = 0;
-            #ifdef CUDA
-            /**
-             * @brief ÉÏ´«Í¼Æ¬
-             * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬£¨CV_8UC1)
-             * @param stream ÊäÈë£¬Òì²½Á÷
-             */
-            virtual void changeSourceImg(std::vector<cv::Mat>& imgs, cv::cuda::Stream& stream) = 0;
-            /**
-             * @brief ÉÏ´«Í¼Æ¬
-             * @param imgs ÊäÈë£¬Éè±¸¶ËÍ¼Æ¬£¨CV_8UC1)
-             */
-            virtual void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) = 0;
-            /**
-             * @brief ½âÏà
-             * @param absolutePhaseImg ÊäÈë/Êä³ö£¬¾ø¶ÔÏàÎ»
-             * @param stream ÊäÈë£¬Òì²½Á÷
-             */
-            virtual void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>& absolutePhaseImg, cv::cuda::Stream& stream) = 0;
-            /**
-             * @brief »ñÈ¡°ü¹üÏàÎ»
-             * @param wrapImg ÊäÈë£¬°ü¹üÏàÎ»
-             * @param stream ÊäÈë£¬Òì²½Á÷
-             */
-            //virtual void getWrapPhaseImg(cv::cuda::GpuMat& wrapImg, cv::cuda::Stream& stream) = 0;
-            /**
-             * @brief »ñÈ¡ÎÆÀíÍ¼Æ¬
-             * @param textureImg ÊäÈë/Êä³ö£¬ÎÆÀíÍ¼Æ¬
-             */
-            virtual void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) = 0;
-            #endif
-            /**
-             * @brief ÉÏ´«Í¼Æ¬
-             * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-             */
-            virtual void changeSourceImg(std::vector<cv::Mat>& imgs) = 0;
-            /**
-             * @brief »ñÈ¡°ü¹üÏàÎ»
-             * @param wrapImg ÊäÈë£¬°ü¹üÏàÎ»
-             */
-            virtual void getWrapPhaseImg(cv::Mat& wrapImg,cv::Mat& conditionImg) = 0;
-        protected:
-
-        private:
-    };
+#ifdef CUDA
+namespace cudaFunc {
+    //åˆ†åŒºé—´ç›¸ä½å±•å¼€è§£è°ƒåˆ¶CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhasePrepare_DevidedSpace(const cv::cuda::GpuMat& shift_0_0_, 
+        const cv::cuda::GpuMat & shift_0_1_, const cv::cuda::GpuMat & shift_0_2_, 
+        const cv::cuda::GpuMat & gray_0_,const cv::cuda::GpuMat& shift_1_0_, 
+        const cv::cuda::GpuMat & shift_1_1_, const cv::cuda::GpuMat & shift_1_2_, 
+        const cv::cuda::GpuMat & gray_1_, const cv::cuda::GpuMat& shift_2_0_, 
+        const cv::cuda::GpuMat & shift_2_1_, const cv::cuda::GpuMat & shift_2_2_, 
+        const cv::cuda::GpuMat & gray_2_, const cv::cuda::GpuMat& shift_3_0_, 
+        const cv::cuda::GpuMat & shift_3_1_, const cv::cuda::GpuMat & shift_3_2_, 
+        const cv::cuda::GpuMat & gray_3_, const int rows, const int cols,
+        cv::cuda::GpuMat & wrapImg1_1_, cv::cuda::GpuMat & wrapImg1_2_, 
+        cv::cuda::GpuMat & wrapImg1_3_, cv::cuda::GpuMat & conditionImg_1_,
+        cv::cuda::GpuMat & wrapImg2_1_, cv::cuda::GpuMat & wrapImg2_2_, 
+        cv::cuda::GpuMat & wrapImg2_3_, cv::cuda::GpuMat & conditionImg_2_,
+        cv::cuda::GpuMat & wrapImg3_1_, cv::cuda::GpuMat & wrapImg3_2_, 
+        cv::cuda::GpuMat & wrapImg3_3_, cv::cuda::GpuMat & conditionImg_3_,
+        cv::cuda::GpuMat & wrapImg4_1_, cv::cuda::GpuMat & wrapImg4_2_, 
+        cv::cuda::GpuMat & wrapImg4_3_, cv::cuda::GpuMat & conditionImg_4_,
+        cv::cuda::GpuMat & floor_K, const dim3 block, cv::cuda::Stream& cvStream);
+    //åˆ†åŒºé—´ç›¸ä½å±•å¼€è§£ç›¸CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhase_DevidedSpace(const cv::cuda::GpuMat & absolutImgWhite, 
+        const int rows, const int cols,
+        const cv::cuda::GpuMat & wrapImg_1_0_, 
+        const cv::cuda::GpuMat & wrapImg_1_1_, 
+        const cv::cuda::GpuMat & wrapImg_1_2_, 
+        const cv::cuda::GpuMat & conditionImg_1_, 
+        cv::cuda::GpuMat & unwrapImg_1_,
+        const cv::cuda::GpuMat & wrapImg_2_0_, 
+        const cv::cuda::GpuMat & wrapImg_2_1_, 
+        const cv::cuda::GpuMat & wrapImg_2_2_, 
+        const cv::cuda::GpuMat & conditionImg_2_, 
+        cv::cuda::GpuMat & unwrapImg_2_,
+        const cv::cuda::GpuMat & wrapImg_3_0_, 
+        const cv::cuda::GpuMat & wrapImg_3_1_, 
+        const cv::cuda::GpuMat & wrapImg_3_2_, 
+        const cv::cuda::GpuMat & conditionImg_3_, 
+        cv::cuda::GpuMat & unwrapImg_3_,
+        const cv::cuda::GpuMat & wrapImg_4_0_, 
+        const cv::cuda::GpuMat & wrapImg_4_1_, 
+        const cv::cuda::GpuMat & wrapImg_4_2_, 
+        const cv::cuda::GpuMat & conditionImg_4_, 
+        cv::cuda::GpuMat & unwrapImg_4_, 
+        cv::cuda::GpuMat & floor_K, 
+        const dim3 block, 
+        cv::cuda::Stream& cvStream);
+    //ä½ç§»æ ¼é›·ç è§£è°ƒåˆ¶CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhasePrepare_ShiftGray(const cv::cuda::GpuMat & shift_0_0_, 
+        const cv::cuda::GpuMat & shift_0_1_, const cv::cuda::GpuMat & shift_0_2_,
+        const cv::cuda::GpuMat & shift_1_0_, const cv::cuda::GpuMat & shift_1_1_, 
+        const cv::cuda::GpuMat & shift_1_2_,const cv::cuda::GpuMat & gray_0_, 
+        const cv::cuda::GpuMat & gray_1_, const cv::cuda::GpuMat & gray_2_, 
+        const cv::cuda::GpuMat & gray_3_,const int rows, const int cols,
+        cv::cuda::GpuMat & wrapImg1, cv::cuda::GpuMat & conditionImg_1_,
+        cv::cuda::GpuMat & wrapImg2, cv::cuda::GpuMat & conditionImg_2_,
+        cv::cuda::GpuMat & floor_K, const dim3 block, cv::cuda::Stream& cvStream);
+    //ä½ç§»æ ¼é›·ç è§£ç›¸CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhase_ShiftGray(const cv::cuda::GpuMat & absolutImgWhite,
+        const int rows, const int cols,const cv::cuda::GpuMat & wrapImg_1_, 
+        const cv::cuda::GpuMat & conditionImg_1_, 
+        cv::cuda::GpuMat & unwrapImg_1_,const cv::cuda::GpuMat & wrapImg_2_, 
+        const cv::cuda::GpuMat & conditionImg_2_, 
+        cv::cuda::GpuMat & unwrapImg_2_,cv::cuda::GpuMat & floor_K, 
+        const dim3 block, cv::cuda::Stream& cvStream);
+    //å››å¸§æ—¶é—´å¤ç”¨ä½ç§»æ ¼é›·ç è§£è°ƒåˆ¶CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhasePrepare_ShiftGrayFourFrame(const cv::cuda::GpuMat& shift_0_0_, 
+        const cv::cuda::GpuMat& shift_0_1_, const cv::cuda::GpuMat& shift_0_2_,
+        const cv::cuda::GpuMat& shift_1_0_, const cv::cuda::GpuMat& shift_1_1_, 
+        const cv::cuda::GpuMat& shift_1_2_, const cv::cuda::GpuMat& shift_2_0_, 
+        const cv::cuda::GpuMat& shift_2_1_, const cv::cuda::GpuMat& shift_2_2_,
+        const cv::cuda::GpuMat& shift_3_0_, const cv::cuda::GpuMat& shift_3_1_,
+        const cv::cuda::GpuMat& shift_3_2_, const cv::cuda::GpuMat& gray_0_, 
+        const cv::cuda::GpuMat& gray_1_, const cv::cuda::GpuMat& gray_2_, 
+        const cv::cuda::GpuMat& gray_3_,const int rows, const int cols,
+        cv::cuda::GpuMat& wrapImg1, cv::cuda::GpuMat& conditionImg_1_,
+        cv::cuda::GpuMat& wrapImg2, cv::cuda::GpuMat& conditionImg_2_,
+        cv::cuda::GpuMat& wrapImg3, cv::cuda::GpuMat& conditionImg_3_,
+        cv::cuda::GpuMat& wrapImg4, cv::cuda::GpuMat& conditionImg_4_,
+        cv::cuda::GpuMat& floor_K, const dim3 block, cv::cuda::Stream& cvStream);
+    //å››å¸§æ—¶é—´å¤ç”¨ä½ç§»æ ¼é›·ç è§£ç›¸CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhase_ShiftGrayFourFrame(const cv::cuda::GpuMat& absolutImgWhite,
+        const int rows, const int cols,const cv::cuda::GpuMat& wrapImg_1_, 
+        const cv::cuda::GpuMat& conditionImg_1_, cv::cuda::GpuMat& unwrapImg_1_,
+        const cv::cuda::GpuMat& wrapImg_2_, 
+        const cv::cuda::GpuMat& conditionImg_2_, cv::cuda::GpuMat& unwrapImg_2_,
+        const cv::cuda::GpuMat& wrapImg_3_, const cv::cuda::GpuMat& conditionImg_3_, 
+        cv::cuda::GpuMat& unwrapImg_3_,const cv::cuda::GpuMat& wrapImg_4_, 
+        const cv::cuda::GpuMat& conditionImg_4_, cv::cuda::GpuMat& unwrapImg_4_,
+        cv::cuda::GpuMat& floor_K, const dim3 block, cv::cuda::Stream& cvStream);
+    //å››æ­¥äº”ä½äº’è¡¥æ ¼é›·ç è§£è°ƒåˆ¶CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhasePrepare_FourStepSixGray(const cv::cuda::GpuMat& shift_0_, 
+        const cv::cuda::GpuMat& shift_1_, const cv::cuda::GpuMat& shift_2_,
+        const cv::cuda::GpuMat& shift_3_,const int rows, const int cols, 
+        cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& averageImg, 
+        cv::cuda::GpuMat& conditionImg, const dim3 block, 
+        cv::cuda::Stream& cvStream);
+    //å››æ­¥äº”ä½äº’è¡¥æ ¼é›·ç è§£ç›¸CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhase_FourStepSixGray(const cv::cuda::GpuMat& Gray_0_, 
+        const cv::cuda::GpuMat& Gray_1_, const cv::cuda::GpuMat& Gray_2_, 
+        const cv::cuda::GpuMat& Gray_3_, const cv::cuda::GpuMat& Gray_4_, 
+        const cv::cuda::GpuMat& Gray_5_,const int rows, const int cols, 
+        const cv::cuda::GpuMat& averageImg, const cv::cuda::GpuMat& conditionImg, 
+        const cv::cuda::GpuMat& wrapImg, cv::cuda::GpuMat& unwrapImg, 
+        const dim3 block, cv::cuda::Stream& cvStream);
+    //å››æ­¥å››ç°åº¦æ—¶é—´å¤ç”¨æ ¼é›·ç è§£ç›¸CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhasePrepare_FourFloorFourStep(const cv::cuda::GpuMat& shift_0_, 
+        const cv::cuda::GpuMat& shift_1_, const cv::cuda::GpuMat& shift_2_, 
+        const cv::cuda::GpuMat& shift_3_,const cv::cuda::GpuMat& gray_0_, 
+        const cv::cuda::GpuMat& gray_1_,cv::cuda::GpuMat& threshodVal, 
+        cv::cuda::GpuMat& threshodAdd, cv::cuda::GpuMat& count,
+        const int rows, const int cols, cv::cuda::GpuMat& wrapImg, 
+        cv::cuda::GpuMat& conditionImg, cv::cuda::GpuMat& medianFilter_0_, 
+        cv::cuda::GpuMat& medianFilter_1_, cv::cuda::GpuMat& kFloorImg_0_, 
+        cv::cuda::GpuMat& kFloorImg_1_, cv::cuda::GpuMat& kFloorImg, 
+        const bool isOdd, const bool isFirstStart,
+        const dim3 block, cv::cuda::Stream& cvStream);
+    //å››æ­¥å››ç°åº¦æ ¼é›·ç è§£ç›¸CUDAä¸»æœºç«¯è°ƒç”¨å‡½æ•°
+    void solvePhase_FourFloorFourStep(const cv::cuda::GpuMat& kFloorImg, 
+        const cv::cuda::GpuMat& conditionImg, const cv::cuda::GpuMat& wrapImg,
+        const int rows, const int cols, cv::cuda::GpuMat& unwrapImg,
+        const dim3 block, cv::cuda::Stream& cvStream);
 }
-#endif // !PhaseSolver_H
+#endif
+class PhaseSolver {
+public:
+    /**
+     * @brief é»˜è®¤æ„é€ å‡½æ•°
+     */
+    PhaseSolver();
+    /**
+     * @brief ææ„å‡½æ•°
+     */
+    virtual ~PhaseSolver();
+    /**
+     * @brief è§£ç›¸
+     * @param absolutePhaseImg è¾“å…¥/è¾“å‡ºï¼Œç»å¯¹ç›¸ä½
+     */
+    virtual void getUnwrapPhaseImg(cv::Mat& absolutePhaseImg) = 0;
+    /**
+     * @brief è·å–çº¹ç†å›¾ç‰‡
+     * @param textureImg è¾“å…¥/è¾“å‡ºï¼Œçº¹ç†å›¾ç‰‡
+     */
+    virtual void getTextureImg(cv::Mat& textureImg) = 0;
+    #ifdef CUDA
+    /**
+     * @brief ä¸Šä¼ å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡ï¼ˆCV_8UC1)
+     * @param stream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    virtual void changeSourceImg(std::vector<cv::Mat>& imgs, 
+        cv::cuda::Stream& stream) = 0;
+    /**
+     * @brief ä¸Šä¼ å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼Œè®¾å¤‡ç«¯å›¾ç‰‡ï¼ˆCV_8UC1)
+     */
+    virtual void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) = 0;
+    /**
+     * @brief è§£ç›¸
+     * @param absolutePhaseImg è¾“å…¥/è¾“å‡ºï¼Œç»å¯¹ç›¸ä½
+     * @param stream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    virtual void getUnwrapPhaseImg(
+        std::vector<cv::cuda::GpuMat>& absolutePhaseImg, 
+        cv::cuda::Stream& stream) = 0;
+    /**
+     * @brief è·å–åŒ…è£¹ç›¸ä½
+     * @param wrapImg è¾“å…¥ï¼ŒåŒ…è£¹ç›¸ä½
+     * @param stream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    //virtual void getWrapPhaseImg(cv::cuda::GpuMat& wrapImg, cv::cuda::Stream& stream) = 0;
+    /**
+     * @brief è·å–çº¹ç†å›¾ç‰‡
+     * @param textureImg è¾“å…¥/è¾“å‡ºï¼Œçº¹ç†å›¾ç‰‡
+     */
+    virtual void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) = 0;
+    #endif
+    /**
+     * @brief ä¸Šä¼ å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     */
+    virtual void changeSourceImg(std::vector<cv::Mat>& imgs) = 0;
+    /**
+     * @brief è·å–åŒ…è£¹ç›¸ä½
+     * @param wrapImg è¾“å…¥ï¼ŒåŒ…è£¹ç›¸ä½
+     */
+    virtual void getWrapPhaseImg(cv::Mat& wrapImg,cv::Mat& conditionImg) = 0;
+};
+}
+
+#endif // RESTRUCTOR_PHASESOLVER_H

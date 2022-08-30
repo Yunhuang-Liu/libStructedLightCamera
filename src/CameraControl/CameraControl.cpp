@@ -1,8 +1,10 @@
-#include <CameraControl/CameraControl.h>
+#include "CameraControl/CameraControl.h"
 
 
-CameraControl::CameraControl(const DLPC34XX_ControllerDeviceId_e projectorModuleType, CameraUsedState state_) : cameraLeft(nullptr),
-    cameraRight(nullptr), cameraColor(nullptr), projector(nullptr), cameraUsedState(state_){
+CameraControl::CameraControl(const DLPC34XX_ControllerDeviceId_e projectorModuleType, 
+    CameraUsedState state_) : cameraLeft(nullptr),
+    cameraRight(nullptr), cameraColor(nullptr), 
+    projector(nullptr), cameraUsedState(state_) {
     projector = new ProjectorControl(projectorModuleType);
     int state = IMV_OK;
     IMV_DeviceList devices;
@@ -82,8 +84,9 @@ CameraControl::CameraControl(const DLPC34XX_ControllerDeviceId_e projectorModule
     }
 }
 
-CameraControl::CameraControl(const int numLutEntries, CameraUsedState state_) : cameraLeft(nullptr),
-    cameraRight(nullptr), cameraColor(nullptr), projector(nullptr), cameraUsedState(state_) {
+CameraControl::CameraControl(const int numLutEntries, CameraUsedState state_) : 
+    cameraLeft(nullptr), cameraRight(nullptr), cameraColor(nullptr), 
+    projector(nullptr), cameraUsedState(state_) {
     projector = new ProjectorControl(numLutEntries);
     int state = IMV_OK;
     IMV_DeviceList devices;
@@ -168,7 +171,8 @@ void CameraControl::getOneFrameImgs(RestructedFrame& imgsOneFrame){
     const int imgsNumGray = cameraLeft->imgs.size();
     imgsOneFrame.leftImgs.resize(imgsNumGray);
     imgsOneFrame.rightImgs.resize(imgsNumGray);
-    while(cameraLeft->index < cameraLeft->imgs.size() || cameraRight->index < cameraRight->imgs.size()){
+    while(cameraLeft->index < cameraLeft->imgs.size() || 
+        cameraRight->index < cameraRight->imgs.size()){
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     for (int i = 0; i < cameraLeft->imgs.size(); i++) {
@@ -189,7 +193,8 @@ void CameraControl::getOneFrameImgs(RestructedFrame& imgsOneFrame){
     }
 }
 
-void CameraControl::setCaptureImgsNum(const int GrayImgsNum, const int ColorImgsNum){
+void CameraControl::setCaptureImgsNum(const int GrayImgsNum, 
+    const int ColorImgsNum){
     if(cameraUsedState == CameraUsedState::LeftColorRightGray)
         cameraLeft->imgs.resize(ColorImgsNum);
     else
@@ -222,7 +227,8 @@ void CameraControl::triggerColorCameraSoftCaputure() {
     }
 }
 
-void CameraControl::setCameraExposure(const int grayExposure, const int colorExposure) {
+void CameraControl::setCameraExposure(const int grayExposure, 
+    const int colorExposure) {
     if(cameraUsedState == LeftColorRightGray)
         cameraLeft->SetExposeTime(colorExposure);
     else
@@ -232,7 +238,7 @@ void CameraControl::setCameraExposure(const int grayExposure, const int colorExp
         cameraColor->SetExposeTime(colorExposure);
 }
 
-void CameraControl::loadFirmware(const std::string firmwarePath){
+void CameraControl::loadFirmware(const std::string firmwarePath) {
     projector->LoadFirmware(firmwarePath);
 }
 

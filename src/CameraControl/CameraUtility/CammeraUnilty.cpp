@@ -1,9 +1,8 @@
-#include <CameraControl/CameraUtility/CammeraUnilty.h>
+#include "CameraControl/CameraUtility/CammeraUnilty.h"
 
 // 取流回调函数
 // get frame callback function
-static void LeftFrameCallback(IMV_Frame* pFrame, void* pUser)
-{
+static void LeftFrameCallback(IMV_Frame* pFrame, void* pUser) {
     CammeraUnilty* pCammerWidget = (CammeraUnilty*)pUser;
     CFrameInfo frameInfo;
     frameInfo.m_nWidth = (int)pFrame->frameInfo.width;
@@ -12,20 +11,20 @@ static void LeftFrameCallback(IMV_Frame* pFrame, void* pUser)
     frameInfo.m_nPaddingX = (int)pFrame->frameInfo.paddingX;
     frameInfo.m_nPaddingY = (int)pFrame->frameInfo.paddingY;
     frameInfo.m_ePixelType = pFrame->frameInfo.pixelFormat;
-    frameInfo.m_pImageBuf = (unsigned char*)malloc(sizeof(unsigned char) * frameInfo.m_nBufferSize);
+    frameInfo.m_pImageBuf = (unsigned char*)malloc(sizeof(unsigned char) *
+        frameInfo.m_nBufferSize);
     frameInfo.m_nTimeStamp = pFrame->frameInfo.timeStamp;
     // 内存申请失败，直接返回
-    if (frameInfo.m_pImageBuf != NULL)
-    {
+    if (frameInfo.m_pImageBuf != NULL) {
         memcpy(frameInfo.m_pImageBuf, pFrame->pData, frameInfo.m_nBufferSize);
-        cv::Mat(frameInfo.m_nHeight, frameInfo.m_nWidth, CV_8U, (uint8_t*)frameInfo.m_pImageBuf).copyTo(pCammerWidget->imgs[pCammerWidget->index]);
+        cv::Mat(frameInfo.m_nHeight, frameInfo.m_nWidth, CV_8U, 
+            (uint8_t*)frameInfo.m_pImageBuf).copyTo(pCammerWidget->imgs[pCammerWidget->index]);
         pCammerWidget->index++;
     }
     free((void*)frameInfo.m_pImageBuf);
 }
 
-static void RightFrameCallback(IMV_Frame* pFrame, void* pUser)
-{
+static void RightFrameCallback(IMV_Frame* pFrame, void* pUser) {
     CammeraUnilty* pCammerWidget = (CammeraUnilty*)pUser;
     CFrameInfo frameInfo;
     frameInfo.m_nWidth = (int)pFrame->frameInfo.width;
@@ -34,20 +33,20 @@ static void RightFrameCallback(IMV_Frame* pFrame, void* pUser)
     frameInfo.m_nPaddingX = (int)pFrame->frameInfo.paddingX;
     frameInfo.m_nPaddingY = (int)pFrame->frameInfo.paddingY;
     frameInfo.m_ePixelType = pFrame->frameInfo.pixelFormat;
-    frameInfo.m_pImageBuf = (unsigned char*)malloc(sizeof(unsigned char) * frameInfo.m_nBufferSize);
+    frameInfo.m_pImageBuf = (unsigned char*)malloc(sizeof(unsigned char) * 
+        frameInfo.m_nBufferSize);
     frameInfo.m_nTimeStamp = pFrame->frameInfo.timeStamp;
     // 内存申请失败，直接返回
-    if (frameInfo.m_pImageBuf != NULL)
-    {
+    if (frameInfo.m_pImageBuf != NULL) {
         memcpy(frameInfo.m_pImageBuf, pFrame->pData, frameInfo.m_nBufferSize);
-        cv::Mat(frameInfo.m_nHeight, frameInfo.m_nWidth, CV_8U, (uint8_t*)frameInfo.m_pImageBuf).copyTo(pCammerWidget->imgs[pCammerWidget->index]);
+        cv::Mat(frameInfo.m_nHeight, frameInfo.m_nWidth, CV_8U, 
+            (uint8_t*)frameInfo.m_pImageBuf).copyTo(pCammerWidget->imgs[pCammerWidget->index]);
         pCammerWidget->index++;
     }
     free((void*)frameInfo.m_pImageBuf);
 }
 
-static void ColorFrameCallback(IMV_Frame* pFrame, void* pUser)
-{
+static void ColorFrameCallback(IMV_Frame* pFrame, void* pUser) {
     CammeraUnilty* pCammerWidget = (CammeraUnilty*)pUser;
     CFrameInfo frameInfo;
     frameInfo.m_nWidth = (int)pFrame->frameInfo.width;
@@ -56,13 +55,14 @@ static void ColorFrameCallback(IMV_Frame* pFrame, void* pUser)
     frameInfo.m_nPaddingX = (int)pFrame->frameInfo.paddingX;
     frameInfo.m_nPaddingY = (int)pFrame->frameInfo.paddingY;
     frameInfo.m_ePixelType = pFrame->frameInfo.pixelFormat;
-    frameInfo.m_pImageBuf = (unsigned char*)malloc(sizeof(unsigned char) * frameInfo.m_nBufferSize);
+    frameInfo.m_pImageBuf = (unsigned char*)malloc(sizeof(unsigned char) * 
+        frameInfo.m_nBufferSize);
     frameInfo.m_nTimeStamp = pFrame->frameInfo.timeStamp;
     // 内存申请失败，直接返回
-    if (frameInfo.m_pImageBuf != NULL)
-    {
+    if (frameInfo.m_pImageBuf != NULL) {
         memcpy(frameInfo.m_pImageBuf, pFrame->pData, frameInfo.m_nBufferSize);
-        pCammerWidget->imgs[pCammerWidget->index].create(frameInfo.m_nHeight, frameInfo.m_nWidth, CV_8UC3);
+        pCammerWidget->imgs[pCammerWidget->index].create(frameInfo.m_nHeight, 
+            frameInfo.m_nWidth, CV_8UC3);
         IMV_PixelConvertParam stPixelConvertParam;
         stPixelConvertParam.nWidth = frameInfo.m_nWidth;
         stPixelConvertParam.nHeight = frameInfo.m_nHeight;
@@ -86,29 +86,24 @@ CammeraUnilty::CammeraUnilty() :
     m_currentCameraKey("")
     ,m_devHandle(NULL)
     ,index(0)
-    , cameraType(LeftCamera)
-{
+    , cameraType(LeftCamera) {
     this->imgs.resize(16);
 }
 
-CammeraUnilty::~CammeraUnilty()
-{
+CammeraUnilty::~CammeraUnilty() {
 }
 
 // 设置曝光
 // set exposeTime
-bool CammeraUnilty::SetExposeTime(double dExposureTime)
-{
-    if (!m_devHandle)
-    {
+bool CammeraUnilty::SetExposeTime(double dExposureTime) {
+    if (!m_devHandle) {
         return false;
     }
 
     int ret = IMV_OK;
 
     ret = IMV_SetDoubleFeatureValue(m_devHandle, "ExposureTime", dExposureTime);
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("set ExposureTime value = %0.2f fail, ErrorCode[%d]\n", dExposureTime, ret);
         return false;
     }
@@ -118,18 +113,15 @@ bool CammeraUnilty::SetExposeTime(double dExposureTime)
 
 // 设置增益
 // set gain
-bool CammeraUnilty::SetAdjustPlus(double dGainRaw)
-{
-    if (!m_devHandle)
-    {
+bool CammeraUnilty::SetAdjustPlus(double dGainRaw) {
+    if (!m_devHandle) {
         return false;
     }
 
     int ret = IMV_OK;
 
     ret = IMV_SetDoubleFeatureValue(m_devHandle, "GainRaw", dGainRaw);
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("set GainRaw value = %0.2f fail, ErrorCode[%d]\n", dGainRaw, ret);
         return false;
     }
@@ -139,12 +131,10 @@ bool CammeraUnilty::SetAdjustPlus(double dGainRaw)
 
 // 打开相机
 // open camera
-bool CammeraUnilty::CameraOpen(void)
-{
+bool CammeraUnilty::CameraOpen(void) {
     int ret = IMV_OK;
 
-    if (m_devHandle)
-    {
+    if (m_devHandle) {
         printf("m_devHandle is already been create!\n");
         return false;
     }
@@ -152,8 +142,7 @@ bool CammeraUnilty::CameraOpen(void)
 
     ret = IMV_CreateHandle(&m_devHandle, modeByCameraKey, (void*)cameraKey);
 
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("create devHandle failed! cameraKey[%s], ErrorCode[%d]\n", cameraKey, ret);
         return false;
     }
@@ -161,8 +150,7 @@ bool CammeraUnilty::CameraOpen(void)
     // 打开相机 
     // Open camera 
     ret = IMV_Open(m_devHandle);
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("open camera failed! ErrorCode[%d]\n", ret);
         return false;
     }
@@ -174,37 +162,31 @@ bool CammeraUnilty::CameraOpen(void)
 
 // 关闭相机
 // close camera
-bool CammeraUnilty::CameraClose(void)
-{
-    if (!m_devHandle)
-    {
+bool CammeraUnilty::CameraClose(void) {
+    if (!m_devHandle) {
         return false;
     }
 
     int ret = IMV_OK;
 
-    if (!m_devHandle)
-    {
+    if (!m_devHandle) {
         printf("close camera fail. No camera.\n");
         return false;
     }
 
-    if (false == IMV_IsOpen(m_devHandle))
-    {
+    if (false == IMV_IsOpen(m_devHandle)) {
         printf("camera is already close.\n");
         return false;
     }
 
     ret = IMV_Close(m_devHandle);
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("close camera failed! ErrorCode[%d]\n", ret);
         return false;
     }
 
     ret = IMV_DestroyHandle(m_devHandle);
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("destroy devHandle failed! ErrorCode[%d]\n", ret);
         return false;
     }
@@ -216,17 +198,14 @@ bool CammeraUnilty::CameraClose(void)
 
 // 开始采集
 // start grabbing
-bool CammeraUnilty::CameraStart()
-{
-    if (!m_devHandle)
-    {
+bool CammeraUnilty::CameraStart() {
+    if (!m_devHandle) {
         return false;
     }
 
     int ret = IMV_OK;
 
-    if (IMV_IsGrabbing(m_devHandle))
-    {
+    if (IMV_IsGrabbing(m_devHandle)) {
         printf("camera is already grebbing.\n");
         return false;
     }
@@ -240,15 +219,13 @@ bool CammeraUnilty::CameraStart()
         ret = IMV_AttachGrabbing(m_devHandle, ColorFrameCallback, this);
     }
 
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("Attach grabbing failed! ErrorCode[%d]\n", ret);
         return false;
     }
 
     ret = IMV_StartGrabbing(m_devHandle);
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("start grabbing failed! ErrorCode[%d]\n", ret);
         return false;
     }
@@ -258,23 +235,19 @@ bool CammeraUnilty::CameraStart()
 
 // 停止采集
 // stop grabbing
-bool CammeraUnilty::CameraStop()
-{
-    if (!m_devHandle)
-    {
+bool CammeraUnilty::CameraStop() {
+    if (!m_devHandle) {
         return false;
     }
 
     int ret = IMV_OK;
-    if (!IMV_IsGrabbing(m_devHandle))
-    {
+    if (!IMV_IsGrabbing(m_devHandle)) {
         printf("camera is already stop grubbing.\n");
         return false;
     }
 
     ret = IMV_StopGrabbing(m_devHandle);
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("Stop grubbing failed! ErrorCode[%d]\n", ret);
         return false;
     }
@@ -283,28 +256,23 @@ bool CammeraUnilty::CameraStop()
 
 // 切换采集方式、触发方式 （连续采集、外部触发、软件触发）
 // Switch acquisition mode and triggering mode (continuous acquisition, external triggering and software triggering)
-bool CammeraUnilty::CameraChangeTrig(ETrigType trigType)
-{
-    if (!m_devHandle)
-    {
+bool CammeraUnilty::CameraChangeTrig(ETrigType trigType) {
+    if (!m_devHandle) {
         return false;
     }
 
     int ret = IMV_OK;
 
-    if (trigContinous == trigType)
-    {
+    if (trigContinous == trigType) {
         // 设置触发模式
         // set trigger mode
         ret = IMV_SetEnumFeatureSymbol(m_devHandle, "TriggerMode", "Off");
-        if (IMV_OK != ret)
-        {
+        if (IMV_OK != ret) {
             printf("set TriggerMode value = Off fail, ErrorCode[%d]\n", ret);
             return false;
         }
     }
-    else if (trigSoftware == trigType)
-    {
+    else if (trigSoftware == trigType) {
         // 设置触发器
         // set trigger
         /*
@@ -318,8 +286,7 @@ bool CammeraUnilty::CameraChangeTrig(ETrigType trigType)
         // 设置触发模式
         // set trigger mode
         ret = IMV_SetEnumFeatureSymbol(m_devHandle, "TriggerMode", "On");
-        if (IMV_OK != ret)
-        {
+        if (IMV_OK != ret) {
             printf("set TriggerMode value = On fail, ErrorCode[%d]\n", ret);
             return false;
         }
@@ -327,14 +294,12 @@ bool CammeraUnilty::CameraChangeTrig(ETrigType trigType)
         // 设置触发源为软触发
         // set triggerSource as software trigger
         ret = IMV_SetEnumFeatureSymbol(m_devHandle, "TriggerSource", "Software");
-        if (IMV_OK != ret)
-        {
+        if (IMV_OK != ret) {
             printf("set TriggerSource value = Software fail, ErrorCode[%d]\n", ret);
             return false;
         }
     }
-    else if (trigLine == trigType)
-    {
+    else if (trigLine == trigType) {
         // 设置触发器
         // set trigger
         /*
@@ -348,8 +313,7 @@ bool CammeraUnilty::CameraChangeTrig(ETrigType trigType)
         // 设置触发模式
         // set trigger mode
         ret = IMV_SetEnumFeatureSymbol(m_devHandle, "TriggerMode", "On");
-        if (IMV_OK != ret)
-        {
+        if (IMV_OK != ret) {
             printf("set TriggerMode value = On fail, ErrorCode[%d]\n", ret);
             return false;
         }
@@ -357,8 +321,7 @@ bool CammeraUnilty::CameraChangeTrig(ETrigType trigType)
         // 设置触发源为Line1触发
         // set trigggerSource as Line1 trigger 
         ret = IMV_SetEnumFeatureSymbol(m_devHandle, "TriggerSource", "Line2");
-        if (IMV_OK != ret)
-        {
+        if (IMV_OK != ret) {
             printf("set TriggerSource value = Line1 fail, ErrorCode[%d]\n", ret);
             return false;
         }
@@ -368,18 +331,15 @@ bool CammeraUnilty::CameraChangeTrig(ETrigType trigType)
 
 // 执行一次软触发
 // execute one software trigger
-bool CammeraUnilty::ExecuteSoftTrig(void)
-{
-    if (!m_devHandle)
-    {
+bool CammeraUnilty::ExecuteSoftTrig(void) {
+    if (!m_devHandle) {
         return false;
     }
 
     int ret = IMV_OK;
 
     ret = IMV_ExecuteCommandFeature(m_devHandle, "TriggerSoftware");
-    if (IMV_OK != ret)
-    {
+    if (IMV_OK != ret) {
         printf("ExecuteSoftTrig fail, ErrorCode[%d]\n", ret);
         return false;
     }
@@ -390,8 +350,7 @@ bool CammeraUnilty::ExecuteSoftTrig(void)
 
 // 设置当前相机  
 // set current camera
-void CammeraUnilty::SetCamera(const std::string& strKey)
-{
+void CammeraUnilty::SetCamera(const std::string& strKey) {
     m_currentCameraKey = strKey;
 }
 

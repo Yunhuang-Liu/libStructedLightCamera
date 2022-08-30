@@ -1,13 +1,13 @@
-#include <Restructor/Restructor.h>
+#include "Restructor/Restructor.h"
 
 namespace RestructorType {
-    Restructor::Restructor(){
+Restructor::Restructor(){
 
-    }
+}
 
-    Restructor::~Restructor(){
+Restructor::~Restructor(){
 
-    }
+}
 }
 
 

@@ -8,9 +8,10 @@
  * @copyright Copyright (c) 2021
  *
  */
-#ifndef ThreeStepFiveGrayCodeMaster_CPU_H
-#define ThreeStepFiveGrayCodeMaster_CPU_H
-#include "./PhaseSolver.h"
+#ifndef RESTRUCTOR_THREESTEPFIVEGRAYCODEMASTER_CPU_H
+#define RESTRUCTOR_THREESTEPFIVEGRAYCODEMASTER_CPU_H
+
+#include "Restructor/PhaseSolver.h"
 #include <fstream>
 
 
@@ -123,4 +124,4 @@ namespace PhaseSolverType {
             const int threads;
     };
 }
-#endif // !ThreeStepFiveGrayCodeMaster_CPU_H
+#endif // RESTRUCTOR_THREESTEPFIVEGRAYCODEMASTER_CPU_H

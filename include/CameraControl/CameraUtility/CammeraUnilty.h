@@ -8,31 +8,32 @@
  * @copyright Copyright (c) 2021
  * 
  */
-#ifndef CAMMERUNILTY_H
-#define CAMMERUNILTY_H
+#ifndef CAMERACONTROL_CAMMERUNILTY_H
+#define CAMERACONTROL_CAMMERUNILTY_H
 
 #include <vector>
-#include "../CameraSDK/IMVApi.h"
+
 #include <opencv2/opencv.hpp>
+
+#include "../CameraSDK/IMVApi.h"
 
 // 状态栏统计信息 
 // Status bar statistics
-struct FrameStatInfo
-{
-    unsigned int	m_nFrameSize;       // 帧大小, 单位: 字节 | frame size ,length :byte
-    uint64_t		m_nPassTime;         // 接收到该帧时经过的纳秒数 |  The number of nanoseconds passed when the frame was received
-    FrameStatInfo(unsigned int nSize, uint64_t nTime) : m_nFrameSize(nSize), m_nPassTime(nTime)
-    {
-    }
+struct FrameStatInfo {
+    unsigned int	m_nFrameSize;   // 帧大小, 单位: 字节 | frame size ,
+                                    // length :byte
+    uint64_t		m_nPassTime;    // 接收到该帧时经过的纳秒数 |  
+                                    // The number of nanoseconds passed when
+                                    // the frame was received
+    FrameStatInfo(unsigned int nSize, uint64_t nTime) : 
+        m_nFrameSize(nSize), m_nPassTime(nTime) {}
 };
 
 // 帧信息 
 // frame imformation
-class CFrameInfo
-{
+class CFrameInfo {
 public:
-    CFrameInfo()
-    {
+    CFrameInfo() {
         m_pImageBuf = NULL;
         m_nBufferSize = 0;
         m_nWidth = 0;
@@ -43,8 +44,7 @@ public:
         m_nTimeStamp = 0;
     }
 
-    ~CFrameInfo()
-    {
+    ~CFrameInfo() {
     }
 
 public:
@@ -58,24 +58,22 @@ public:
     uint64_t		m_nTimeStamp;
 };
 
-class CammeraUnilty
-{
+class CammeraUnilty {
 public:
-    explicit CammeraUnilty();
-    ~CammeraUnilty();
-    /** 相机类别 **/
+    /** \相机类别 **/
     enum CameraType {
         LeftCamera = 0,
         RightCamera = 1,
         ColorCamera = 2,
     };
     /** \枚举触发方式 **/
-    enum ETrigType
-    {
+    enum ETrigType {
         trigContinous = 0,	// 连续拉流 | continue grabbing
         trigSoftware = 1,	// 软件触发 | software trigger
         trigLine = 2,		// 外部触发	| external trigger
     };
+    explicit CammeraUnilty();
+    ~CammeraUnilty();
     /** \打开相机 **/
     bool CameraOpen(void);
     /** \关闭相机 **/
@@ -97,7 +95,8 @@ public:
     /** \设置当前相机 **/
     void SetCamera(const std::string& strKey);
     /** \设置ROI **/
-    void setROI(const int width, const int height, const int offsetX, const int offsetY);
+    void setROI(const int width, const int height, 
+        const int offsetX, const int offsetY);
     /** \清除Buufer **/
     void clearBuffer();
     /** \设置自动曝光 **/
@@ -109,18 +108,18 @@ public:
     /** \设置亮度 **/
     void setBrightness(const int brightness);
     /** \设置白平衡R、G、B增益值 **/
-    void setWhiteBlanceRGB(float r,float g,float b);
-    /** \所有图片 **/
+    void setWhiteBlanceRGB(float r,float g,float b);		
+     /** \所有图片 **/
     std::vector<cv::Mat> imgs;
     /** \图片索引 **/
     int index;
     /** \是否彩色相机 **/
     CameraType cameraType;
     /** \相机句柄 **/
-    IMV_HANDLE							m_devHandle = nullptr;				
+    IMV_HANDLE  m_devHandle = nullptr;		
 private:
     /** \当前相机key **/
-    std::string					        m_currentCameraKey;			
+    std::string m_currentCameraKey;			
 };
 
-#endif // CAMMERUNILTY_H
+#endif // CAMERACONTROL_CAMMERUNILTY_H

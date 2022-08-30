@@ -1,7 +1,7 @@
 /**
  * @file FourStepSixGrayCodeMaster_GPU.cuh
  * @author Liu Yunhuang(1369215984@qq.com)
- * @brief  GPU¼ÓËÙ½âÏàÆ÷(ËÄ²½ÎåÎ»»¥²¹¸ñÀ×Âë)
+ * @brief  GPUåŠ é€Ÿè§£ç›¸å™¨(å››æ­¥äº”ä½äº’è¡¥æ ¼é›·ç )
  * @version 0.1
  * @date 2021-12-10
  *
@@ -9,85 +9,90 @@
  *
  */
 
-#ifndef FourStepSixGrayCodeMaster_GPU_H
-#define FourStepSixGrayCodeMaster_GPU_H
-#include "./PhaseSolver.h"
+#ifndef RESTRUCTOR_FOURSTEPSIXGRAYCODEMASTER_GPU_H
+#define RESTRUCTOR_FOURSTEPSIXGRAYCODEMASTER_GPU_H
+
+#include "Restructor/PhaseSolver.h"
 
 namespace PhaseSolverType {
+/**
+ * @brief äº’è¡¥æ ¼é›·ç å››æ­¥ç›¸ç§»è§£ç å™¨(4+6 | CUDA)
+ *
+ */
+class FourStepSixGrayCodeMaster_GPU : public PhaseSolver {
+public:
     /**
-     * @brief »¥²¹¸ñÀ×ÂëËÄ²½ÏàÒÆ½âÂëÆ÷(4+6 | CUDA)
-     *
+     * @brief æ„é€ å‡½æ•°
+     * @param block_ è¾“å…¥ï¼ŒBlockå°ºå¯¸
      */
-    class FourStepSixGrayCodeMaster_GPU : public PhaseSolver {
-    public:
-        /**
-         * @brief ¹¹Ôìº¯Êı
-         * @param block_ ÊäÈë£¬Block³ß´ç
-         */
-        FourStepSixGrayCodeMaster_GPU(const dim3 block_ = dim3(32, 8));
-        /**
-         * @brief ¹¹Ôìº¯Êı
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         * @param block_ ÊäÈë£¬Block³ß´ç
-         */
-        FourStepSixGrayCodeMaster_GPU(std::vector<cv::Mat>& imgs, const dim3 block_ = dim3(32, 8));
-        /**
-         * @brief Îö¹¹º¯Êı
-         */
-        ~FourStepSixGrayCodeMaster_GPU();
-        /**
-         * @brief ½âÏà
-         *
-         * @param unwrapImg ÊäÈë/Êä³ö£¬¾ø¶ÔÏàÎ»Í¼
-         * @param pStream ÊäÈë£¬Òì²½Á÷
-         */
-        void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>& unwrapImg, cv::cuda::Stream& pStream) override;
-        /**
-         * @brief ÉÏ´«Í¼Æ¬
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         * @param pStream ÊäÈë£¬Òì²½Á÷
-         */
-        void changeSourceImg(std::vector<cv::Mat>& imgs, cv::cuda::Stream& stream) override;
-        /**
-         * @brief ÉÏ´«Ô­Ê¼Í¼Æ¬
-         * @param imgs ÊäÈë£¬Éè±¸¶ËÍ¼Æ¬£¨CV_8UC1)
-         */
-        void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override;
-        /**
-         * @brief »ñÈ¡ÎÆÀíÍ¼Æ¬£¨»Ò¶È¸¡µãĞÍ£©
-         * @param textureImg ÊäÈë/Êä³ö£¬ÎÆÀíÍ¼Æ¬
-         */
-        void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override;
-    protected:
-        /**
-         * @brief ÉÏ´«Í¼Æ¬
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         */
-        void changeSourceImg(std::vector<cv::Mat>& imgs) override;
-        /**
-         * @brief »ñÈ¡°ü¹üÏàÎ»
-         */
-        void getWrapPhaseImg();
-    private:
-        void getUnwrapPhaseImg(cv::Mat&) override{}
-        void getWrapPhaseImg(cv::Mat&, cv::Mat&) override {}
-        void getTextureImg(cv::Mat& textureImg) override {}
-        /** \GPUÍ¼Ïñ 
-         *  \È«²¿ÅÄÉãÍ¼Æ¬ 0¡ª¡ª3£ºÏàÒÆ 4¡ª¡ª9£º¸ñÀ× 10£¿ÑÕÉ«
-         **/
-        std::vector<cv::cuda::GpuMat> imgs_device;
-        /** \ãĞÖµÍ¼Ïñ **/
-        cv::cuda::GpuMat averageImg_device;
-        /** \µ÷ÖÆÍ¼Ïñ **/
-        cv::cuda::GpuMat conditionImg_device;
-        /** \°ü¹üÏàÎ»Í¼Ïñ **/
-        cv::cuda::GpuMat wrapImg_device;
-        /** \block³ß´ç **/
-        const dim3 block;
-        /** \ĞĞÊı **/
-        int rows;
-        /** \ÁĞÊı **/
-        int cols;
-    };
+    FourStepSixGrayCodeMaster_GPU(const dim3 block_ = dim3(32, 8));
+    /**
+     * @brief æ„é€ å‡½æ•°
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     * @param block_ è¾“å…¥ï¼ŒBlockå°ºå¯¸
+     */
+    FourStepSixGrayCodeMaster_GPU(std::vector<cv::Mat>& imgs, 
+        const dim3 block_ = dim3(32, 8));
+    /**
+     * @brief ææ„å‡½æ•°
+     */
+    ~FourStepSixGrayCodeMaster_GPU();
+    /**
+     * @brief è§£ç›¸
+     *
+     * @param unwrapImg è¾“å…¥/è¾“å‡ºï¼Œç»å¯¹ç›¸ä½å›¾
+     * @param pStream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>& unwrapImg, 
+        cv::cuda::Stream& pStream) override;
+    /**
+     * @brief ä¸Šä¼ å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     * @param pStream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void changeSourceImg(std::vector<cv::Mat>& imgs, 
+        cv::cuda::Stream& stream) override;
+    /**
+     * @brief ä¸Šä¼ åŸå§‹å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼Œè®¾å¤‡ç«¯å›¾ç‰‡ï¼ˆCV_8UC1)
+     */
+    void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override;
+    /**
+     * @brief è·å–çº¹ç†å›¾ç‰‡ï¼ˆç°åº¦æµ®ç‚¹å‹ï¼‰
+     * @param textureImg è¾“å…¥/è¾“å‡ºï¼Œçº¹ç†å›¾ç‰‡
+     */
+    void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override;
+protected:
+    /**
+     * @brief ä¸Šä¼ å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     */
+    void changeSourceImg(std::vector<cv::Mat>& imgs) override;
+    /**
+     * @brief è·å–åŒ…è£¹ç›¸ä½
+     */
+    void getWrapPhaseImg();
+private:
+    void getUnwrapPhaseImg(cv::Mat&) override{}
+    void getWrapPhaseImg(cv::Mat&, cv::Mat&) override {}
+    void getTextureImg(cv::Mat& textureImg) override {}
+    /** \GPUå›¾åƒ 
+     *  \å…¨éƒ¨æ‹æ‘„å›¾ç‰‡ 0â€”â€”3ï¼šç›¸ç§» 4â€”â€”9ï¼šæ ¼é›· 10ï¼Ÿé¢œè‰²
+     **/
+    std::vector<cv::cuda::GpuMat> imgs_device;
+    /** \é˜ˆå€¼å›¾åƒ **/
+    cv::cuda::GpuMat averageImg_device;
+    /** \è°ƒåˆ¶å›¾åƒ **/
+    cv::cuda::GpuMat conditionImg_device;
+    /** \åŒ…è£¹ç›¸ä½å›¾åƒ **/
+    cv::cuda::GpuMat wrapImg_device;
+    /** \blockå°ºå¯¸ **/
+    const dim3 block;
+    /** \è¡Œæ•° **/
+    int rows;
+    /** \åˆ—æ•° **/
+    int cols;
+};
 }
-#endif // !FourStepSixGrayCodeMaster_GPU_H
+
+#endif // RESTRUCTOR_FOURSTEPSIXGRAYCODEMASTER_GPU_H

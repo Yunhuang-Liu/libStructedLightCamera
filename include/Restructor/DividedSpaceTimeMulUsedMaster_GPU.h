@@ -1,7 +1,7 @@
 /**
  * @file DividedSpaceTimeMulUsedMaster_GPU.cuh
  * @author Liu Yunhuang(1369215984@qq.com)
- * @brief  ·ÖÇø¼äÏàÎ»Õ¹¿ª+Ê±¼ä¸´ÓÃGPU¼ÓËÙ½âÏàÆ÷
+ * @brief  åˆ†åŒºé—´ç›¸ä½å±•å¼€+æ—¶é—´å¤ç”¨GPUåŠ é€Ÿè§£ç›¸å™¨
  * @version 0.1
  * @date 2021-12-10
  *
@@ -9,163 +9,167 @@
  *
  */
 
-#ifndef DividedSpaceTimeMulUsedMaster_GPU_H
-#define DividedSpaceTimeMulUsedMaster_GPU_H
+#ifndef RESTRUCTOR_DIVIDEDTIMEMULUSEDMASTER_GPU_H
+#define RESTRUCTOR_DIVIDEDTIMEMULUSEDMASTER_GPU_H
 
-#include "./PhaseSolver.h"
+#include "Restructor/PhaseSolver.h"
 
 namespace PhaseSolverType {
+/**
+* @brief åˆ†åŒºé—´ç›¸ä½å±•å¼€+æ—¶é—´å¤ç”¨æ ¼é›·ç GPUè§£ç›¸å™¨
+*/
+class DividedSpaceTimeMulUsedMaster_GPU : public PhaseSolver {
+public:
     /**
-     * @brief ·ÖÇø¼äÏàÎ»Õ¹¿ª+Ê±¼ä¸´ÓÃ¸ñÀ×ÂëGPU½âÏàÆ÷
+     * @brief æ„é€ å‡½æ•°
+     * @param refImgWhite_ è¾“å…¥ï¼Œå‚è€ƒç»å¯¹ç›¸ä½
+     * @param block è¾“å…¥ï¼ŒBlockå°ºå¯¸
      */
-    class DividedSpaceTimeMulUsedMaster_GPU : public PhaseSolver {
-    public:
-        /**
-         * @brief ¹¹Ôìº¯Êı
-         * @param refImgWhite_ ÊäÈë£¬²Î¿¼¾ø¶ÔÏàÎ»
-         * @param block ÊäÈë£¬Block³ß´ç
-         */
-        DividedSpaceTimeMulUsedMaster_GPU(const cv::Mat& refImgWhite_, const dim3 block = dim3(32, 8));
-        /**
-         * @brief ¹¹Ôìº¯Êı
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         * @param refImgWhite ÊäÈë£¬²Î¿¼¾ø¶ÔÏàÎ»
-         * @param block ÊäÈë£¬Block³ß´ç
-         */
-        DividedSpaceTimeMulUsedMaster_GPU(std::vector<cv::Mat> &imgs,const cv::Mat& refImgWhite, const dim3 block = dim3(32, 8));
-        /**
-         * @brief Îö¹¹º¯Êı
-         */
-        ~DividedSpaceTimeMulUsedMaster_GPU();
-        /**
-         * @brief ½âÏà
-         * @param absolutePhaseImg ÊäÈë/Êä³ö£¬¾ø¶ÔÏàÎ»Í¼
-         * @param pStream ÊäÈë£¬Òì²½Á÷
-         */
-        void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>& unwrapImg, cv::cuda::Stream& pStream) override ;
-        /**
-         * @brief ÉÏ´«Ô­Ê¼Í¼Æ¬
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         * @param stream ÊäÈë£¬Òì²½Á÷
-         */
-        void changeSourceImg(std::vector<cv::Mat>& imgs, cv::cuda::Stream& stream) override;
-        /**
-         * @brief ÉÏ´«Ô­Ê¼Í¼Æ¬
-         * @param imgs ÊäÈë£¬Éè±¸¶ËÍ¼Æ¬£¨CV_8UC1)
-         */
-        void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override;
-        /**
-         * @brief »ñÈ¡ÎÆÀíÍ¼Æ¬£¨»Ò¶È¸¡µãĞÍ£©
-         * @param textureImg ÊäÈë/Êä³ö£¬ÎÆÀíÍ¼Æ¬
-         */
-        void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override;
-    protected:
-        /**
-         * @brief »ñÈ¡°ü¹üÏàÎ»
-         * @param stream ÊäÈë£¬Òì²½Á÷
-         */
-        void getWrapPhaseImg(cv::cuda::Stream& pStream);
-        /**
-         * @brief ¸ü¸ÄÔ´Í¼Æ¬,Í¬²½°æ±¾£¬ÔİÊ±Î´±»ÒÆ³ı
-         * @param imgs ÊäÈë£¬Ô­Ê¼Í¼Æ¬
-         */
-        void changeSourceImg(std::vector<cv::Mat>& imgs) override;
-    private:
-        void getUnwrapPhaseImg(cv::Mat&) override {}
-        void getWrapPhaseImg(cv::Mat&, cv::Mat&) override {}
-        void getTextureImg(cv::Mat& textureImg) override {}
-        /** \µÚÒ»Ö¡ãĞÖµÍ¼Ïñ **/
-        cv::cuda::GpuMat averageImg_1_device;
-        /** \µÚ¶şÖ¡ãĞÖµÍ¼Ïñ **/
-        cv::cuda::GpuMat averageImg_2_device;
-        /** \µÚÈıÖ¡ãĞÖµÍ¼Ïñ **/
-        cv::cuda::GpuMat averageImg_3_device;
-        /** \µÚËÄÖ¡ãĞÖµÍ¼Ïñ **/
-        cv::cuda::GpuMat averageImg_4_device;
-        /** \µÚÒ»Ö¡µ÷ÖÆÍ¼Ïñ **/
-        cv::cuda::GpuMat conditionImg_1_device;
-        /** \µÚ¶şÖ¡µ÷ÖÆÍ¼Ïñ **/
-        cv::cuda::GpuMat conditionImg_2_device;
-        /** \µÚÈıÖ¡µ÷ÖÆÍ¼Ïñ **/
-        cv::cuda::GpuMat conditionImg_3_device;
-        /** \µÚËÄÖ¡µ÷ÖÆÍ¼Ïñ **/
-        cv::cuda::GpuMat conditionImg_4_device;
-        /** \µÚÒ»Ö¡°ü¹üÏàÎ»Í¼Ïñ¡ª1 **/
-        cv::cuda::GpuMat wrapImg1_1_device;
-        /** \µÚÒ»Ö¡°ü¹üÏàÎ»Í¼Ïñ¡ª2 **/
-        cv::cuda::GpuMat wrapImg1_2_device;
-        /** \µÚÒ»Ö¡°ü¹üÏàÎ»Í¼Ïñ¡ª3 **/
-        cv::cuda::GpuMat wrapImg1_3_device;
-        /** \µÚ¶şÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª1 **/
-        cv::cuda::GpuMat wrapImg2_1_device;
-        /** \µÚ¶şÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª2 **/
-        cv::cuda::GpuMat wrapImg2_2_device;
-        /** \µÚ¶şÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª3 **/
-        cv::cuda::GpuMat wrapImg2_3_device;
-        /** \µÚÈıÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª1 **/
-        cv::cuda::GpuMat wrapImg3_1_device;
-        /** \µÚÈıÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª2 **/
-        cv::cuda::GpuMat wrapImg3_2_device;
-        /** \µÚÈıÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª3 **/
-        cv::cuda::GpuMat wrapImg3_3_device;
-        /** \µÚËÄÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª1 **/
-        cv::cuda::GpuMat wrapImg4_1_device;
-        /** \µÚËÄÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª2 **/
-        cv::cuda::GpuMat wrapImg4_2_device;
-        /** \µÚËÄÖ¡°ü¹üÏàÎ»Í¼Ïñ¡ª3 **/
-        cv::cuda::GpuMat wrapImg4_3_device;
-        /** \²Î¿¼Æ½Ãæ¾ø¶ÔÏàÎ» **/
-        const cv::cuda::GpuMat refImgWhite_device;
-        /** \µÚÒ»Ö¡Í¼Ïñ:GrayCode **/
-        cv::cuda::GpuMat img1_1_device;
-        /** \µÚÒ»Ö¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img1_2_device;
-        /** \µÚÒ»Ö¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img1_3_device;
-        /** \µÚÒ»Ö¡Í¼Ïñ:Phase**/
-        cv::cuda::GpuMat img1_4_device;
-        /** \µÚ¶şÖ¡Í¼Ïñ:GrayCode **/
-        cv::cuda::GpuMat img2_1_device;
-        /** \µÚ¶şÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img2_2_device;
-        /** \µÚ¶şÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img2_3_device;
-        /** \µÚ¶şÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img2_4_device;
-        /** \µÚÈıÖ¡Í¼Ïñ:GrayCode **/
-        cv::cuda::GpuMat img3_1_device;
-        /** \µÚÈıÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img3_2_device;
-        /** \µÚÈıÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img3_3_device;
-        /** \µÚÈıÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img3_4_device;
-        /** \µÚËÄÖ¡Í¼Ïñ:GrayCode **/
-        cv::cuda::GpuMat img4_1_device;
-        /** \µÚËÄÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img4_2_device;
-        /** \µÚËÄÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img4_3_device;
-        /** \µÚËÄÖ¡Í¼Ïñ:Phase **/
-        cv::cuda::GpuMat img4_4_device;
-        /** \µÚÒ»Ö¡¾ø¶ÔÏàÎ» **/
-        cv::cuda::GpuMat unwrapImg_1_device;
-        /** \µÚ¶şÖ¡¾ø¶ÔÏàÎ» **/
-        cv::cuda::GpuMat unwrapImg_2_device;
-        /** \µÚÈıÖ¡¾ø¶ÔÏàÎ» **/
-        cv::cuda::GpuMat unwrapImg_3_device;
-        /** \µÚËÄÖ¡¾ø¶ÔÏàÎ» **/
-        cv::cuda::GpuMat unwrapImg_4_device;
-        /** \½âÏà½×¼¶ **/
-        cv::cuda::GpuMat floor_K_device;
-        /** \block³ß´ç **/
-        const dim3 block;
-        /** \ĞĞÊı **/
-        int rows;
-        /** \ÁĞÊı **/
-        int cols;
-    };
+    DividedSpaceTimeMulUsedMaster_GPU(const cv::Mat& refImgWhite_, 
+        const dim3 block = dim3(32, 8));
+    /**
+     * @brief æ„é€ å‡½æ•°
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     * @param refImgWhite è¾“å…¥ï¼Œå‚è€ƒç»å¯¹ç›¸ä½
+     * @param block è¾“å…¥ï¼ŒBlockå°ºå¯¸
+     */
+    DividedSpaceTimeMulUsedMaster_GPU(std::vector<cv::Mat> &imgs,
+        const cv::Mat& refImgWhite, 
+        const dim3 block = dim3(32, 8));
+    /**
+     * @brief ææ„å‡½æ•°
+     */
+    ~DividedSpaceTimeMulUsedMaster_GPU();
+    /**
+     * @brief è§£ç›¸
+     * @param absolutePhaseImg è¾“å…¥/è¾“å‡ºï¼Œç»å¯¹ç›¸ä½å›¾
+     * @param pStream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>& unwrapImg, 
+        cv::cuda::Stream& pStream) override;
+    /**
+     * @brief ä¸Šä¼ åŸå§‹å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+     * @param stream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void changeSourceImg(std::vector<cv::Mat>& imgs, 
+        cv::cuda::Stream& stream) override;
+    /**
+     * @brief ä¸Šä¼ åŸå§‹å›¾ç‰‡
+     * @param imgs è¾“å…¥ï¼Œè®¾å¤‡ç«¯å›¾ç‰‡ï¼ˆCV_8UC1)
+     */
+    void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override;
+    /**
+     * @brief è·å–çº¹ç†å›¾ç‰‡ï¼ˆç°åº¦æµ®ç‚¹å‹ï¼‰
+     * @param textureImg è¾“å…¥/è¾“å‡ºï¼Œçº¹ç†å›¾ç‰‡
+     */
+    void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override;    
+protected:
+    /**
+     * @brief è·å–åŒ…è£¹ç›¸ä½
+     * @param stream è¾“å…¥ï¼Œå¼‚æ­¥æµ
+     */
+    void getWrapPhaseImg(cv::cuda::Stream& pStream);
+    /**
+     * @brief æ›´æ”¹æºå›¾ç‰‡,åŒæ­¥ç‰ˆæœ¬ï¼Œæš‚æ—¶æœªè¢«ç§»é™¤
+     * @param imgs è¾“å…¥ï¼ŒåŸå§‹å›¾ç‰‡
+    */
+    void changeSourceImg(std::vector<cv::Mat>& imgs) override;
+private:
+    /** \blockå°ºå¯¸ **/
+    const dim3 block;
+    void getUnwrapPhaseImg(cv::Mat&) override {}
+    void getWrapPhaseImg(cv::Mat&, cv::Mat&) override {}
+    void getTextureImg(cv::Mat& textureImg) override {}
+    /** \ç¬¬ä¸€å¸§é˜ˆå€¼å›¾åƒ **/
+    cv::cuda::GpuMat averageImg_1_device;
+    /** \ç¬¬äºŒå¸§é˜ˆå€¼å›¾åƒ **/
+    cv::cuda::GpuMat averageImg_2_device;
+    /** \ç¬¬ä¸‰å¸§é˜ˆå€¼å›¾åƒ **/
+    cv::cuda::GpuMat averageImg_3_device;
+    /** \ç¬¬å››å¸§é˜ˆå€¼å›¾åƒ **/
+    cv::cuda::GpuMat averageImg_4_device;
+    /** \ç¬¬ä¸€å¸§è°ƒåˆ¶å›¾åƒ **/
+    cv::cuda::GpuMat conditionImg_1_device;
+    /** \ç¬¬äºŒå¸§è°ƒåˆ¶å›¾åƒ **/
+    cv::cuda::GpuMat conditionImg_2_device;
+    /** \ç¬¬ä¸‰å¸§è°ƒåˆ¶å›¾åƒ **/
+    cv::cuda::GpuMat conditionImg_3_device;
+    /** \ç¬¬å››å¸§è°ƒåˆ¶å›¾åƒ **/
+    cv::cuda::GpuMat conditionImg_4_device;
+    /** \ç¬¬ä¸€å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”1 **/
+    cv::cuda::GpuMat wrapImg1_1_device;
+    /** \ç¬¬ä¸€å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”2 **/
+    cv::cuda::GpuMat wrapImg1_2_device;
+    /** \ç¬¬ä¸€å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”3 **/
+    cv::cuda::GpuMat wrapImg1_3_device;
+    /** \ç¬¬äºŒå¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”1 **/
+    cv::cuda::GpuMat wrapImg2_1_device;
+    /** \ç¬¬äºŒå¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”2 **/
+    cv::cuda::GpuMat wrapImg2_2_device;
+    /** \ç¬¬äºŒå¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”3 **/
+    cv::cuda::GpuMat wrapImg2_3_device;
+    /** \ç¬¬ä¸‰å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”1 **/
+    cv::cuda::GpuMat wrapImg3_1_device;
+    /** \ç¬¬ä¸‰å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”2 **/
+    cv::cuda::GpuMat wrapImg3_2_device;
+    /** \ç¬¬ä¸‰å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”3 **/
+    cv::cuda::GpuMat wrapImg3_3_device;
+    /** \ç¬¬å››å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”1 **/
+    cv::cuda::GpuMat wrapImg4_1_device;
+    /** \ç¬¬å››å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”2 **/
+    cv::cuda::GpuMat wrapImg4_2_device;
+    /** \ç¬¬å››å¸§åŒ…è£¹ç›¸ä½å›¾åƒâ€”3 **/
+    cv::cuda::GpuMat wrapImg4_3_device;
+    /** \å‚è€ƒå¹³é¢ç»å¯¹ç›¸ä½ **/
+    const cv::cuda::GpuMat refImgWhite_device;
+    /** \ç¬¬ä¸€å¸§å›¾åƒ:GrayCode **/
+    cv::cuda::GpuMat img1_1_device;
+    /** \ç¬¬ä¸€å¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img1_2_device;
+    /** \ç¬¬ä¸€å¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img1_3_device;
+    /** \ç¬¬ä¸€å¸§å›¾åƒ:Phase**/
+    cv::cuda::GpuMat img1_4_device;
+    /** \ç¬¬äºŒå¸§å›¾åƒ:GrayCode **/
+    cv::cuda::GpuMat img2_1_device;
+    /** \ç¬¬äºŒå¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img2_2_device;
+    /** \ç¬¬äºŒå¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img2_3_device;
+    /** \ç¬¬äºŒå¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img2_4_device;
+    /** \ç¬¬ä¸‰å¸§å›¾åƒ:GrayCode **/
+    cv::cuda::GpuMat img3_1_device;
+    /** \ç¬¬ä¸‰å¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img3_2_device;
+    /** \ç¬¬ä¸‰å¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img3_3_device;
+    /** \ç¬¬ä¸‰å¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img3_4_device;
+    /** \ç¬¬å››å¸§å›¾åƒ:GrayCode **/
+    cv::cuda::GpuMat img4_1_device;
+    /** \ç¬¬å››å¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img4_2_device;
+    /** \ç¬¬å››å¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img4_3_device;
+    /** \ç¬¬å››å¸§å›¾åƒ:Phase **/
+    cv::cuda::GpuMat img4_4_device;
+    /** \ç¬¬ä¸€å¸§ç»å¯¹ç›¸ä½ **/
+    cv::cuda::GpuMat unwrapImg_1_device;
+    /** \ç¬¬äºŒå¸§ç»å¯¹ç›¸ä½ **/
+    cv::cuda::GpuMat unwrapImg_2_device;
+    /** \ç¬¬ä¸‰å¸§ç»å¯¹ç›¸ä½ **/
+    cv::cuda::GpuMat unwrapImg_3_device;
+    /** \ç¬¬å››å¸§ç»å¯¹ç›¸ä½ **/
+    cv::cuda::GpuMat unwrapImg_4_device;
+    /** \è§£ç›¸é˜¶çº§ **/
+    cv::cuda::GpuMat floor_K_device;
+    /** \è¡Œæ•° **/
+    int rows;
+    /** \åˆ—æ•° **/
+    int cols;
+};
 }
 
-
-#endif // !DividedSpaceTimeMulUsedMaster_GPU_H
+#endif // RESTRUCTOR_DIVIDEDTIMEMULUSEDMASTER_GPU_H

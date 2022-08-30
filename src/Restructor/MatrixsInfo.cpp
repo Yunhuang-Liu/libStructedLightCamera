@@ -1,7 +1,6 @@
-#include <Restructor/MatrixsInfo.h>
+#include "Restructor/MatrixsInfo.h"
 
-MatrixsInfo::MatrixsInfo(std::string intrinsicDir,std::string extrinsicDir)
-{
+MatrixsInfo::MatrixsInfo(std::string intrinsicDir,std::string extrinsicDir) {
     cv::FileStorage readYml(intrinsicDir, cv::FileStorage::READ);
     readYml["M1"] >> myInfo.M1;
     readYml["D1"] >> myInfo.D1;
@@ -23,8 +22,7 @@ MatrixsInfo::MatrixsInfo(std::string intrinsicDir,std::string extrinsicDir)
     readYml.release();
 }
 
-MatrixsInfo::MatrixsInfo(std::string calibrationFileDir)
-{
+MatrixsInfo::MatrixsInfo(std::string calibrationFileDir) {
     cv::FileStorage readYml(calibrationFileDir, cv::FileStorage::READ);
     readYml["M1"] >> myInfo.M1;
     readYml["D1"] >> myInfo.D1;
@@ -36,7 +34,6 @@ MatrixsInfo::MatrixsInfo(std::string calibrationFileDir)
     readYml.release();
 }
 
-const Info& MatrixsInfo::getInfo()
-{
+const Info& MatrixsInfo::getInfo() {
     return myInfo;
 }
