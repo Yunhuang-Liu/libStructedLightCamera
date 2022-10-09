@@ -3,14 +3,14 @@
     "",
     "\\include",
     "\\include\\Restructor",
+    "\\lib",
     "\\src",
     "\\src\\CameraControl",
-    "\\src\\CameraControl\\CameraUtility",
     "\\src\\CameraControl\\ProjectorSDK",
     "\\src\\Restructor",
     "\\src\\Restructor\\cuda",
     "\\systemFile"
   ],
-  "SelectedNode": "\\CMakeLists.txt",
+  "SelectedNode": "\\src\\Restructor\\FourStepSixGrayCodeMaster_CPU.cpp",
   "PreviewInSolutionExplorer": false
 }

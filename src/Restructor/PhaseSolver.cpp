@@ -1,10 +1,9 @@
 #include <Restructor/PhaseSolver.h>
 
-PhaseSolverType::PhaseSolver::PhaseSolver(){
+namespace SL {
+    PhaseSolverType::PhaseSolver::PhaseSolver() {
+    }
 
-}
-
-PhaseSolverType::PhaseSolver::~PhaseSolver(){
-    
-}
-
+    PhaseSolverType::PhaseSolver::~PhaseSolver() {
+    }
+}// namespace SL

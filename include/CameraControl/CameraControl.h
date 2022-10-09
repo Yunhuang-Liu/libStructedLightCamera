@@ -1,7 +1,7 @@
 /**
  * @file CammeraControl.h
  * @author Liu Yunhuang (1369215984@qq.com)
- * @brief  ½á¹¹¹âÏà»ú¿ØÖÆÀà
+ * @brief  ç»“æ„å…‰ç›¸æœºæ§åˆ¶ç±»
  * @version 0.1
  * @date 2022-5-9
  *
@@ -9,92 +9,141 @@
  *
  */
 
-#ifndef CameraControl_H
-#define CameraControl_H
+#ifndef PROJECTORSDK_CameraControl_H
+#define PROJECTORSDK_CameraControl_H
 
-#include "./CameraUtility/CammeraUnilty.h"
-#include "./ProjectorSDK/ProjectorControl.h"
+#include <CameraControl/CameraUtility/CammeraUnilty.h>
+#include <CameraControl/ProjectorSDK/ProjectorControl.h>
 
-struct RestructedFrame{
-public:
-    RestructedFrame() {};
-    RestructedFrame(std::vector<cv::Mat>& leftImgs_, std::vector<cv::Mat>& rightImgs_, std::vector<cv::Mat>& colorImgs_) :
-    leftImgs(leftImgs_), rightImgs(rightImgs_), colorImgs(colorImgs_){}
-    RestructedFrame(std::vector<cv::Mat>& leftImgs_, std::vector<cv::Mat>& rightImgs_) : leftImgs(leftImgs_), rightImgs(rightImgs_){}
-    std::vector<cv::Mat> leftImgs;
-    std::vector<cv::Mat> rightImgs;
-    std::vector<cv::Mat> colorImgs;
-};
+/** @brief ç»“æ„å…‰åº“ */
+namespace SL {
+    /** @brief è®¾å¤‡æ§åˆ¶åº“ */
+    namespace Device {
+        /** @brief é‡å»ºå¸§ */
+        struct RestructedFrame {
+        public:
+            RestructedFrame(){};
+            /**
+             * @brief                å¸¦æœ‰å½©è‰²å›¾ç‰‡çš„æ„é€ å‡½æ•°
+             * 
+             * @param leftImgs_      è¾“å…¥ï¼Œå·¦ç›¸æœºå›¾ç‰‡
+             * @param rightImgs_     è¾“å…¥ï¼Œå³ç›¸æœºå›¾ç‰‡
+             * @param colorImgs_     è¾“å…¥ï¼Œå½©è‰²ç›¸æœºå›¾ç‰‡
+             */
+            RestructedFrame(std::vector<cv::Mat> &leftImgs_,
+                            std::vector<cv::Mat> &rightImgs_,
+                            std::vector<cv::Mat> &colorImgs_) {
+                leftImgs.resize(leftImgs_.size());
+                rightImgs.resize(rightImgs_.size());
+                colorImgs.resize(colorImgs_.size());
+                for (int i = 0; i < leftImgs.size(); i++) {
+                    leftImgs[i] = leftImgs_[i];
+                }
+                for (int i = 0; i < rightImgs_.size(); i++) {
+                    rightImgs[i] = rightImgs_[i];
+                }
+                for (int i = 0; i < colorImgs_.size(); i++) {
+                    colorImgs[i] = colorImgs_[i];
+                }
+            }
+            /**
+             * @brief                å¸¦æœ‰å½©è‰²å›¾ç‰‡çš„æ„é€ å‡½æ•°
+             * 
+             * @param leftImgs_      è¾“å…¥ï¼Œå·¦ç›¸æœºå›¾ç‰‡
+             * @param rightImgs_     è¾“å…¥ï¼Œå³ç›¸æœºå›¾ç‰‡
+             */
+            RestructedFrame(std::vector<cv::Mat> &leftImgs_,
+                            std::vector<cv::Mat> &rightImgs_) {
+                leftImgs.resize(leftImgs_.size());
+                rightImgs.resize(rightImgs_.size());
+                for (int i = 0; i < leftImgs.size(); i++) {
+                    leftImgs[i] = leftImgs_[i];
+                }
+                for (int i = 0; i < rightImgs_.size(); i++) {
+                    rightImgs[i] = rightImgs_[i];
+                }
+            }
+            //å·¦ç›¸æœºæ‹æ‘„å›¾ç‰‡
+            std::vector<cv::Mat> leftImgs;
+            //å³ç›¸æœºæ‹æ‘„å›¾ç‰‡
+            std::vector<cv::Mat> rightImgs;
+            //å½©è‰²ç›¸æœºæ‹æ‘„å›¾ç‰‡
+            std::vector<cv::Mat> colorImgs;
+        };
 
-class CameraControl{
-public:
-    enum CameraUsedState {
-        LeftGrayRightGray = 0,
-        LeftColorRightGray = 1,
-        LeftGrayRightGrayExColor = 2,
-    };
-    /**
-     * @brief Ä¬ÈÏ¹¹Ôìº¯Êı
-     * 
-     * @param projectorModuleType ÊäÈë£¬Í¶Ó°ÒÇÀàĞÍ
-     * @param state ÊäÈë£¬Ïà»úÅäÖÃ×´Ì¬
-     */
-    CameraControl(const DLPC34XX_ControllerDeviceId_e projectorModuleType, CameraUsedState state = LeftGrayRightGrayExColor);
-    /**
-     * @brief Ä¬ÈÏ¹¹Ôìº¯Êı
-     *
-     * @param numLutEntries ÊäÈë£¬DLP6500Í¶Ó°ÕÅÊı£¬
-     *                      *** Warning Begin ***
-     *                      Çë×¢Òâ£¬ÈôĞèÊ¹ÓÃ±¾SDK£¬ĞèÊÂÊ¹ÓÃGUI¼ÓÔØÍ¼Æ¬
-     *                      *** Warning End ***
-     * @param state ÊäÈë£¬Ïà»úÅäÖÃ×´Ì¬
-     */
-    CameraControl(const int numLutEntries, CameraUsedState state = LeftGrayRightGrayExColor);
-    /**
-      * @brief »ñÈ¡Ò»Ö¡Í¼Æ¬
-      * 
-      * @param imgsOneFrame ÊäÈë£¬»ñÈ¡µ½µÄÔ­Ê¼Í¼Æ¬
-      */
-     void getOneFrameImgs(RestructedFrame& imgsOneFrame);
-     /**
-      * @brief ÉèÖÃ²¶»ñÍ¼Æ¬ÊıÁ¿
-      * 
-      * @param GrayImgsNum  ÊäÈë£¬»Ò¶ÈÏà»ú²¶»ñÕÅÊı
-      * @param ColorImgsNum ÊäÈë£¬²ÊÉ«Ïà»ú²¶»ñÕÅÊı
-      */
-     void setCaptureImgsNum(const int GrayImgsNum,const int ColorImgsNum);
-     /**
-      * @brief ¼ÓÔØ¹Ì¼ş
-      * 
-      * @param firmwarePath ÊäÈë£¬¹Ì¼şµØÖ·
-      */
-     void loadFirmware(const std::string firmwarePath);
-     /**
-      * @brief ½«²ÊÉ«Ïà»úÉèÖÃÎªÈí´¥·¢²¢´¥·¢Ò»´Î
-      */
-     void triggerColorCameraSoftCaputure();
-     /**
-      * @brief ÉèÖÃÏà»úÆØ¹âÊ±¼ä
-      * 
-      * @param grayExposure ÊäÈë£¬»Ò¶ÈÏà»úÆØ¹âÊ±¼ä
-      * @param colorExposure ÊäÈë£¬²ÊÉ«Ïà»úÆØ¹âÊ±¼ä
-      */
-     void setCameraExposure(const int grayExposure, const int colorExposure);
-     /**
-      * @brief ¹Ø±ÕÏà»ú 
-      */
-     void closeCamera();
-private:
-    /** \×óÏà»ú **/
-    CammeraUnilty* cameraLeft;
-    /** \ÓÒÏà»ú **/
-    CammeraUnilty* cameraRight;
-    /** \²ÊÉ«Ïà»ú **/
-    CammeraUnilty* cameraColor;
-    /** \Í¶Ó°ÒÇ **/
-    ProjectorControl* projector;
-    /** \Ïà»úÅäÖÃ×´Ì¬ **/
-    CameraUsedState cameraUsedState;
-};
+        /** @brief ç»“æ„å…‰ç›¸æœºæ§åˆ¶ç±» */
+        class CameraControl {
+        public:
+            /** @brief ç›¸æœºä½¿ç”¨çŠ¶æ€ **/
+            enum CameraUsedState {
+                LeftGrayRightGray = 0,        //å·¦ç°åº¦å³ç°åº¦
+                LeftColorRightGray = 1,       //å·¦å½©è‰²å³ç°åº¦
+                LeftGrayRightGrayExColor = 2, //å·¦ç°åº¦å³ç°åº¦é¢å¤–å½©è‰²
+            };
+            /**
+             * @brief é»˜è®¤æ„é€ å‡½æ•°
+             * 
+             * @param projectorModuleType è¾“å…¥ï¼ŒæŠ•å½±ä»ªç±»å‹
+             * @param state è¾“å…¥ï¼Œç›¸æœºé…ç½®çŠ¶æ€
+             */
+            CameraControl(const DLPC34XX_ControllerDeviceId_e projectorModuleType,
+                          CameraUsedState state = LeftGrayRightGrayExColor);
+            /**
+             * @brief é»˜è®¤æ„é€ å‡½æ•°
+             *
+             * @param numLutEntries è¾“å…¥ï¼ŒDLP6500æŠ•å½±å¼ æ•°ï¼Œ
+             * @warning è¯·æ³¨æ„ï¼Œè‹¥éœ€ä½¿ç”¨æœ¬SDKï¼Œéœ€äº‹ä½¿ç”¨GUIåŠ è½½å›¾ç‰‡
+             * @param state è¾“å…¥ï¼Œç›¸æœºé…ç½®çŠ¶æ€
+             */
+            CameraControl(const int numLutEntries,
+                          CameraUsedState state = LeftGrayRightGrayExColor);
+            /**
+             * @brief è·å–ä¸€å¸§å›¾ç‰‡
+             * 
+             * @param imgsOneFrame è¾“å…¥ï¼Œè·å–åˆ°çš„åŸå§‹å›¾ç‰‡
+             */
+            void getOneFrameImgs(RestructedFrame &imgsOneFrame);
+            /**
+             * @brief è®¾ç½®æ•è·å›¾ç‰‡æ•°é‡
+             * 
+             * @param GrayImgsNum  è¾“å…¥ï¼Œç°åº¦ç›¸æœºæ•è·å¼ æ•°
+             * @param ColorImgsNum è¾“å…¥ï¼Œå½©è‰²ç›¸æœºæ•è·å¼ æ•°
+             */
+            void setCaptureImgsNum(const int GrayImgsNum, const int ColorImgsNum);
+            /**
+             * @brief åŠ è½½å›ºä»¶
+             * 
+             * @param firmwarePath è¾“å…¥ï¼Œå›ºä»¶åœ°å€
+             */
+            void loadFirmware(const std::string firmwarePath);
+            /**
+             * @brief å°†å½©è‰²ç›¸æœºè®¾ç½®ä¸ºè½¯è§¦å‘å¹¶è§¦å‘ä¸€æ¬¡
+             */
+            void triggerColorCameraSoftCaputure();
+            /**
+             * @brief è®¾ç½®ç›¸æœºæ›å…‰æ—¶é—´
+             * 
+             * @param grayExposure è¾“å…¥ï¼Œç°åº¦ç›¸æœºæ›å…‰æ—¶é—´
+             * @param colorExposure è¾“å…¥ï¼Œå½©è‰²ç›¸æœºæ›å…‰æ—¶é—´
+             */
+            void setCameraExposure(const int grayExposure, const int colorExposure);
+            /**
+             * @brief å…³é—­ç›¸æœº 
+             */
+            void closeCamera();
 
-#endif
+        private:
+            /** \å·¦ç›¸æœº **/
+            CammeraUnilty *cameraLeft;
+            /** \å³ç›¸æœº **/
+            CammeraUnilty *cameraRight;
+            /** \å½©è‰²ç›¸æœº **/
+            CammeraUnilty *cameraColor;
+            /** \æŠ•å½±ä»ª **/
+            ProjectorControl *projector;
+            /** \ç›¸æœºé…ç½®çŠ¶æ€ **/
+            CameraUsedState cameraUsedState;
+        };
+    }// namespace Device
+}// namespace SL
+#endif // PROJECTORSDK_CameraControl_H

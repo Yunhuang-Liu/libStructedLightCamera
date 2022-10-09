@@ -4,3 +4,7 @@
 out
 build
 .vs
+.vscode
+CMakeSettings.json
+CMakeLists.txt.user
+.idea

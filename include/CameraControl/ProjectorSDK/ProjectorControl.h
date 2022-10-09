@@ -1,7 +1,7 @@
 /**
  * @file ProjectorControl.h
  * @author Liu Yunhuang (1369215984@qq.com)
- * @brief  Í¶Ó°ÒÇ¿ØÖÆÀà
+ * @brief  æŠ•å½±ä»ªæ§åˆ¶ç±»
  * @version 0.1
  * @date 2022-5-9
  *
@@ -10,15 +10,16 @@
  */
 
 
-#ifndef ProjectorControl_H
-#define ProjectorControl_H
+#ifndef CameraControl_ProjectorControl_H
+#define CameraControl_ProjectorControl_H
 
-#include "./dlpc_common.h"
-#include "./dlpc34xx.h"
-#include "./dlpc347x_internal_patterns.h"
-#include "./cypress_i2c.h"
-#include "./API.h"
-#include "./usb.h"
+#include <CameraControl/ProjectorSDK/dlpc_common.h>
+#include <CameraControl/ProjectorSDK/dlpc34xx.h>
+#include <CameraControl/ProjectorSDK/dlpc347x_internal_patterns.h>
+#include <CameraControl/ProjectorSDK/cypress_i2c.h>
+#include <CameraControl/ProjectorSDK/API.h>
+#include <CameraControl/ProjectorSDK/usb.h>
+
 #include <string>
 #include <iostream>
 
@@ -35,44 +36,54 @@ static uint8_t s_ReadBuffer[MAX_READ_CMD_PAYLOAD];
 /** \file pointer **/
 static FILE* s_FilePointer;
 
-/** \Í¶Ó°ÒÇ¿ØÖÆÀà£¬Ó¦µ±×¢ÒâµÄÊÇ£¬DLP3010½«µÃµ½È«ÃæµÄÖ§³Ö£¬ÎŞĞèGUI½øĞĞ¸¨Öú£¬ÈçÒâDLP6500µÄĞèÇó½«ÆÈÊ¹Äã²»µÃ²»Ê¹ÓÃGUIÊÂÏÈ½øĞĞÍ¼Æ¬µÄÉÕÈë **/
-class ProjectorControl{
-public:
-    /**
-     * @brief ¹¹Ôìº¯Êı
-     * @param projectorType ÊäÈë£¬Í¶Ó°ÒÇÀà±ğ
-     */
-    ProjectorControl(const DLPC34XX_ControllerDeviceId_e projectorType);
-    /** 
-     * @brief ¹¹Ôìº¯Êı
-     * @param projectorType ÊäÈë£¬Í¶Ó°ÒÇÀà±ğ
-     */
-    ProjectorControl(const int numLutEntries);
-    /**
-     * @brief Í¶Ó°Ò»´Î 
-     * @param numLutEntries ÊäÈë£¬Í¼Æ¬ÊıÄ¿
-     */
-    void projecteOnce();
-    /**
-     * @brief ¼ÓÔØ¹Ì¼ş
-     * @param firmWareAdress ÊäÈë£¬¹Ì¼şÎÄ¼şµØÖ·
-     */
-    void LoadFirmware(const std::string firmWareAdress);
-private:
-    /**
-     * @brief ³õÊ¼»¯I2C
-     */
-    void InitConnectionAndCommandLayer();
-    /**
-     * @brief µÈ´ı
-     * @param Seconds ÊäÈë£¬µÈ´ıÊ±³¤
-     */
-    void WaitForSeconds(uint32_t Seconds);
-    /**
-     * @brief ´ÓÉÁ´æ¼ÓÔØÍ¼Æ¬
-     */
-    void LoadPatternOrderTableEntryfromFlash();
-    /** \ÊÇ·ñÎªDLPC900¿ØÖÆĞ¾Æ¬ **/
-    const bool isDLPC900;
-};
-#endif
+/** @brief ç»“æ„å…‰åº“ */
+namespace SL {
+    /** @brief è®¾å¤‡æ§åˆ¶åº“ */
+    namespace Device {
+        /**
+         * @brief æŠ•å½±ä»ªæ§åˆ¶ç±»
+         * @note åº”å½“æ³¨æ„çš„æ˜¯ï¼ŒDLP3010å°†å¾—åˆ°å…¨é¢çš„æ”¯æŒï¼Œæ— éœ€GUIè¿›è¡Œè¾…åŠ©ï¼ŒDLP6500çš„éœ€æ±‚å°†è¿«ä½¿ä½ ä¸å¾—ä¸ä½¿ç”¨GUIäº‹å…ˆè¿›è¡Œå›¾ç‰‡çš„çƒ§å…¥ 
+         */
+        class ProjectorControl {
+        public:
+            /**
+             * @brief æ„é€ å‡½æ•°
+             * @param projectorType è¾“å…¥ï¼ŒæŠ•å½±ä»ªç±»åˆ«
+             */
+            ProjectorControl(const DLPC34XX_ControllerDeviceId_e projectorType);
+            /** 
+             * @brief æ„é€ å‡½æ•°
+             * @param projectorType è¾“å…¥ï¼ŒæŠ•å½±ä»ªç±»åˆ«
+             */
+            ProjectorControl(const int numLutEntries);
+            /**
+             * @brief æŠ•å½±ä¸€æ¬¡ 
+             * @param numLutEntries è¾“å…¥ï¼Œå›¾ç‰‡æ•°ç›®
+             */
+            void projecteOnce();
+            /**
+             * @brief åŠ è½½å›ºä»¶
+             * @param firmWareAdress è¾“å…¥ï¼Œå›ºä»¶æ–‡ä»¶åœ°å€
+             */
+            void LoadFirmware(const std::string firmWareAdress);
+
+        private:
+            /**
+             * @brief åˆå§‹åŒ–I2C
+             */
+            void InitConnectionAndCommandLayer();
+            /**
+             * @brief ç­‰å¾…
+             * @param Seconds è¾“å…¥ï¼Œç­‰å¾…æ—¶é•¿
+             */
+            void WaitForSeconds(uint32_t Seconds);
+            /**
+             * @brief ä»é—ªå­˜åŠ è½½å›¾ç‰‡
+             */
+            void LoadPatternOrderTableEntryfromFlash();
+            /** \æ˜¯å¦ä¸ºDLPC900æ§åˆ¶èŠ¯ç‰‡ **/
+            const bool isDLPC900;
+        };
+    }// namespace Device
+}// namespace SL
+#endif //CameraControl_ProjectorControl_H

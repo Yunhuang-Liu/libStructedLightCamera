@@ -1,80 +1,100 @@
 /**
  * @file Restructor_CPU_GrayPhase.h
  * @author Liu Yunhuang(1369215984@qq.com)
- * @brief  CPUÖØ½¨Æ÷(SIMD:AVX(256bit),¶àÏß³Ì)
+ * @brief  CPUé‡å»ºå™¨(SIMD:AVX(256bit),å¤šçº¿ç¨‹)
  * @version 0.1
  * @date 2021-12-10
  *
  * @copyright Copyright (c) 2021
  *
  */
-#ifndef Restructor_CPU_H
-#define Restructor_CPU_H
-#include "Restructor.h"
+#ifndef RESTRUCTOR_RESTRUCTOR_CPU_H
+#define RESTRUCTOR_RESTRUCTOR_CPU_H
+
+#include <Restructor/Restructor.h>
+#include <Restructor/MatrixsInfo.h>
+
 #include <immintrin.h>
-#include "MatrixsInfo.h"
 #include <limits>
 
-namespace RestructorType {
-    class Restructor_CPU : public Restructor{
+/** @brief ç»“æ„å…‰åº“ */
+namespace SL {
+    /** @brief é‡å»ºåº“ */
+    namespace RestructorType {
+        /** @brief CPUåŠ é€Ÿé‡å»ºå™¨ */
+        class Restructor_CPU : public Restructor {
         public:
-        /**
-             * @brief ¹¹Ôìº¯Êı
-             * @param calibrationInfo ÊäÈë£¬±ê¶¨ĞÅÏ¢
-             * @param minDisparity ÊäÈë£¬×îĞ¡ÊÓ²î
-             * @param maxDisparity ÊäÈë£¬×î´óÊÓ²î
-             * @param minDepth ÊäÈë£¬×îĞ¡Éî¶ÈÖµ
-             * @param maxDepth ÊäÈë£¬×î´óÉî¶ÈÖµ
-             * @param threads ÊäÈë£¬Ïß³ÌÊı
-             */
-            Restructor_CPU(const Info& calibrationInfo, const int minDisparity = -500, const int maxDisparity = 500, 
-                           const float minDepth = 170, const float maxDepth = 220, const int threads = 16);
             /**
-             * @brief Îö¹¹º¯Êı
+             * @brief æ„é€ å‡½æ•°
+             * 
+             * @param calibrationInfo è¾“å…¥ï¼Œæ ‡å®šä¿¡æ¯
+             * @param minDisparity è¾“å…¥ï¼Œæœ€å°è§†å·®
+             * @param maxDisparity è¾“å…¥ï¼Œæœ€å¤§è§†å·®
+             * @param minDepth è¾“å…¥ï¼Œæœ€å°æ·±åº¦å€¼
+             * @param maxDepth è¾“å…¥ï¼Œæœ€å¤§æ·±åº¦å€¼
+             * @param threads è¾“å…¥ï¼Œçº¿ç¨‹æ•°
+             */
+            Restructor_CPU(const Info &calibrationInfo, const int minDisparity = -500,
+                           const int maxDisparity = 500, const float minDepth = 170,
+                           const float maxDepth = 220, const int threads = 16);
+            /**
+             * @brief ææ„å‡½æ•°
              */
             ~Restructor_CPU();
             /**
-             * @brief ÖØ½¨
-             * @param leftAbsImg ÊäÈë£¬×ó¾ø¶ÔÏàÎ»
-             * @param rightAbsImg ÊäÈë£¬ÓÒ¾ø¶ÔÏàÎ»
-             * @param depthImgOut ÊäÈë/Êä³ö£¬Éî¶ÈÍ¼
+             * @brief é‡å»º
+             * 
+             * @param leftAbsImg è¾“å…¥ï¼Œå·¦ç»å¯¹ç›¸ä½
+             * @param rightAbsImg è¾“å…¥ï¼Œå³ç»å¯¹ç›¸ä½
+             * @param depthImgOut è¾“å…¥/è¾“å‡ºï¼Œæ·±åº¦å›¾
              */
-            void restruction(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg, cv::Mat& depthImgOut, const bool isColor = false) override;
+            void restruction(const cv::Mat &leftAbsImg, const cv::Mat &rightAbsImg,
+                             cv::Mat &depthImgOut, const bool isColor = false) override;
+
         protected:
             /**
-             * @brief Ó³ÉäÉî¶ÈÎÆÀí
-             * @param leftAbsImg ÊäÈë£¬×ó¾ø¶ÔÏàÎ»
-             * @param rightAbsImg ÊäÈë£¬ÓÒ¾ø¶ÔÏàÎ»
-             * @param colorImg ÊäÈë£¬Ô­Ê¼²ÊÉ«Í¼Æ¬
-             * @param depthImgOut ÊäÈë/Êä³ö Éî¶ÈÍ¼
-             * @param colorImgOut ÊäÈë/Êä³ö ÎÆÀíÍ¼
+             * @brief æ˜ å°„æ·±åº¦çº¹ç†
+             * 
+             * @param leftAbsImg è¾“å…¥ï¼Œå·¦ç»å¯¹ç›¸ä½
+             * @param rightAbsImg è¾“å…¥ï¼Œå³ç»å¯¹ç›¸ä½
+             * @param colorImg è¾“å…¥ï¼ŒåŸå§‹å½©è‰²å›¾ç‰‡
+             * @param depthImgOut è¾“å…¥/è¾“å‡º æ·±åº¦å›¾
+             * @param colorImgOut è¾“å…¥/è¾“å‡º çº¹ç†å›¾
              */
-            void getDepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& rightAbsImg,
-                                  cv::Mat& depthImgOut, const bool isColor = false);
+            void getDepthColorMap(const cv::Mat &leftAbsImg, const cv::Mat &rightAbsImg,
+                                  cv::Mat &depthImgOut, const bool isColor = false);
+
         private:
-            #ifdef CUDA
-            //GPU¶Ëº¯Êı
-            void download(const int index, cv::cuda::GpuMat& depthImg) {};
-            void restruction(const cv::cuda::GpuMat& leftAbsImg, const cv::cuda::GpuMat& rightAbsImg,
-                const int sysIndex, cv::cuda::Stream& stream, const bool isColor = false) override {}
-            #endif
-            /** \´æ´¢Ïß³ÌËø **/
+#ifdef CUDA
+            //GPUç«¯å‡½æ•°
+            void download(const int index, cv::cuda::GpuMat &depthImg){};
+            void restruction(const cv::cuda::GpuMat &leftAbsImg,
+                             const cv::cuda::GpuMat &rightAbsImg,
+                             const int sysIndex,
+                             cv::cuda::Stream &stream,
+                             const bool isColor = false) override {}
+#endif
+            /** \å­˜å‚¨çº¿ç¨‹é” **/
             std::mutex mutexMap;
-            /** \±ê¶¨ĞÅÏ¢ **/
-            const Info& calibrationInfo;
-            /** \Ê¹ÓÃÏß³ÌÊı **/
+            /** \æ ‡å®šä¿¡æ¯ **/
+            const Info &calibrationInfo;
+            /** \ä½¿ç”¨çº¿ç¨‹æ•° **/
             const int threads;
-            /** \×îĞ¡ÊÓ²îÖµ **/
+            /** \æœ€å°è§†å·®å€¼ **/
             int minDisparity;
-            /** \×î´óÊÓ²îÖµ **/
+            /** \æœ€å¤§è§†å·®å€¼ **/
             int maxDisparity;
-            /** \×îĞ¡Éî¶È **/
+            /** \æœ€å°æ·±åº¦ **/
             const float minDepth;
-            /** \×î´óÉî¶È **/
+            /** \æœ€å¤§æ·±åº¦ **/
             const float maxDepth;
-            /** \ÖØÍ¶Ó°Ö±½Ó»ñÈ¡µãÔÆ(¶àÏß³ÌÈë¿Úº¯Êı) **/
-            void thread_DepthColorMap(const cv::Mat& leftAbsImg, const cv::Mat& righAbstImg,
-                                       cv::Mat& depthImgOut, const cv::Point2i region, const bool isColor = false);
-    };
-}
-#endif // !Restructor_CPU_H
+            /** \é‡æŠ•å½±ç›´æ¥è·å–ç‚¹äº‘(å¤šçº¿ç¨‹å…¥å£å‡½æ•°) **/
+            void thread_DepthColorMap(const cv::Mat &leftAbsImg,
+                                      const cv::Mat &righAbstImg,
+                                      cv::Mat &depthImgOut,
+                                      const cv::Point2i region,
+                                      const bool isColor = false);
+        };
+    }// namespace RestructorType
+}// namespace SL
+#endif // RESTRUCTOR_RESTRUCTOR_CPU_H

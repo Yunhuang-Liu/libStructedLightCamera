@@ -1,13 +1,12 @@
 #include <Restructor/Restructor.h>
 
-namespace RestructorType {
-    Restructor::Restructor(){
+namespace SL {
+    namespace RestructorType {
+        Restructor::Restructor() {
+        }
 
-    }
-
-    Restructor::~Restructor(){
-
-    }
-}
-
+        Restructor::~Restructor() {
+        }
+    }// namespace RestructorType
+}// namespace SL
 
