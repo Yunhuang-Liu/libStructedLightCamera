@@ -11,28 +11,31 @@
 #ifndef RESTRUCTOR_THREESTEPFIVEGRAYCODEMASTER_CPU_H
 #define RESTRUCTOR_THREESTEPFIVEGRAYCODEMASTER_CPU_H
 
-#include "Restructor/PhaseSolver.h"
+#include <Restructor/PhaseSolver.h>
 #include <fstream>
 
-
-namespace PhaseSolverType {
-    /**
-     * @brief 互补格雷码四步相移解码器(3+5 | 多线程+SIMD)
-     *
-     */
-    class ThreeStepFiveGrayCodeMaster_CPU : public PhaseSolver{
+/** @brief 结构光库 */
+namespace SL {
+    /** @brief 重建库 */
+    namespace PhaseSolverType {
+        /**
+         * @brief 互补格雷码四步相移解码器(3+5 | 多线程+SIMD)
+         */
+        class ThreeStepFiveGrayCodeMaster_CPU : public PhaseSolver {
         public:
-             /**
+            /**
              * @brief 默认构造函数
+             * 
              * @param threads 输入，线程数
              */
             ThreeStepFiveGrayCodeMaster_CPU(const int threads = 16);
             /**
              * @brief 构造函数
+             * 
              * @param imgs 输入，原始图片
              * @param threads 输入，线程数
              */
-            ThreeStepFiveGrayCodeMaster_CPU(std::vector<cv::Mat>& imgs,const int threads = 16);
+            ThreeStepFiveGrayCodeMaster_CPU(std::vector<cv::Mat> &imgs, const int threads = 16);
             /**
              * @brief 析构函数
              */
@@ -42,35 +45,40 @@ namespace PhaseSolverType {
              *
              * @param absolutePhaseImg 输入/输出，绝对相位
              */
-            void getUnwrapPhaseImg(cv::Mat& absolutePhaseImg) override;
+            void getUnwrapPhaseImg(cv::Mat &absolutePhaseImg) override;
             /**
              * @brief 更改源图片
+             * 
              * @param imgs 输入，原始图片
              */
-            void changeSourceImg(std::vector<cv::Mat>& imgs) override;
+            void changeSourceImg(std::vector<cv::Mat> &imgs) override;
             /**
              * @brief 获取包裹相位
+             * 
              * @param wrapImg 输入，包裹相位
              * @param conditionImg 输入，调制图片
              */
-            void getWrapPhaseImg(cv::Mat& wrapImg, cv::Mat& conditionImg) override;
+            void getWrapPhaseImg(cv::Mat &wrapImg, cv::Mat &conditionImg) override;
             /**
              * @brief 获取纹理图片
+             * 
              * @param textureImg 输入/输出，纹理图片
              */
-            void getTextureImg(cv::Mat& textureImg) override;
+            void getTextureImg(cv::Mat &textureImg) override;
+
         protected:
             /**
              * @brief 获取包裹相位
              */
             void getWrapPhaseImg();
+
         private:
-            #ifdef CUDA
-            void changeSourceImg(std::vector<cv::Mat>&, cv::cuda::Stream&) override {}
-            void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat>&, cv::cuda::Stream&) override{}
-            void getTextureImg(std::vector<cv::cuda::GpuMat>& textureImg) override {}
-            void changeSourceImg(std::vector<cv::cuda::GpuMat>& imgs) override {}
-            #endif
+#ifdef CUDA
+            void changeSourceImg(std::vector<cv::Mat> &, cv::cuda::Stream &) override {}
+            void getUnwrapPhaseImg(std::vector<cv::cuda::GpuMat> &, cv::cuda::Stream &) override {}
+            void getTextureImg(std::vector<cv::cuda::GpuMat> &textureImg) override {}
+            void changeSourceImg(std::vector<cv::cuda::GpuMat> &imgs) override {}
+#endif
             /** \阈值图像 **/
             cv::Mat averageImg;
             /** \调制阈值图像 **/
@@ -85,7 +93,7 @@ namespace PhaseSolverType {
              * @param thirdStep 输入，第三步图像
              * @param wrapImg 输出，包裹相位图片
              */
-            void atan3M(const cv::Mat& firstStep, const cv::Mat& secondStep, const cv::Mat& thirdStep, cv::Mat& wrapImg, const int threads = 16);
+            void atan3M(const cv::Mat &firstStep, const cv::Mat &secondStep, const cv::Mat &thirdStep, cv::Mat &wrapImg, const int threads = 16);
             /**
              * @brief 计算包裹相位
              *
@@ -95,7 +103,7 @@ namespace PhaseSolverType {
              * @param region 输入，多线程区间
              * @param wrapImg 输出，包裹相位图片
              */
-            void SIMD_WrapImg(const cv::Mat& firstStep, const cv::Mat& secondStep, const cv::Mat& thirdStep, const cv::Point2i& region, cv::Mat& wrapImg);
+            void SIMD_WrapImg(const cv::Mat &firstStep, const cv::Mat &secondStep, const cv::Mat &thirdStep, const cv::Point2i &region, cv::Mat &wrapImg);
             /**
              * @brief 计算阈值图像
              *
@@ -108,7 +116,7 @@ namespace PhaseSolverType {
              * @param cols 输入，列数
              * @param region 输入，图像操作区间
              */
-            void dataInit_Thread_SIMD(const int rows,const int cols,const cv::Point2i region);
+            void dataInit_Thread_SIMD(const int rows, const int cols, const cv::Point2i region);
             /**
              * @brief 线程入口函数，多线程解相
              *
@@ -117,11 +125,12 @@ namespace PhaseSolverType {
              * @param region 输入，图像操作范围
              * @param absolutePhaseImg 输入输出，绝对相位图片
              */
-            void mutiplyThreadUnwrap(const int rows,const int cols,const cv::Point2i region,cv::Mat& absolutePhaseImg);
+            void mutiplyThreadUnwrap(const int rows, const int cols, const cv::Point2i region, cv::Mat &absolutePhaseImg);
             /** \全部拍摄图片 0——3：相移 4——9：格雷 10？颜色 **/
-            std::vector<cv::Mat>& imgs;
+            std::vector<cv::Mat> &imgs;
             /** \线程数 **/
             const int threads;
-    };
-}
+        };
+    }// namespace PhaseSolverType
+}// namespace SL
 #endif // RESTRUCTOR_THREESTEPFIVEGRAYCODEMASTER_CPU_H

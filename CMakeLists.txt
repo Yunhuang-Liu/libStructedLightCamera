@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX C:/Users/LiuYunhuang/Desktop/softWare/WindowsVCLib/libStructedLightCamera)
 
-file(GLOB_RECURSE CPUHeader ./StructedLightCamera.h ./include/*CPU.h ./include/CameraControl/*.h
-    ./include/WrapCreator.h ./include/MatrixsInfo.h ./include/PhaseSolver.h ./include/Restructor.h)
+file(GLOB_RECURSE CPUHeader ./include/StructedLightCamera.h ./include/*CPU.h ./include/CameraControl/*.h
+    ./include/WrapCreator.h ./include/MatrixsInfo.h ./include/PhaseSolver.h ./include/Restructor.h
+    ./include/Rectifier.h ./include/NStepNGrayCodeMaster_CPU.h)
 file(GLOB_RECURSE GPUHeader ./include/*GPU.h ./include/*.cuh)
-file(GLOB MAIN ./Example.cpp)
-file(GLOB_RECURSE CPUSource ./StructedLightCamera.cpp ./src/*CPU.cpp ./src/*.c
+file(GLOB_RECURSE CPUSource ./src/StructedLightCamera.cpp ./src/*CPU.cpp ./src/*.c
     ./src/CameraControl/*.cpp ./src/MatrixsInfo.cpp ./src/PhaseSolver.cpp ./src/Restructor.cpp
-    ./src/WrapRestructor_CPU.cpp)
+    ./src/WrapRestructor_CPU.cpp ./src/Rectifier_CPU.cpp ./src/NStepNGrayCodeMaster_CPU.cpp)
 file(GLOB_RECURSE GPUSource ./src/*.cu ./src/*GPU.cpp)
 source_group("CPUHeader" FILES ${CPUHeader})
 source_group("GPUHeader" FILES ${GPUHeader})
@@ -24,9 +24,9 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/include
     ${EIGEN3_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
+    ${PROJECT_SOURCE_DIR}/include
     )
 
 link_directories(
@@ -59,7 +59,7 @@ if(CUDA_FOUND)
    add_library(libStructedLightCamera SHARED  ${CPUSource} ${GPUSource} ${CUDA_OBJS} ${CPUHeader} ${GPUHeader})
    set_target_properties(libStructedLightCamera PROPERTIES DEBUG_POSTFIX "d")
    set_target_properties(libStructedLightCamera PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./StructedLightCamera.h)
+   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./include/StructedLightCamera.h)
    target_link_libraries(
        libStructedLightCamera
        ${OpenCV_LIBRARIES}
@@ -71,11 +71,11 @@ if(CUDA_FOUND)
 
    add_library(libStructedLightCameraStatic STATIC  ${CPUSource} ${GPUSource} ${CUDA_OBJS} ${CPUHeader} ${GPUHeader})
    set_target_properties(libStructedLightCameraStatic PROPERTIES DEBUG_POSTFIX "d") 
-   # Ö¸¶¨¾²Ì¬¿âµÄÊä³öÃû³Æ
+   # æŒ‡å®šé™æ€åº“çš„è¾“å‡ºåç§°
    set_target_properties(libStructedLightCameraStatic PROPERTIES OUTPUT_NAME "libStructedLightCamera")
-   # Ê¹¶¯Ì¬¿âºÍ¾²Ì¬¿âÍ¬Ê±´æÔÚ
+   # ä½¿åŠ¨æ€åº“å’Œé™æ€åº“åŒæ—¶å­˜åœ¨
    set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./StructedLightCamera.h)
+   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./include/StructedLightCamera.h)
    target_link_libraries(
        libStructedLightCameraStatic
        ${OpenCV_LIBRARIES}
@@ -96,13 +96,13 @@ else()
    set(CMAKE_DEBUG_POSTFIX "d")
    set_target_properties(libStructedLightCamera PROPERTIES DEBUG_POSTFIX "d") 
    set_target_properties(libStructedLightCameraStatic PROPERTIES DEBUG_POSTFIX "d") 
-   # Ö¸¶¨¾²Ì¬¿âµÄÊä³öÃû³Æ
+   # æŒ‡å®šé™æ€åº“çš„è¾“å‡ºåç§°
    set_target_properties(libStructedLightCameraStatic PROPERTIES OUTPUT_NAME "libStructedLightCamera")
-   # Ê¹¶¯Ì¬¿âºÍ¾²Ì¬¿âÍ¬Ê±´æÔÚ
+   # ä½¿åŠ¨æ€åº“å’Œé™æ€åº“åŒæ—¶å­˜åœ¨
    set_target_properties(libStructedLightCamera PROPERTIES CLEAN_DIRECT_OUTPUT 1)
    set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./StructedLightCamera.h)
-   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./StructedLightCamera.h)
+   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./include/StructedLightCamera.h)
+   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./include/StructedLightCamera.h)
    target_link_libraries(
         libStructedLightCamera
         ${OpenCV_LIBRARIES}
@@ -197,7 +197,7 @@ install(
 
 install(
     FILES
-    ./StructedLightCameraConfig.cmake
+    ./cmake/StructedLightCameraConfig.cmake
     DESTINATION
     ${CMAKE_INSTALL_PREFIX}
 )

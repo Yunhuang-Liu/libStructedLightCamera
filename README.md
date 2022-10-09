@@ -36,30 +36,14 @@ Then,your CMakeLists.txt can add these:
 > find_package(CUDA REQUIRED)  
 > if(CUDA_FOUND)  
 > add_defination(-DCUDA)  
-> endif()  
+> endif()
+
 The system is contrusted like this:  
-![StructedLightCamera System](./StructedLightCamera.png)  
+![StructedLightCamera System](./doc/typicCompose.png)
+
 **You can be aware of that our phasesolve and restructor is a Factory mode,so you can get what you want though Polymorphism.**  
 ***  
-**A example is like this:**  
-> //Load calibration file  
-> MatrixsInfo* matrixInfo = new MatrixsInfo("../systemFile/calibrationFiles/intrinsic.yml","../systemFile/  calibrationFiles/extrinsic.yml");  
-> const Info& calibrationInfo = matrixInfo->getInfo();  
-> //Choose gpu  
-> cv::cuda::setDevice(0);  
-> //Load ref img if use devidedspace phasesolver  
-> cv::Mat leftRef = cv::imread("../systemFile/refImg/left.tif", cv::IMREAD_UNCHANGED);  
-> cv::Mat rightRef = cv::imread("../systemFile/refImg/right.tif", cv::IMREAD_UNCHANGED);  
-> //set params optional  
-> RestructorType::RestructParamater params(-500, 500, 150, 350, 16);  
-> params.block = dim3(32, 16, 1);  
-> //construct our StructedLightCamera  
-> StructedLightCamera* camera = new StructedLightCamera(calibrationInfo, StructedLightCamera::DevidedSpaceTimeMulUsed, StructedLightCamera::GPU ,params, leftRef, rightRef);  
-> //set camera exposure time optional  
-> camera->setExposureTime(3000, 20400);  
-> //get one frame  
-> std::vector<cv::cuda::GpuMat> depthImgs;  
-> std::vector<cv::cuda::GpuMat> colorImgs;  
-> camera->getOneFrame(depthImgs, colorImgs);  
+**You can see `StructedLightCamera.h` to learn how to use it.**  
+**A document in our `doc` folder is used to explain this project.**
 
 
