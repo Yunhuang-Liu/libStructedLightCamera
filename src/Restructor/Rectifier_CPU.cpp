@@ -1,7 +1,7 @@
 #include <Restructor/Rectifier_CPU.h>
 
-namespace SL {
-    namespace Rectify {
+namespace sl {
+    namespace rectifier {
         Rectifier_CPU::Rectifier_CPU() {
         }
 
@@ -23,5 +23,5 @@ namespace SL {
             else
                 cv::remap(imgInput, imgOutput, m_map_Rx, m_map_Ry, cv::INTER_LINEAR);
         }
-    }// namespace Rectify
-}// namespace SL
+    }// namespace rectifier
+}// namespace sl

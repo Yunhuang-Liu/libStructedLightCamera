@@ -22,9 +22,9 @@
 #include <cuda_runtime.h>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 重建库 */
-    namespace RestructorType {
+    namespace restructor {
         /** @brief GPU加速重建器 */
         class Restructor_GPU : public Restructor {
         public:
@@ -127,6 +127,6 @@ namespace SL {
             /** \最大视差值 **/
             int maxDisparity;
         };
-    }// namespace RestructorType
-}// namespace SL
+    }// namespace restructor
+}// namespace sl
 #endif // RESTRUCTOR_RESTRUCTOR_GPU_H

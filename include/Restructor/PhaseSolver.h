@@ -35,9 +35,9 @@
 #endif
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 解相库 */
-    namespace PhaseSolverType {
+    namespace phaseSolver {
         #ifdef CUDA
         /** @brief cuda函数库 */
         namespace cudaFunc {
@@ -161,6 +161,11 @@ namespace SL {
                                               const cv::cuda::GpuMat &conditionImg, const cv::cuda::GpuMat &wrapImg,
                                               const int rows, const int cols, cv::cuda::GpuMat &unwrapImg,
                                               const dim3 block, cv::cuda::Stream &cvStream);
+            //四步参考相位解相器CUDA主机端调用函数
+            void refPlainSolvePhase(const cv::cuda::GpuMat &wrapImg, const cv::cuda::GpuMat &conditionImg,
+                                    const cv::cuda::GpuMat &refPlainImg, const int rows, const int cols,
+                                    cv::cuda::GpuMat &unwrapImg, const bool isFarest,
+                                    const dim3 block, cv::cuda::Stream &cvStream); 
         }// namespace cudaFunc
         #endif
         /** @brief 相位求解器 */
@@ -232,11 +237,11 @@ namespace SL {
             virtual void changeSourceImg(std::vector<cv::Mat> &imgs) = 0;
             /**
              * @brief 获取包裹相位
-             * 
+             *
              * @param wrapImg 输入，包裹相位
              */
             virtual void getWrapPhaseImg(cv::Mat &wrapImg, cv::Mat &conditionImg) = 0;
         };
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl
 #endif // RESTRUCTOR_PHASESOLVER_H

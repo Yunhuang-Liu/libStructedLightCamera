@@ -19,9 +19,9 @@
 #include <thread>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 包裹生成库 */
-    namespace WrapCreat {
+    namespace wrapCreator {
         /** @brief CPU加速包裹相位求解器 */
         class WrapCreator_CPU : public WrapCreator {
         public:
@@ -77,6 +77,6 @@ namespace SL {
                                      const cv::Size region,
                                      const bool isCounter = false);
         };
-    }// namespace WrapCreat
-}// namespace SL
+    }// namespace wrapCreator
+}// namespace sl
 #endif // RESTRUCTOR_WRAPCREATOR_CPU_H

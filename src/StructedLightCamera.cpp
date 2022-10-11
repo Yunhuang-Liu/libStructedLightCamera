@@ -1,9 +1,9 @@
 #include <StructedLightCamera.h>
 
-using namespace SL;
-using namespace SL::Device;
+using namespace sl;
+using namespace sl::device;
 
-StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, const AlgorithmType algorithmType_, const AcceleratedMethod acceleratedMethod_, const SLCameraSet cameraSet, const RestructorType::RestructParamater params, const cv::Mat& leftRefImg, const cv::Mat& rightRefImg) :
+StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, const AlgorithmType algorithmType_, const AcceleratedMethod acceleratedMethod_, const SLCameraSet cameraSet, const restructor::RestructParamater params, const cv::Mat& leftRefImg, const cv::Mat& rightRefImg) :
     restructor(nullptr),phaseSolverLeft(nullptr),phaseSolverRight(nullptr),camera(nullptr),calibrationInfo(infoCalibraion),
     algorithmType(algorithmType_),acceleratedMethod(acceleratedMethod_){
     int grayCaptureImgNum;
@@ -11,8 +11,8 @@ StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, const Algor
     int trigNum;
     switch (algorithmType) {
         case AlgorithmType::ThreeStepFiveGrayCode : {
-            phaseSolverLeft = new PhaseSolverType::ThreeStepFiveGrayCodeMaster_CPU();
-            phaseSolverRight = new PhaseSolverType::ThreeStepFiveGrayCodeMaster_CPU();
+            phaseSolverLeft = new phaseSolver::ThreeStepFiveGrayCodeMaster_CPU();
+            phaseSolverRight = new phaseSolver::ThreeStepFiveGrayCodeMaster_CPU();
             grayCaptureImgNum = 8;
             colorCaptureImgNum = 1;
             trigNum = 8;
@@ -20,13 +20,13 @@ StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, const Algor
         }
         case AlgorithmType::FourStepSixGrayCode : {
             if(AcceleratedMethod::CPU == acceleratedMethod){
-                phaseSolverLeft = new PhaseSolverType::FourStepSixGrayCodeMaster_CPU(leftRefImg);
-                phaseSolverRight = new PhaseSolverType::FourStepSixGrayCodeMaster_CPU(rightRefImg);
+                phaseSolverLeft = new phaseSolver::FourStepSixGrayCodeMaster_CPU(leftRefImg);
+                phaseSolverRight = new phaseSolver::FourStepSixGrayCodeMaster_CPU(rightRefImg);
             }
             #ifdef CUDA
             else{
-                phaseSolverLeft = new PhaseSolverType::FourStepSixGrayCodeMaster_GPU(params.block);
-                phaseSolverRight = new PhaseSolverType::FourStepSixGrayCodeMaster_GPU(params.block);
+                phaseSolverLeft = new phaseSolver::FourStepSixGrayCodeMaster_GPU(params.block);
+                phaseSolverRight = new phaseSolver::FourStepSixGrayCodeMaster_GPU(params.block);
             }
             #endif
             grayCaptureImgNum = 10;
@@ -36,16 +36,16 @@ StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, const Algor
         }
         #ifdef CUDA
         case AlgorithmType::DevidedSpaceTimeMulUsed : {
-            phaseSolverLeft = new PhaseSolverType::DividedSpaceTimeMulUsedMaster_GPU(leftRefImg,params.block);
-            phaseSolverRight = new PhaseSolverType::DividedSpaceTimeMulUsedMaster_GPU(rightRefImg,params.block);
+            phaseSolverLeft = new phaseSolver::DividedSpaceTimeMulUsedMaster_GPU(leftRefImg,params.block);
+            phaseSolverRight = new phaseSolver::DividedSpaceTimeMulUsedMaster_GPU(rightRefImg, params.block);
             grayCaptureImgNum = 16;
             colorCaptureImgNum = 4;
             trigNum = 16;
             break;
         }
         case AlgorithmType::ShiftGrayCodeTimeMulUsed : {
-            phaseSolverLeft = new PhaseSolverType::ShiftGrayCodeUnwrapMaster_GPU(params.block);
-            phaseSolverRight = new PhaseSolverType::ShiftGrayCodeUnwrapMaster_GPU(params.block);
+            phaseSolverLeft = new phaseSolver::ShiftGrayCodeUnwrapMaster_GPU(params.block);
+            phaseSolverRight = new phaseSolver::ShiftGrayCodeUnwrapMaster_GPU(params.block);
             grayCaptureImgNum = 16;
             colorCaptureImgNum = 4;
             trigNum = 16;
@@ -60,13 +60,13 @@ StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, const Algor
     camera->setCaptureImgsNum(grayCaptureImgNum, colorCaptureImgNum);
     switch (acceleratedMethod){
         case AcceleratedMethod::CPU : {
-            restructor = new RestructorType::Restructor_CPU(calibrationInfo, params.minDisparity, params.maxDisparity,
+            restructor = new restructor::Restructor_CPU(calibrationInfo, params.minDisparity, params.maxDisparity,
                 params.minDepth, params.maxDepth, params.threads);
             break;
         }
         #ifdef CUDA
         case AcceleratedMethod::GPU : {
-            restructor = new RestructorType::Restructor_GPU(calibrationInfo, params.minDisparity, params.maxDisparity,
+            restructor = new restructor::Restructor_GPU(calibrationInfo, params.minDisparity, params.maxDisparity,
                 params.minDepth, params.maxDepth,params.block);
             break;
         }

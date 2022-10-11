@@ -1,7 +1,7 @@
 #include <CameraControl/CameraControl.h>
 
-namespace SL {
-    namespace Device {
+namespace sl {
+    namespace device {
         CameraControl::CameraControl(const DLPC34XX_ControllerDeviceId_e projectorModuleType,
                                      CameraUsedState state_) : cameraLeft(nullptr),
                                                                cameraRight(nullptr), cameraColor(nullptr),
@@ -256,5 +256,5 @@ namespace SL {
                 cameraLeft->CameraClose();
             }
         }
-    }// namespace Device
-}// namespace SL
+    }// namespace device
+}// namespace sl

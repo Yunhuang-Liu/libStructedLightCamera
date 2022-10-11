@@ -1,7 +1,7 @@
 #include <Restructor/ThreeStepFiveGrayCodeMaster_CPU.h>
 
-namespace SL {
-    namespace PhaseSolverType {
+namespace sl {
+    namespace phaseSolver {
         ThreeStepFiveGrayCodeMaster_CPU::ThreeStepFiveGrayCodeMaster_CPU(
                 std::vector<cv::Mat> &imgs_, const int threads_) : imgs(imgs_),
                                                                    threads(threads_) {
@@ -306,5 +306,5 @@ namespace SL {
         void ThreeStepFiveGrayCodeMaster_CPU::getTextureImg(cv::Mat &textureImg) {
             textureImg = averageImg;
         }
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl

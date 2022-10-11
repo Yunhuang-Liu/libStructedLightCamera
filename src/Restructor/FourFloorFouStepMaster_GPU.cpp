@@ -1,7 +1,7 @@
 #include <Restructor/FourFloorFouStepMaster_GPU.h>
 
-namespace SL {
-    namespace PhaseSolverType {
+namespace sl {
+    namespace phaseSolver {
         FourFloorFourStepMaster_GPU::FourFloorFourStepMaster_GPU(
                 std::vector<cv::Mat> &imgs, const dim3 block_) : block(block_), currentFrame(0) {
             if (imgs.size() > 0) {
@@ -31,10 +31,10 @@ namespace SL {
             }
 
             if (currentFrame % 2 != 0)
-                PhaseSolverType::cudaFunc::solvePhasePrepare_FourFloorFourStep(imgs_device[4], imgs_device[5], imgs_device[1], imgs_device[2], imgs_device[0], imgs_device[3], threshodVal, threshodAdd, count, rows, cols, wrapImg_device, conditionImg_device, medianFilter_0_, medianFilter_1_, floorImg_0_device, floorImg_1_device, floorImg_device, false, !currentFrame, block, pStream);
+                phaseSolver::cudaFunc::solvePhasePrepare_FourFloorFourStep(imgs_device[4], imgs_device[5], imgs_device[1], imgs_device[2], imgs_device[0], imgs_device[3], threshodVal, threshodAdd, count, rows, cols, wrapImg_device, conditionImg_device, medianFilter_0_, medianFilter_1_, floorImg_0_device, floorImg_1_device, floorImg_device, false, !currentFrame, block, pStream);
             else
-                PhaseSolverType::cudaFunc::solvePhasePrepare_FourFloorFourStep(imgs_device[1], imgs_device[2], imgs_device[4], imgs_device[5], imgs_device[0], imgs_device[3], threshodVal, threshodAdd, count, rows, cols, wrapImg_device, conditionImg_device, medianFilter_0_, medianFilter_1_, floorImg_0_device, floorImg_1_device, floorImg_device, true, !currentFrame, block, pStream);
-            PhaseSolverType::cudaFunc::solvePhase_FourFloorFourStep(floorImg_device, conditionImg_device, wrapImg_device, rows, cols, unwrapImg[0], block, pStream);
+                phaseSolver::cudaFunc::solvePhasePrepare_FourFloorFourStep(imgs_device[1], imgs_device[2], imgs_device[4], imgs_device[5], imgs_device[0], imgs_device[3], threshodVal, threshodAdd, count, rows, cols, wrapImg_device, conditionImg_device, medianFilter_0_, medianFilter_1_, floorImg_0_device, floorImg_1_device, floorImg_device, true, !currentFrame, block, pStream);
+            phaseSolver::cudaFunc::solvePhase_FourFloorFourStep(floorImg_device, conditionImg_device, wrapImg_device, rows, cols, unwrapImg[0], block, pStream);
             currentFrame++;
         }
 
@@ -145,5 +145,5 @@ namespace SL {
                                                   conditionImg_device.type()));
             textureImg[0] = conditionImg_device;
         }
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl

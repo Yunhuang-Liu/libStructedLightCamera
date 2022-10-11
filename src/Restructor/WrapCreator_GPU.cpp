@@ -1,7 +1,7 @@
 #include <Restructor/WrapCreator_GPU.h>
 
-namespace SL {
-    namespace WrapCreat {
+namespace sl {
+    namespace wrapCreator {
         WrapCreator_GPU::WrapCreator_GPU() {
         }
 
@@ -18,8 +18,8 @@ namespace SL {
             wrapImg.create(rows, cols, CV_32FC1);
             conditionImg.create(rows, cols, CV_32FC1);
 
-            WrapCreat::cudaFunc::getWrapImgSync(imgs, wrapImg,
+            wrapCreator::cudaFunc::getWrapImgSync(imgs, wrapImg,
                                                 conditionImg, isCounter, cvStream, parameter.block);
         }
-    }// namespace WrapCreat
-}// namespace SL
+    }// namespace wrapCreator
+}// namespace sl

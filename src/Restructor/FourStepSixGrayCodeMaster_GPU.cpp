@@ -1,7 +1,7 @@
 #include <Restructor/FourStepSixGrayCodeMaster_GPU.h>
 
-namespace SL {
-    namespace PhaseSolverType {
+namespace sl {
+    namespace phaseSolver {
         FourStepSixGrayCodeMaster_GPU::FourStepSixGrayCodeMaster_GPU(
                 std::vector<cv::Mat> &imgs, const dim3 block_) : block(block_) {
             if (imgs.size() > 0) {
@@ -15,12 +15,9 @@ namespace SL {
         FourStepSixGrayCodeMaster_GPU::~FourStepSixGrayCodeMaster_GPU() {
         }
 
-        void FourStepSixGrayCodeMaster_GPU::getWrapPhaseImg() {
-        }
-
         void FourStepSixGrayCodeMaster_GPU::getUnwrapPhaseImg(
                 std::vector<cv::cuda::GpuMat> &unwrapImg, cv::cuda::Stream &pStream) {
-            PhaseSolverType::cudaFunc::solvePhasePrepare_FourStepSixGray(
+            phaseSolver::cudaFunc::solvePhasePrepare_FourStepSixGray(
                     imgs_device[0], imgs_device[1], imgs_device[2], imgs_device[3],
                     rows, cols,
                     wrapImg_device, averageImg_device, conditionImg_device,
@@ -29,7 +26,7 @@ namespace SL {
             for (int i = 0; i < unwrapImg.size(); i++) {
                 unwrapImg[i].create(rows, cols, CV_32FC1);
             }
-            PhaseSolverType::cudaFunc::solvePhase_FourStepSixGray(
+            phaseSolver::cudaFunc::solvePhase_FourStepSixGray(
                     imgs_device[4], imgs_device[5], imgs_device[6], imgs_device[7],
                     imgs_device[8], imgs_device[9],
                     rows, cols,
@@ -85,5 +82,5 @@ namespace SL {
                                                   averageImg_device.type()));
             textureImg[0] = averageImg_device;
         }
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl

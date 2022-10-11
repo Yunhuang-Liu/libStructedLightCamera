@@ -18,9 +18,9 @@
 #include <limits>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 重建库 */
-    namespace RestructorType {
+    namespace restructor {
         /** @brief CPU加速重建器 */
         class Restructor_CPU : public Restructor {
         public:
@@ -95,6 +95,6 @@ namespace SL {
                                       const cv::Point2i region,
                                       const bool isColor = false);
         };
-    }// namespace RestructorType
-}// namespace SL
+    }// namespace restructor
+}// namespace sl
 #endif // RESTRUCTOR_RESTRUCTOR_CPU_H

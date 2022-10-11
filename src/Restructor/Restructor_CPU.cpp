@@ -1,7 +1,7 @@
 #include <Restructor/Restructor_CPU.h>
 
-namespace SL {
-    namespace RestructorType {
+namespace sl {
+    namespace restructor {
         Restructor_CPU::Restructor_CPU(
                 const Info &calibrationInfo_, const int minDisparity_, const int maxDisparity_,
                 const float minDepth_, const float maxDepth_, const int threads_) : calibrationInfo(calibrationInfo_),
@@ -43,7 +43,7 @@ namespace SL {
             const int rows = leftAbsImg.rows / threads;
             for (int i = 0; i < threads - 1; i++) {
                 tasks[i] = std::thread(
-                        &RestructorType::Restructor_CPU::thread_DepthColorMap,
+                        &restructor::Restructor_CPU::thread_DepthColorMap,
                         this,
                         std::ref(leftAbsImg),
                         std::ref(rightAbsImg),
@@ -52,7 +52,7 @@ namespace SL {
                         isColor);
             }
             tasks[threads - 1] = std::thread(
-                    &RestructorType::Restructor_CPU::thread_DepthColorMap,
+                    &restructor::Restructor_CPU::thread_DepthColorMap,
                     this,
                     std::ref(leftAbsImg),
                     std::ref(rightAbsImg),
@@ -159,6 +159,6 @@ namespace SL {
                 }
             }
         }
-    }// namespace RestructorType
-}// namespace SL
+    }// namespace restructor
+}// namespace sl
 

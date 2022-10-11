@@ -23,9 +23,9 @@
 #endif
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 重建库 */
-    namespace RestructorType {
+    namespace restructor {
         /** @brief 重建器控制参数 **/
         struct RestructParamater {
             RestructParamater() : minDisparity(-500), maxDisparity(500), minDepth(170),
@@ -136,6 +136,6 @@ namespace SL {
              */
             void getDepthColorMap();
         };
-    }// namespace RestructorType
-}// namespace SL
+    }// namespace restructor
+}// namespace sl
 #endif // RESTRUCTOR_RESTRUCTOR_H

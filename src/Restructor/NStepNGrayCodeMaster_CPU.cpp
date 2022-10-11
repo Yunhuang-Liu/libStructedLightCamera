@@ -1,7 +1,7 @@
 #include <Restructor/NStepNGrayCodeMaster_CPU.h>
 
-namespace SL {
-    namespace PhaseSolverType {
+namespace sl {
+    namespace phaseSolver {
         NStepNGrayCodeMaster_CPU::NStepNGrayCodeMaster_CPU(
                 const int shiftStep_, const int threads_) : shiftStep(shiftStep_),
                                                             threads(threads_) {
@@ -224,7 +224,7 @@ namespace SL {
             int rows = wrapImg.rows / threads;
             for (int i = 0; i < threads - 1; i++) {
                 tasks[i] = std::thread(
-                        &PhaseSolverType::NStepNGrayCodeMaster_CPU::SIMD_WrapImg,
+                        &phaseSolver::NStepNGrayCodeMaster_CPU::SIMD_WrapImg,
                         this,
                         std::ref(imgs),
                         shiftStep,
@@ -232,7 +232,7 @@ namespace SL {
                         std::ref(wrapImg));
             }
             tasks[threads - 1] = std::thread(
-                    &PhaseSolverType::NStepNGrayCodeMaster_CPU::SIMD_WrapImg,
+                    &phaseSolver::NStepNGrayCodeMaster_CPU::SIMD_WrapImg,
                     this,
                     std::ref(imgs),
                     shiftStep,
@@ -315,5 +315,5 @@ namespace SL {
         void NStepNGrayCodeMaster_CPU::getTextureImg(cv::Mat &textureImg) {
             textureImg = averageImg;
         }
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl

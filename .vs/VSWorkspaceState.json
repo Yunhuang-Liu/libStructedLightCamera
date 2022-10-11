@@ -2,15 +2,16 @@
   "ExpandedNodes": [
     "",
     "\\include",
+    "\\include\\CameraControl",
+    "\\include\\CameraControl\\CameraUtility",
+    "\\include\\CameraControl\\ProjectorSDK",
     "\\include\\Restructor",
-    "\\lib",
+    "\\include\\Restructor\\cuda",
+    "\\include\\Restructor\\cuda\\include",
     "\\src",
     "\\src\\CameraControl",
-    "\\src\\CameraControl\\ProjectorSDK",
-    "\\src\\Restructor",
-    "\\src\\Restructor\\cuda",
-    "\\systemFile"
+    "\\src\\CameraControl\\CameraUtility"
   ],
-  "SelectedNode": "\\src\\Restructor\\FourStepSixGrayCodeMaster_CPU.cpp",
+  "SelectedNode": "\\include\\StructedLightCamera.h",
   "PreviewInSolutionExplorer": false
 }

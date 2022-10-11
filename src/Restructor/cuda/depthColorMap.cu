@@ -3,8 +3,8 @@
 #include <atomic>
 
 //½á¹¹¹â¿â
-namespace SL {
-    namespace RestructorType {
+namespace sl {
+    namespace restructor {
         namespace cudaFunc {
             __global__ void matchAndTriangulateColor_CUDA(
                     cv::cuda::PtrStep<float> leftImg, cv::cuda::PtrStep<float> rightImg,
@@ -176,6 +176,6 @@ namespace SL {
                         R1_inv, depthMap);
             }
         }// namespace cudaFunc
-    }// namespace RestructorType
-}// namespace SL
+    }// namespace restructor
+}// namespace sl
 

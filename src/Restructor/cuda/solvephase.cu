@@ -1,8 +1,8 @@
 #include <Restructor/cuda/include/cudaTypeDef.cuh>
 #include <cuda_runtime_api.h>
 
-namespace SL {
-    namespace PhaseSolverType {
+namespace sl {
+    namespace phaseSolver {
         namespace cudaFunc {
             __global__ void atan2M_FourStepSixGray(
                     const cv::cuda::PtrStep<uchar> shift_0_,
@@ -867,6 +867,23 @@ namespace SL {
                 }
             }
 
+            __global__ void solvePhase_RefPlain(const cv::cuda::PtrStep<float> wrapImg, const cv::cuda::PtrStep<float> conditionImg,
+                const cv::cuda::PtrStep<float> refPlainImg, const int rows, const int cols, 
+                cv::cuda::PtrStep<float> unwrapImg, const bool isFarest) {
+                const int x = blockDim.x * blockIdx.x + threadIdx.x;
+                const int y = blockDim.y * blockIdx.y + threadIdx.y;
+                if (x < cols && y < rows) {
+                    if (conditionImg.ptr(y)[x] < 10.f) {
+                        unwrapImg.ptr(y)[x] = -5.f;
+                        return;
+                    }
+                    if (isFarest)
+                        unwrapImg.ptr(y)[x] = wrapImg.ptr(y)[x] + cuda::std::floorf((refPlainImg.ptr(y)[x] - wrapImg.ptr(y)[x]) / CV_2PI) * CV_2PI;
+                    else
+                        unwrapImg.ptr(y)[x] = wrapImg.ptr(y)[x] + cuda::std::ceilf((refPlainImg.ptr(y)[x] - wrapImg.ptr(y)[x]) / CV_2PI) * CV_2PI;
+                }
+            }
+
             void solvePhasePrepare_DevidedSpace(
                     const cv::cuda::GpuMat &shift_0_0_,
                     const cv::cuda::GpuMat &shift_0_1_,
@@ -909,21 +926,21 @@ namespace SL {
             }
 
             void solvePhase_DevidedSpace(
-                    const cv::cuda::GpuMat &absolutImgWhite,
-                    const int rows, const int cols,
-                    const cv::cuda::GpuMat &wrapImg_1_0_, const cv::cuda::GpuMat &wrapImg_1_1_,
-                    const cv::cuda::GpuMat &wrapImg_1_2_, const cv::cuda::GpuMat &conditionImg_1_,
-                    cv::cuda::GpuMat &unwrapImg_1_,
-                    const cv::cuda::GpuMat &wrapImg_2_0_, const cv::cuda::GpuMat &wrapImg_2_1_,
-                    const cv::cuda::GpuMat &wrapImg_2_2_, const cv::cuda::GpuMat &conditionImg_2_,
-                    cv::cuda::GpuMat &unwrapImg_2_,
-                    const cv::cuda::GpuMat &wrapImg_3_0_, const cv::cuda::GpuMat &wrapImg_3_1_,
-                    const cv::cuda::GpuMat &wrapImg_3_2_, const cv::cuda::GpuMat &conditionImg_3_,
-                    cv::cuda::GpuMat &unwrapImg_3_,
-                    const cv::cuda::GpuMat &wrapImg_4_0_, const cv::cuda::GpuMat &wrapImg_4_1_,
-                    const cv::cuda::GpuMat &wrapImg_4_2_, const cv::cuda::GpuMat &conditionImg_4_,
-                    cv::cuda::GpuMat &unwrapImg_4_,
-                    cv::cuda::GpuMat &floor_K, const dim3 block, cv::cuda::Stream &cvStream) {
+                const cv::cuda::GpuMat &absolutImgWhite,
+                const int rows, const int cols,
+                const cv::cuda::GpuMat &wrapImg_1_0_, const cv::cuda::GpuMat &wrapImg_1_1_,
+                const cv::cuda::GpuMat &wrapImg_1_2_, const cv::cuda::GpuMat &conditionImg_1_,
+                cv::cuda::GpuMat &unwrapImg_1_,
+                const cv::cuda::GpuMat &wrapImg_2_0_, const cv::cuda::GpuMat &wrapImg_2_1_,
+                const cv::cuda::GpuMat &wrapImg_2_2_, const cv::cuda::GpuMat &conditionImg_2_,
+                cv::cuda::GpuMat &unwrapImg_2_,
+                const cv::cuda::GpuMat &wrapImg_3_0_, const cv::cuda::GpuMat &wrapImg_3_1_,
+                const cv::cuda::GpuMat &wrapImg_3_2_, const cv::cuda::GpuMat &conditionImg_3_,
+                cv::cuda::GpuMat &unwrapImg_3_,
+                const cv::cuda::GpuMat &wrapImg_4_0_, const cv::cuda::GpuMat &wrapImg_4_1_,
+                const cv::cuda::GpuMat &wrapImg_4_2_, const cv::cuda::GpuMat &conditionImg_4_,
+                cv::cuda::GpuMat &unwrapImg_4_,
+                cv::cuda::GpuMat &floor_K, const dim3 block, cv::cuda::Stream &cvStream) {
                 cudaStream_t stream = cv::cuda::StreamAccessor::getStream(cvStream);
                 dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
                 getUnwrapImg_DevidedSpace<<<grid, block, 0, stream>>>(
@@ -1135,22 +1152,32 @@ namespace SL {
                         rows, cols, unwrapImg);
             }
 
-            /** \AbsolutImgWhite **/
             void solvePhase_FourStepSixGray(
-                    const cv::cuda::GpuMat &Gray_0_, const cv::cuda::GpuMat &Gray_1_,
-                    const cv::cuda::GpuMat &Gray_2_, const cv::cuda::GpuMat &Gray_3_,
-                    const cv::cuda::GpuMat &Gray_4_, const cv::cuda::GpuMat &Gray_5_,
-                    const int rows, const int cols,
-                    const cv::cuda::GpuMat &averageImg, const cv::cuda::GpuMat &conditionImg,
-                    const cv::cuda::GpuMat &wrapImg, cv::cuda::GpuMat &unwrapImg,
-                    const dim3 block, cv::cuda::Stream &cvStream) {
+                const cv::cuda::GpuMat &Gray_0_, const cv::cuda::GpuMat &Gray_1_,
+                const cv::cuda::GpuMat &Gray_2_, const cv::cuda::GpuMat &Gray_3_,
+                const cv::cuda::GpuMat &Gray_4_, const cv::cuda::GpuMat &Gray_5_,
+                const int rows, const int cols,
+                const cv::cuda::GpuMat &averageImg, const cv::cuda::GpuMat &conditionImg,
+                const cv::cuda::GpuMat &wrapImg, cv::cuda::GpuMat &unwrapImg,
+                const dim3 block, cv::cuda::Stream &cvStream) {
                 cudaStream_t stream = cv::cuda::StreamAccessor::getStream(cvStream);
                 dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
                 getUnwrapImg_FourStepSixGray<<<grid, block, 0, stream>>>(
-                        Gray_0_, Gray_1_, Gray_2_, Gray_3_, Gray_4_, Gray_5_,
-                        rows, cols,
-                        averageImg, conditionImg, wrapImg, unwrapImg);
+                    Gray_0_, Gray_1_, Gray_2_, Gray_3_, Gray_4_, Gray_5_,
+                    rows, cols,
+                    averageImg, conditionImg, wrapImg, unwrapImg);
+            }
+
+            void refPlainSolvePhase(const cv::cuda::GpuMat& wrapImg, const cv::cuda::GpuMat& conditionImg, 
+                const cv::cuda::GpuMat& refPlainImg, const int rows, const int cols,
+                cv::cuda::GpuMat &unwrapImg, const bool isFarest,
+                const dim3 block, cv::cuda::Stream& cvStream) {
+                cudaStream_t stream = cv::cuda::StreamAccessor::getStream(cvStream);
+                dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
+                solvePhase_RefPlain<<<grid, block, 0, stream>>>(wrapImg, conditionImg,
+                                    refPlainImg, rows, cols,
+                                    unwrapImg, isFarest);
             }
         }// namespace cudaFunc
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl

@@ -1,7 +1,7 @@
 #include <Restructor/Restructor_GPU.h>
 
-namespace SL {
-    namespace RestructorType {
+namespace sl {
+    namespace restructor {
         Restructor_GPU::Restructor_GPU(
                 const Info &calibrationInfo_, const int minDisparity_, const int maxDisparity_,
                 const float minDepth_, const float maxDepth_, const dim3 block_) : calibrationInfo(calibrationInfo_),
@@ -67,7 +67,7 @@ namespace SL {
                 cv::cuda::GpuMat &depthImg, cv::cuda::Stream &pStream) {
             const int rows = leftImg.rows;
             const int cols = leftImg.cols;
-            RestructorType::cudaFunc::depthColorMap(leftImg, rightImg, rows, cols,
+            restructor::cudaFunc::depthColorMap(leftImg, rightImg, rows, cols,
                                                     minDisparity, maxDisparity, minDepth, maxDepth, Q,
                                                     M3, R, T, R1_inv, depthImg, block, pStream);
         }
@@ -77,7 +77,7 @@ namespace SL {
                 cv::cuda::GpuMat &depthImg, cv::cuda::Stream &pStream) {
             const int rows = leftImg.rows;
             const int cols = leftImg.cols;
-            RestructorType::cudaFunc::depthMap(leftImg, rightImg, rows, cols,
+            restructor::cudaFunc::depthMap(leftImg, rightImg, rows, cols,
                                                minDisparity, maxDisparity, minDepth, maxDepth, Q,
                                                M1, R1_inv, depthImg, block, pStream);
         }
@@ -85,7 +85,7 @@ namespace SL {
         void Restructor_GPU::download(const int index, cv::cuda::GpuMat &depthImg) {
             depthImg = depthImg_device[index];
         }
-    }// namespace RestructorType
-}// namespace SL
+    }// namespace restructor
+}// namespace sl
 
 

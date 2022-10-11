@@ -4,9 +4,9 @@
 #include <Restructor/Rectifier.h>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 极线校正库 */
-    namespace Rectify {
+    namespace rectifier {
         /** @brief CPU极线校正器 */
         class Rectifier_CPU : public Rectifier {
         public:
@@ -47,6 +47,6 @@ namespace SL {
             //右相机Y方向映射表
             cv::Mat m_map_Ry;
         };
-    }// namespace Rectify
-}// namespace SL
+    }// namespace rectifier
+}// namespace sl
 #endif // RESTRUCTOR_RECTIFIER_CPU_H_

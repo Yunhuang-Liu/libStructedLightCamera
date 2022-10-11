@@ -15,9 +15,9 @@
 #include <Restructor/WrapCreator.h>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 包裹生成库 */
-    namespace WrapCreat {
+    namespace wrapCreator {
         /** @brief GPU加速包裹相位求解器 */
         class WrapCreator_GPU : public WrapCreator {
         public:
@@ -44,6 +44,6 @@ namespace SL {
                             cv::Mat &conditionImg, const bool isCounter = false,
                             const WrapParameter parameter = WrapParameter()) override{};
         };
-    }// namespace WrapCreat
-}// namespace SL
+    }// namespace wrapCreator
+}// namespace sl
 #endif // RESTRUCTOR_WRAPCREATOR_GPU_H

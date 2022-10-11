@@ -17,9 +17,9 @@
 #include <fstream>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 解相库 */
-    namespace PhaseSolverType {
+    namespace phaseSolver {
         /**
          * @brief N位互补格雷码N步相移解码器(多线程+SIMD)
          */
@@ -160,6 +160,6 @@ namespace SL {
             /** \相移步数 **/
             const int shiftStep;
         };
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl
 #endif //RESTRUCTOR_NSTEPNGRAYCODEMASTER_CPU_H

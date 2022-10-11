@@ -18,9 +18,9 @@
 #endif
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 包裹生成库 */
-    namespace WrapCreat {
+    namespace wrapCreator {
         #ifdef CUDA
         /** @brief cuda函数库 */
         namespace cudaFunc {
@@ -83,6 +83,6 @@ namespace SL {
                                     const WrapParameter parameter = WrapParameter()) = 0;
             #endif
         };
-    }// namespace WrapCreat
-}// namespace SL
+    }// namespace wrapCreator
+}// namespace sl
 #endif // RESTRUCTOR_WRAPERCREATOR_H

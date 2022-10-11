@@ -37,9 +37,9 @@ static uint8_t s_ReadBuffer[MAX_READ_CMD_PAYLOAD];
 static FILE* s_FilePointer;
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 设备控制库 */
-    namespace Device {
+    namespace device {
         /**
          * @brief 投影仪控制类
          * @note 应当注意的是，DLP3010将得到全面的支持，无需GUI进行辅助，DLP6500的需求将迫使你不得不使用GUI事先进行图片的烧入 
@@ -84,6 +84,6 @@ namespace SL {
             /** \是否为DLPC900控制芯片 **/
             const bool isDLPC900;
         };
-    }// namespace Device
-}// namespace SL
+    }// namespace device
+}// namespace sl
 #endif //CameraControl_ProjectorControl_H

@@ -1,7 +1,7 @@
 #include <Restructor/Rectifier_GPU.h>
 
-namespace SL {
-    namespace Rectify {
+namespace sl {
+    namespace rectifier {
         Rectifier_GPU::Rectifier_GPU() {
         }
 
@@ -38,5 +38,5 @@ namespace SL {
                 cv::cuda::remap(imgDev, imgOutput, m_map_Rx, m_map_Ry, cv::INTER_LINEAR,
                                 0, cv::Scalar(), cvStream);
         }
-    }// namespace Rectify
-}// namespace SL
+    }// namespace rectifier
+}// namespace sl

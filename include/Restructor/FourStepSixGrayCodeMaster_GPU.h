@@ -15,9 +15,9 @@
 #include <Restructor/PhaseSolver.h>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 解相库 */
-    namespace PhaseSolverType {
+    namespace phaseSolver {
         /**
          * @brief 互补格雷码四步相移解码器(4+6 | CUDA)
          */
@@ -71,11 +71,6 @@ namespace SL {
              * @param imgs 输入，原始图片
              */
             void changeSourceImg(std::vector<cv::Mat> &imgs) override;
-            /**
-             * @brief 获取包裹相位
-             */
-            void getWrapPhaseImg();
-
         private:
             void getUnwrapPhaseImg(cv::Mat &) override {}
             void getWrapPhaseImg(cv::Mat &, cv::Mat &) override {}
@@ -95,6 +90,6 @@ namespace SL {
             /** \列数 **/
             int cols;
         };
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl
 #endif // RESTRUCTOR_FOURSTEPSIXGRAYCODEMASTER_GPU_H

@@ -1,7 +1,7 @@
 #include <CameraControl/ProjectorSDK/ProjectorControl.h>
 
-namespace SL {
-    namespace Device {
+namespace sl {
+    namespace device {
         /**
          * @brief I2C Write
          * 
@@ -157,5 +157,5 @@ namespace SL {
 
             fclose(s_FilePointer);
         }
-    }// namespace Device
-}// namespace SL
+    }// namespace device
+}// namespace sl

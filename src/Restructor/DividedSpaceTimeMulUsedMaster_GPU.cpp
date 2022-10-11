@@ -1,7 +1,7 @@
 #include <Restructor/DividedSpaceTimeMulUsedMaster_GPU.h>
 
-namespace SL {
-    namespace PhaseSolverType {
+namespace sl {
+    namespace phaseSolver {
         DividedSpaceTimeMulUsedMaster_GPU::DividedSpaceTimeMulUsedMaster_GPU(
                 std::vector<cv::Mat> &imgs, const cv::Mat &refImgWhite, const dim3 block_) : refImgWhite_device(refImgWhite), block(block_) {
             rows = refImgWhite.rows;
@@ -54,7 +54,7 @@ namespace SL {
 
         void DividedSpaceTimeMulUsedMaster_GPU::getWrapPhaseImg(
                 cv::cuda::Stream &stream) {
-            PhaseSolverType::cudaFunc::solvePhasePrepare_DevidedSpace(
+            phaseSolver::cudaFunc::solvePhasePrepare_DevidedSpace(
                     img1_4_device, img1_2_device, img1_3_device, img1_1_device,
                     img2_4_device, img2_2_device, img2_3_device, img2_1_device,
                     img3_4_device, img3_2_device, img3_3_device, img3_1_device,
@@ -76,7 +76,7 @@ namespace SL {
             unwrapImg.resize(4, cv::cuda::GpuMat(rows, cols, CV_32FC1));
             getWrapPhaseImg(stream);
             //cudaDeviceSynchronize();
-            PhaseSolverType::cudaFunc::solvePhase_DevidedSpace(refImgWhite_device,
+            phaseSolver::cudaFunc::solvePhase_DevidedSpace(refImgWhite_device,
                                                                rows, cols,
                                                                wrapImg1_1_device, wrapImg1_2_device, wrapImg1_3_device,
                                                                conditionImg_1_device, unwrapImg[0],
@@ -191,5 +191,5 @@ namespace SL {
             textureImg[2] = averageImg_3_device;
             textureImg[3] = averageImg_4_device;
         }
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl

@@ -1,7 +1,7 @@
 #include <Restructor/cuda/include/cudaTypeDef.cuh>
 
-namespace SL {
-    namespace WrapCreat {
+namespace sl {
+    namespace wrapCreator {
         namespace cudaFunc {
 
             __global__ void wrapThreeStep(
@@ -83,5 +83,5 @@ namespace SL {
                 }
             }
         }// namespace cudaFunc
-    }// namespace WrapCreat
-}// namespace SL
+    }// namespace wrapCreator
+}// namespace sl

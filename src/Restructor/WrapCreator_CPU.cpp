@@ -1,7 +1,7 @@
 #include <Restructor/WrapCreator_CPU.h>
 
-namespace SL {
-    namespace WrapCreat {
+namespace sl {
+    namespace wrapCreator {
         WrapCreator_CPU::WrapCreator_CPU() {
         }
 
@@ -46,9 +46,9 @@ namespace SL {
             const int blockRows = wrapImg.rows / threadsUsed;
             for (int i = 0; i < threadsUsed; i++) {
                 if (imgs.size() == 3)
-                    threads[i] = std::thread(&WrapCreat::WrapCreator_CPU::thread_ThreeStepWrap, this, std::ref(copyImg), std::ref(wrapImg), std::ref(conditionImg), cv::Size(cols, blockRows * (i + 1)));
+                    threads[i] = std::thread(&wrapCreator::WrapCreator_CPU::thread_ThreeStepWrap, this, std::ref(copyImg), std::ref(wrapImg), std::ref(conditionImg), cv::Size(cols, blockRows * (i + 1)));
                 else if (imgs.size() == 4)
-                    threads[i] = std::thread(&WrapCreat::WrapCreator_CPU::thread_FourStepWrap, this, std::ref(copyImg), std::ref(wrapImg), std::ref(conditionImg), cv::Size(cols, blockRows * (i + 1)), isCounter);
+                    threads[i] = std::thread(&wrapCreator::WrapCreator_CPU::thread_FourStepWrap, this, std::ref(copyImg), std::ref(wrapImg), std::ref(conditionImg), cv::Size(cols, blockRows * (i + 1)), isCounter);
                 else
                     std::cout << "The " << numImg << " step is not support in current!" << std::endl;
             }
@@ -140,5 +140,5 @@ namespace SL {
                 }
             }
         }
-    }// namespace WrapCreat
-}// namespace SL
+    }// namespace wrapCreator
+}// namespace sl

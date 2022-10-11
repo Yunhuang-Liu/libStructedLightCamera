@@ -16,9 +16,9 @@
 #include <CameraControl/ProjectorSDK/ProjectorControl.h>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 设备控制库 */
-    namespace Device {
+    namespace device {
         /** @brief 重建帧 */
         struct RestructedFrame {
         public:
@@ -144,6 +144,6 @@ namespace SL {
             /** \相机配置状态 **/
             CameraUsedState cameraUsedState;
         };
-    }// namespace Device
-}// namespace SL
+    }// namespace device
+}// namespace sl
 #endif // PROJECTORSDK_CameraControl_H

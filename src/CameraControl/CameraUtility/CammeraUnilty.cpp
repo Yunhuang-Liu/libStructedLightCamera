@@ -1,7 +1,7 @@
 #include <CameraControl/CameraUtility/CammeraUnilty.h>
 
-namespace SL {
-    namespace Device {
+namespace sl {
+    namespace device {
         //灰度相机取流回调函数
         static void grayFrameCallback(IMV_Frame *pFrame, void *pUser) {
             CammeraUnilty *pCammerWidget = (CammeraUnilty *) pUser;
@@ -339,5 +339,5 @@ namespace SL {
                 return false;
             }
         }
-    }// namespace Device
-}// namespace CameraControl
+    }// namespace device
+}// namespace sl

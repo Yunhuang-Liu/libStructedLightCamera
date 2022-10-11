@@ -1,6 +1,6 @@
 #include <Restructor/MatrixsInfo.h>
 
-namespace SL {
+namespace sl {
     MatrixsInfo::MatrixsInfo(std::string intrinsicDir, std::string extrinsicDir) {
         cv::FileStorage readYml(intrinsicDir, cv::FileStorage::READ);
         readYml["M1"] >> myInfo.M1;
@@ -38,4 +38,4 @@ namespace SL {
     const Info &MatrixsInfo::getInfo() {
         return myInfo;
     }
-}// namespace SL
+}// namespace sl

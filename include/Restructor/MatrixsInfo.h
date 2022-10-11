@@ -17,7 +17,7 @@
 
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 信息结构体    */
     struct Info {
         /** \左相机内参矩阵 **/
@@ -83,5 +83,5 @@ namespace SL {
         /** \读取到的校正信息 **/
         Info myInfo;
     };
-}// namespace SL
+}// namespace sl
 #endif // RESTRUCTOR_MATRIXINFO_H

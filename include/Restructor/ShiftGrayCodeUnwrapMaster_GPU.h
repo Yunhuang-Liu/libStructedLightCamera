@@ -15,9 +15,9 @@
 #include <Restructor/PhaseSolver.h>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 重建库 */
-    namespace PhaseSolverType {
+    namespace phaseSolver {
         /** 
          * @brief GPU加速的时间复用位移格雷码解相器 
          * @note 四帧复用
@@ -160,6 +160,6 @@ namespace SL {
             /** \列数 **/
             int cols;
         };
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl
 #endif // RESTRUCTOR_SHIFTGRAYCODEMASTER_GPU_H

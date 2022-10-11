@@ -16,9 +16,9 @@
 #include <fstream>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 解相库 */
-    namespace PhaseSolverType {
+    namespace phaseSolver {
         /**
          * @brief 互补格雷码四步相移解码器(4+6 | 多线程+SIMD)
          */
@@ -142,6 +142,6 @@ namespace SL {
             /** \包裹相位图像 **/
             cv::Mat wrapImg;
         };
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl
 #endif // RESTRUCTOR_FOURSTEPSIXGRAYCODEMASTER_CPU_H

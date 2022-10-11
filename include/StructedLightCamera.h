@@ -29,6 +29,7 @@
 #include <Restructor/DividedSpaceTimeMulUsedMaster_GPU.h>
 #include <Restructor/ShiftGrayCodeUnwrapMaster_GPU.h>
 #include <Restructor/FourFloorFouStepMaster_GPU.h>
+#include <Restructor/FourStepRefPlainMaster_GPU.h>
 #include <Restructor/WrapCreator_GPU.h>
 #include <Restructor/Rectifier_GPU.h>
 #endif
@@ -55,10 +56,10 @@ public:
     };
     // @brief 结构光相机设置参数
     struct SLCameraSet{
-        SLCameraSet() : chipCore(ChipControlCore::DLP3010), cameraSet(SL::Device::CameraControl::CameraUsedState::LeftGrayRightGrayExColor){}
-        SLCameraSet(ChipControlCore chipCore_, SL::Device::CameraControl::CameraUsedState cameraSet_) : chipCore(chipCore_), cameraSet(cameraSet) {}
+        SLCameraSet() : chipCore(ChipControlCore::DLP3010), cameraSet(sl::device::CameraControl::CameraUsedState::LeftGrayRightGrayExColor){}
+        SLCameraSet(ChipControlCore chipCore_, sl::device::CameraControl::CameraUsedState cameraSet_) : chipCore(chipCore_), cameraSet(cameraSet) {}
         ChipControlCore chipCore;   //芯片类型
-        SL::Device::CameraControl::CameraUsedState cameraSet;//相机设置
+        sl::device::CameraControl::CameraUsedState cameraSet;//相机设置
     };
     /**
      * @brief 构造函数
@@ -70,8 +71,8 @@ public:
      * @param leftRefImg 输入，左参考绝对相位
      * @param rightRefImg 输入，右参考绝对相位
      */
-    StructedLightCamera(const SL::Info& infoCalibraion, const AlgorithmType algorithmType = AlgorithmType::ShiftGrayCodeTimeMulUsed, const AcceleratedMethod acceleratedMethod = AcceleratedMethod::CPU,const SLCameraSet cameraSet = SLCameraSet(),
-                        const SL::RestructorType::RestructParamater params = SL::RestructorType::RestructParamater(),
+    StructedLightCamera(const sl::Info& infoCalibraion, const AlgorithmType algorithmType = AlgorithmType::ShiftGrayCodeTimeMulUsed, const AcceleratedMethod acceleratedMethod = AcceleratedMethod::CPU,const SLCameraSet cameraSet = SLCameraSet(),
+                        const sl::restructor::RestructParamater params = sl::restructor::RestructParamater(),
                         const cv::Mat& leftRefImg = cv::Mat(0,0,CV_32FC1), const cv::Mat& rightRefImg = cv::Mat(0,0,CV_32FC1));
     /**
      * @brief 获取深度纹理图
@@ -107,15 +108,15 @@ private:
      */
     void remapImg(const cv::cuda::GpuMat& src, const cv::cuda::GpuMat& remap_x, const cv::cuda::GpuMat& remap_y, cv::cuda::GpuMat& outImg);
     /** \标定信息 **/
-    const SL::Info &calibrationInfo;
+    const sl::Info &calibrationInfo;
     /** \左相机解相器 **/
-    SL::PhaseSolverType::PhaseSolver *phaseSolverLeft;
+    sl::phaseSolver::PhaseSolver *phaseSolverLeft;
     /** \右相机解相器 **/
-    SL::PhaseSolverType::PhaseSolver *phaseSolverRight;
+    sl::phaseSolver::PhaseSolver *phaseSolverRight;
     /** \重建器 **/
-    SL::RestructorType::Restructor *restructor;
+    sl::restructor::Restructor *restructor;
     /** \相机控制器 **/
-    SL::Device::CameraControl *camera;
+    sl::device::CameraControl *camera;
     /** \解相算法 **/
     AlgorithmType algorithmType;
     /** \加速方法 **/

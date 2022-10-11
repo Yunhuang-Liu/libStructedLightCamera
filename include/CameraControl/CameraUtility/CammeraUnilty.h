@@ -18,9 +18,9 @@
 #include <opencv2/opencv.hpp>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 设备控制库 */
-    namespace Device {
+    namespace device {
         /** @brief 帧信息 */
         class CFrameInfo {
         public:
@@ -187,6 +187,6 @@ namespace SL {
             /** \当前相机key **/
             std::string m_currentCameraKey;
         };
-    }// namespace Device
-}// namespace SL
+    }// namespace device
+}// namespace sl
 #endif // CAMERACONTROL_CAMMERUNILTY_H

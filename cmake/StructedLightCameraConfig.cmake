@@ -3,11 +3,12 @@
 ##################################
 #   This sets the following variables:
 # StructedLightCamera_FOUND             -True if StructedLight Was found
-# StructedLightCamera_INCLUDE_DIR    -Directories containing the StructedLightCamera include files
+# StructedLightCamera_INCLUDE_DIRS    -Directories containing the StructedLightCamera include files
 # StructedLightCamera_LIBRARY            -Libraries needed to use StructedLightCamera
 
 find_path(
     StructedLightCamera_INCLUDE_DIR
+    StructedLightCamera.h
     ${StructedLightCamera_DIR}/include
 )
 
@@ -47,7 +48,7 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
     StructedLightCamera
     DEFAULT_MSG
-    StructedLightCamera_INCLUDE_DIRS 
+    StructedLightCamera_INCLUDE_DIR
     StructedLightCamera_LIBRARIES
     DAHUASDK_DIR 
     TISDK_DIR
@@ -55,5 +56,5 @@ find_package_handle_standard_args(
 
 mark_as_advanced(
     StructedLightCamera_LIBRARIES
-    StructedLightCamera_INCLUDE_DIR
+    StructedLightCamera_INCLUDE_DIRS
 )

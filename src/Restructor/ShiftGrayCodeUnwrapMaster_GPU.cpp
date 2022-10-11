@@ -1,7 +1,7 @@
 #include <Restructor/ShiftGrayCodeUnwrapMaster_GPU.h>
 
-namespace SL {
-    namespace PhaseSolverType {
+namespace sl {
+    namespace phaseSolver {
         ShiftGrayCodeUnwrapMaster_GPU::ShiftGrayCodeUnwrapMaster_GPU(
                 std::vector<cv::Mat> &imgs, const cv::Mat &refImgWhite, const dim3 block_) : block(block_) {
             rows = imgG_1_device.rows;
@@ -59,7 +59,7 @@ namespace SL {
 
         void ShiftGrayCodeUnwrapMaster_GPU::getWrapPhaseImg(cv::cuda::Stream &pStream) {
             if (img4_3_device.empty()) {
-                PhaseSolverType::cudaFunc::solvePhasePrepare_ShiftGray(
+                phaseSolver::cudaFunc::solvePhasePrepare_ShiftGray(
                         img1_1_device, img1_2_device, img1_3_device,
                         img2_1_device, img2_2_device, img2_3_device,
                         imgG_1_device, imgG_2_device, imgG_3_device, imgG_4_device,
@@ -68,7 +68,7 @@ namespace SL {
                         wrapImg2_device, conditionImg_2_device,
                         floor_K_device, block, pStream);
             } else {
-                PhaseSolverType::cudaFunc::solvePhasePrepare_ShiftGrayFourFrame(
+                phaseSolver::cudaFunc::solvePhasePrepare_ShiftGrayFourFrame(
                         img1_1_device, img1_2_device, img1_3_device,
                         img2_1_device, img2_2_device, img2_3_device,
                         img3_1_device, img3_2_device, img3_3_device,
@@ -96,13 +96,13 @@ namespace SL {
                 unwrapImg[i].create(rows, cols, CV_32FC1);
             }
             if (!isFourFrame) {
-                PhaseSolverType::cudaFunc::solvePhase_ShiftGray(
+                phaseSolver::cudaFunc::solvePhase_ShiftGray(
                         refImgWhite_device, rows, cols,
                         wrapImg1_device, conditionImg_1_device, unwrapImg[0],
                         wrapImg2_device, conditionImg_2_device, unwrapImg[1],
                         floor_K_device, block, pStream);
             } else {
-                PhaseSolverType::cudaFunc::solvePhase_ShiftGrayFourFrame(
+                phaseSolver::cudaFunc::solvePhase_ShiftGrayFourFrame(
                         refImgWhite_device, rows, cols,
                         wrapImg1_device, conditionImg_1_device, unwrapImg[0],
                         wrapImg2_device, conditionImg_2_device, unwrapImg[1],
@@ -303,5 +303,5 @@ namespace SL {
                 textureImg[3] = averageImg_4_device;
             }
         }
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl

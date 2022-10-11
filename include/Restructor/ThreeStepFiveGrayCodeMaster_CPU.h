@@ -15,9 +15,9 @@
 #include <fstream>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 重建库 */
-    namespace PhaseSolverType {
+    namespace phaseSolver {
         /**
          * @brief 互补格雷码四步相移解码器(3+5 | 多线程+SIMD)
          */
@@ -131,6 +131,6 @@ namespace SL {
             /** \线程数 **/
             const int threads;
         };
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl
 #endif // RESTRUCTOR_THREESTEPFIVEGRAYCODEMASTER_CPU_H

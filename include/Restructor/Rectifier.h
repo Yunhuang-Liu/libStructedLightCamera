@@ -17,9 +17,9 @@
 #endif
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 极线校正库 */
-    namespace Rectify {
+    namespace rectifier {
         /** @brief 极线校正器 */
         class Rectifier {
         public:
@@ -44,6 +44,6 @@ namespace SL {
             #endif
         private:
         };
-    }// namespace Rectify
-}// namespace SL
+    }// namespace rectifier
+}// namespace sl
 #endif // RESTRUCTOR_RECTIFIER_H_

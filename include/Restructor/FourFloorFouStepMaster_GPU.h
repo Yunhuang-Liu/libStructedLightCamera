@@ -15,9 +15,9 @@
 #include <Restructor/PhaseSolver.h>
 
 /** @brief 结构光库 */
-namespace SL {
+namespace sl {
     /** @brief 解相库 */
-    namespace PhaseSolverType {
+    namespace phaseSolver {
         /**
          * @brief 四步四灰度时间复用格雷码解相器(1+2 - 1+2 --- | CUDA)
          */
@@ -113,6 +113,6 @@ namespace SL {
             /** \当前连续帧数 **/
             int currentFrame;
         };
-    }// namespace PhaseSolverType
-}// namespace SL
+    }// namespace phaseSolver
+}// namespace sl
 #endif // RESTRUCTOR_FOURFLOORSTEPMASTER_GPU_H
