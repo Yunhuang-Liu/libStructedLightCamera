@@ -28,13 +28,13 @@ namespace sl {
              * 
              * @param info      输入，相机标定参数
              */
-            Rectifier_GPU(const Info &info);
+            Rectifier_GPU(const tool::Info &info);
             /**
              * @brief           使用标定参数初始化极线校正器
              * 
              * @param info      输入，相机标定参数
              */
-            void initialize(const Info &info);
+            void initialize(const tool::Info &info);
             /**
              * @brief                对图片进行极线校正
              * 

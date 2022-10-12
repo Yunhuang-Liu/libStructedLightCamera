@@ -67,7 +67,7 @@ public:
      * @param leftRefImg 输入，左参考绝对相位
      * @param rightRefImg 输入，右参考绝对相位
      */
-    StructedLightCamera(const sl::Info& infoCalibraion, const AlgorithmType algorithmType = AlgorithmType::ShiftGrayCodeTimeMulUsed, const AcceleratedMethod acceleratedMethod = AcceleratedMethod::CPU,const SLCameraSet cameraSet = SLCameraSet(),
+    StructedLightCamera(const sl::tool::Info& infoCalibraion, const AlgorithmType algorithmType = AlgorithmType::ShiftGrayCodeTimeMulUsed, const AcceleratedMethod acceleratedMethod = AcceleratedMethod::CPU,const SLCameraSet cameraSet = SLCameraSet(),
                         const sl::restructor::RestructParamater params = sl::restructor::RestructParamater(),
                         const cv::Mat& leftRefImg = cv::Mat(0,0,CV_32FC1), const cv::Mat& rightRefImg = cv::Mat(0,0,CV_32FC1));
     /**
@@ -104,7 +104,7 @@ private:
      */
     void remapImg(const cv::cuda::GpuMat& src, const cv::cuda::GpuMat& remap_x, const cv::cuda::GpuMat& remap_y, cv::cuda::GpuMat& outImg);
     /** \标定信息 **/
-    const sl::Info &calibrationInfo;
+    const sl::tool::Info &calibrationInfo;
     /** \左相机解相器 **/
     sl::phaseSolver::PhaseSolver *phaseSolverLeft;
     /** \右相机解相器 **/

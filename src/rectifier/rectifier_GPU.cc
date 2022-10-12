@@ -5,7 +5,7 @@ namespace sl {
         Rectifier_GPU::Rectifier_GPU() {
         }
 
-        Rectifier_GPU::Rectifier_GPU(const Info &info) {
+        Rectifier_GPU::Rectifier_GPU(const tool::Info &info) {
             m_imgSize = cv::Size(info.S.ptr<double>(0)[0], info.S.ptr<double>(1)[0]);
             cv::Mat m_map_Lx_, m_map_Ly_, m_map_Rx_, m_map_Ry_;
             cv::initUndistortRectifyMap(info.M1, info.D1, info.R1, info.P1, m_imgSize, CV_32FC1, m_map_Lx_, m_map_Ly_);
@@ -16,7 +16,7 @@ namespace sl {
             m_map_Ry.upload(m_map_Ry_);
         }
 
-        void Rectifier_GPU::initialize(const Info &info) {
+        void Rectifier_GPU::initialize(const tool::Info &info) {
             m_imgSize = cv::Size(info.S.ptr<double>(0)[0], info.S.ptr<double>(1)[0]);
             cv::Mat m_map_Lx_, m_map_Ly_, m_map_Rx_, m_map_Ry_;
             cv::initUndistortRectifyMap(info.M1, info.D1, info.R1, info.P1, m_imgSize, CV_32FC1, m_map_Lx_, m_map_Ly_);

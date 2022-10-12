@@ -41,7 +41,7 @@ namespace sl {
              * 
              * @param info      输入，相机标定参数
              */
-            virtual void initialize(const Info &info) = 0;
+            virtual void initialize(const tool::Info &info) = 0;
             /**
              * @brief           对图片进行极线校正
              * 

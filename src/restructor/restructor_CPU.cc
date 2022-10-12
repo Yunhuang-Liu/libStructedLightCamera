@@ -3,7 +3,7 @@
 namespace sl {
     namespace restructor {
         Restructor_CPU::Restructor_CPU(
-                const Info &calibrationInfo_, const int minDisparity_, const int maxDisparity_,
+                const tool::Info &calibrationInfo_, const int minDisparity_, const int maxDisparity_,
                 const float minDepth_, const float maxDepth_, const int threads_) : calibrationInfo(calibrationInfo_),
                                                                                     minDisparity(minDisparity_),
                                                                                     maxDisparity(maxDisparity_),

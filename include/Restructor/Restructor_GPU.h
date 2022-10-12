@@ -39,7 +39,7 @@ namespace sl {
              * @param maxDepth 输入，最大深度值
              * @param block 输入，Block尺寸
              */
-            Restructor_GPU(const Info &calibrationInfo, const int minDisparity = -500,
+            Restructor_GPU(const tool::Info &calibrationInfo, const int minDisparity = -500,
                            const int maxDisparity = 500, const float minDepth = 170,
                            const float maxDepth = 220, const dim3 block = dim3(32, 8));
             /**
@@ -103,7 +103,7 @@ namespace sl {
             /** \block尺寸 **/
             const dim3 block;
             /** \标定信息 **/
-            const Info &calibrationInfo;
+            const tool::Info &calibrationInfo;
             //CPU端函数
             void restruction(const cv::Mat &leftAbsImg,
                              const cv::Mat &rightAbsImg,

@@ -34,7 +34,7 @@ namespace sl {
              * @param maxDepth 输入，最大深度值
              * @param threads 输入，线程数
              */
-            Restructor_CPU(const Info &calibrationInfo, const int minDisparity = -500,
+            Restructor_CPU(const tool::Info &calibrationInfo, const int minDisparity = -500,
                            const int maxDisparity = 500, const float minDepth = 170,
                            const float maxDepth = 220, const int threads = 16);
             /**
@@ -77,7 +77,7 @@ namespace sl {
             /** \存储线程锁 **/
             std::mutex mutexMap;
             /** \标定信息 **/
-            const Info &calibrationInfo;
+            const tool::Info &calibrationInfo;
             /** \使用线程数 **/
             const int threads;
             /** \最小视差值 **/

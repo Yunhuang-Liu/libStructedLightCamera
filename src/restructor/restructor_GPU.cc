@@ -3,7 +3,7 @@
 namespace sl {
     namespace restructor {
         Restructor_GPU::Restructor_GPU(
-                const Info &calibrationInfo_, const int minDisparity_, const int maxDisparity_,
+                const tool::Info &calibrationInfo_, const int minDisparity_, const int maxDisparity_,
                 const float minDepth_, const float maxDepth_, const dim3 block_) : calibrationInfo(calibrationInfo_),
                                                                                    minDisparity(minDisparity_),
                                                                                    maxDisparity(maxDisparity_),

@@ -3,7 +3,7 @@
 using namespace sl;
 using namespace sl::device;
 
-StructedLightCamera::StructedLightCamera(const Info& infoCalibraion, const AlgorithmType algorithmType_, const AcceleratedMethod acceleratedMethod_, const SLCameraSet cameraSet, const restructor::RestructParamater params, const cv::Mat& leftRefImg, const cv::Mat& rightRefImg) :
+StructedLightCamera::StructedLightCamera(const sl::tool::Info& infoCalibraion, const AlgorithmType algorithmType_, const AcceleratedMethod acceleratedMethod_, const SLCameraSet cameraSet, const restructor::RestructParamater params, const cv::Mat& leftRefImg, const cv::Mat& rightRefImg) :
     restructor(nullptr),phaseSolverLeft(nullptr),phaseSolverRight(nullptr),camera(nullptr),calibrationInfo(infoCalibraion),
     algorithmType(algorithmType_),acceleratedMethod(acceleratedMethod_){
     int grayCaptureImgNum;
