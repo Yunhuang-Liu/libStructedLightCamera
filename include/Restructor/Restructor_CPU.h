@@ -1,18 +1,18 @@
 /**
- * @file Restructor_CPU_GrayPhase.h
+ * @file restructor_CPU.h
  * @author Liu Yunhuang(1369215984@qq.com)
- * @brief  CPU重建器(SIMD:AVX(256bit),多线程)
+ * @brief  CPU重建器
  * @version 0.1
  * @date 2021-12-10
  *
  * @copyright Copyright (c) 2021
  *
  */
-#ifndef RESTRUCTOR_RESTRUCTOR_CPU_H
-#define RESTRUCTOR_RESTRUCTOR_CPU_H
+#ifndef RESTRUCTOR_RESTRUCTOR_CPU_H_
+#define RESTRUCTOR_RESTRUCTOR_CPU_H_
 
-#include <Restructor/Restructor.h>
-#include <Restructor/MatrixsInfo.h>
+#include <restructor/restructor.h>
+#include <tool/matrixsInfo.h>
 
 #include <immintrin.h>
 #include <limits>
@@ -97,4 +97,4 @@ namespace sl {
         };
     }// namespace restructor
 }// namespace sl
-#endif // RESTRUCTOR_RESTRUCTOR_CPU_H
+#endif // RESTRUCTOR_RESTRUCTOR_CPU_H_

@@ -6,14 +6,13 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX C:/Users/LiuYunhuang/Desktop/softWare/WindowsVCLib/libStructedLightCamera)
 
-file(GLOB_RECURSE CPUHeader ./include/StructedLightCamera.h ./include/*CPU.h ./include/CameraControl/*.h
-    ./include/WrapCreator.h ./include/MatrixsInfo.h ./include/PhaseSolver.h ./include/Restructor.h
-    ./include/Rectifier.h ./include/NStepNGrayCodeMaster_CPU.h)
+file(GLOB_RECURSE CPUHeader ./include/structedLightCamera.h ./include/*CPU.h ./include/device/*.h
+    ./include/wrapCreator.h ./include/matrixsInfo.h ./include/phaseSolver.h ./include/restructor.h
+    ./include/rectifier.h)
 file(GLOB_RECURSE GPUHeader ./include/*GPU.h ./include/*.cuh)
-file(GLOB_RECURSE CPUSource ./src/StructedLightCamera.cpp ./src/*CPU.cpp ./src/*.c
-    ./src/CameraControl/*.cpp ./src/MatrixsInfo.cpp ./src/PhaseSolver.cpp ./src/Restructor.cpp
-    ./src/WrapRestructor_CPU.cpp ./src/Rectifier_CPU.cpp ./src/NStepNGrayCodeMaster_CPU.cpp)
-file(GLOB_RECURSE GPUSource ./src/*.cu ./src/*GPU.cpp)
+file(GLOB_RECURSE CPUSource ./src/structedLightCamera.cc ./src/*CPU.cc ./src/*.c
+    ./src/device/*.cc ./src/matrixsInfo.cc ./src/phaseSolver.cc ./src/restructor.cc)
+file(GLOB_RECURSE GPUSource ./src/*.cu ./src/*GPU.cc)
 source_group("CPUHeader" FILES ${CPUHeader})
 source_group("GPUHeader" FILES ${GPUHeader})
 source_group("CPUSource" FILES ${CPUSource})
@@ -59,7 +58,7 @@ if(CUDA_FOUND)
    add_library(libStructedLightCamera SHARED  ${CPUSource} ${GPUSource} ${CUDA_OBJS} ${CPUHeader} ${GPUHeader})
    set_target_properties(libStructedLightCamera PROPERTIES DEBUG_POSTFIX "d")
    set_target_properties(libStructedLightCamera PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./include/StructedLightCamera.h)
+   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./include/structedLightCamera.h)
    target_link_libraries(
        libStructedLightCamera
        ${OpenCV_LIBRARIES}
@@ -75,7 +74,7 @@ if(CUDA_FOUND)
    set_target_properties(libStructedLightCameraStatic PROPERTIES OUTPUT_NAME "libStructedLightCamera")
    # 使动态库和静态库同时存在
    set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./include/StructedLightCamera.h)
+   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./include/structedLightCamera.h)
    target_link_libraries(
        libStructedLightCameraStatic
        ${OpenCV_LIBRARIES}
@@ -101,8 +100,8 @@ else()
    # 使动态库和静态库同时存在
    set_target_properties(libStructedLightCamera PROPERTIES CLEAN_DIRECT_OUTPUT 1)
    set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./include/StructedLightCamera.h)
-   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./include/StructedLightCamera.h)
+   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./include/structedLightCamera.h)
+   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./include/structedLightCamera.h)
    target_link_libraries(
         libStructedLightCamera
         ${OpenCV_LIBRARIES}
@@ -129,17 +128,25 @@ install(
     PUBLIC_HEADER DESTINATION include
     )
 
-file(GLOB CameraControl ./include/CameraControl/*.h)
-file(GLOB CameraControl_CameraSDK ./include/CameraControl/CameraSDK/*.h)
-file(GLOB CameraControl_CameraUtility ./include/CameraControl/CameraUtility/*.h)
-file(GLOB CameraControl_ProjectorSDK ./include/CameraControl/ProjectorSDK/*.h)
-file(GLOB CameraControl_Restructor ./include/Restructor/*.h)
-file(GLOB CameraControl_RestructorCUDA ./include/Restructor/cuda/*.cuh)
-source_group("CameraControl_CameraSDK" FILES ${CameraControl_CameraSDK})
-source_group("CameraControl_CameraUtility" FILES ${CameraControl_CameraUtility})
-source_group("CameraControl_ProjectorSDK" FILES ${CameraControl_ProjectorSDK})
-source_group("CameraControl_Restructor" FILES ${CameraControl_Restructor})
-source_group("CameraControl_RestructorCUDA" FILES ${CameraControl_RestructorCUDA})
+file(GLOB DEVICE ./include/device/*.h)
+file(GLOB DEVICE_CAMERA ./include/device/camera/*.h)
+file(GLOB DEVICE_PROJECTOR ./include/device/projector/*.h)
+file(GLOB PHASESOLVER ./include/phaseSolver/*.h)
+file(GLOB WRAPCREATOR ./include/wrapCreator/*.h)
+file(GLOB RECTIFIER ./include/rectifier/*.h)
+file(GLOB TOOL ./include/tool/*.h)
+file(GLOB RESTRUCTOR ./include/restructor/*.h)
+file(GLOB RESTRUCTOR ./include/restructor/*.h)
+file(GLOB CUDAHEADER ./include/cuda/*.cuh)
+source_group("Device" FILES ${DEVICE})
+source_group("Device_Camera" FILES ${DEVICE_CAMERA})
+source_group("Device_Projector" FILES ${DEVICE_PROJECTOR})
+source_group("PhaseSolver" FILES ${PHASESOLVER})
+source_group("WrapCerator" FILES ${WRAPCREATOR})
+source_group("Rectifier" FILES ${RECTIFIER})
+source_group("Tool" FILES ${TOOL})
+source_group("Restructor" FILES ${RESTRUCTOR})
+source_group("CudaHeader" FILES ${CUDAHEADER})
 
 install(
     FILES
@@ -164,36 +171,51 @@ install(
 
 install(
     FILES
-    ${CameraControl}
+    ${DEVICE}
     DESTINATION
-    include/CameraControl
+    include/device
     )
 install(
     FILES
-    ${CameraControl_CameraSDK}
+    ${DEVICE_CAMERA}
     DESTINATION
-    include/CameraControl/CameraSDK
+    include/device/camera
     )
 install(
     FILES
-    ${CameraControl_CameraUtility}
+    ${DEVICE_PROJECTOR}
     DESTINATION
-    include/CameraControl/CameraUtility)
+    include/device/projector)
 install(
     FILES
-    ${CameraControl_ProjectorSDK}
+    ${PHASESOLVER}
     DESTINATION
-    include/CameraControl/ProjectorSDK)
+    include/phaseSolver)
 install(
     FILES
-    ${CameraControl_Restructor}
+    ${WRAPCREATOR}
     DESTINATION
-    include/Restructor)
+    include/wrapCreator)
 install(
     FILES
-    ${CameraControl_RestructorCUDA}
+    ${RECTIFIER}
     DESTINATION
-    include/Restructor/cuda/include)
+    include/rectifier)
+install(
+    FILES
+    ${TOOL}
+    DESTINATION
+    include/tool)
+install(
+    FILES
+    ${RESTRUCTOR}
+    DESTINATION
+    include/restructor)
+install(
+    FILES
+    ${CUDAHEADER}
+    DESTINATION
+    include/cuda)
 
 install(
     FILES

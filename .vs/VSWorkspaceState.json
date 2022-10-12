@@ -2,16 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\include",
-    "\\include\\CameraControl",
-    "\\include\\CameraControl\\CameraUtility",
-    "\\include\\CameraControl\\ProjectorSDK",
-    "\\include\\Restructor",
-    "\\include\\Restructor\\cuda",
-    "\\include\\Restructor\\cuda\\include",
-    "\\src",
-    "\\src\\CameraControl",
-    "\\src\\CameraControl\\CameraUtility"
+    "\\include\\cuda",
+    "\\include\\device",
+    "\\src"
   ],
-  "SelectedNode": "\\include\\StructedLightCamera.h",
+  "SelectedNode": "\\include\\restructor",
   "PreviewInSolutionExplorer": false
 }

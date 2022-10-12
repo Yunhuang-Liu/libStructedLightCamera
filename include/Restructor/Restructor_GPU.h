@@ -1,5 +1,5 @@
 /**
- * @file Restruction_GPU_Divided_Time.cuh
+ * @file restructor_GPU.h
  * @author Liu Yunhuang(1369215984@qq.com)
  * @brief  GPU重建器
  * @version 0.1
@@ -11,13 +11,14 @@
 #ifndef RESTRUCTOR_RESTRUCTOR_GPU_H
 #define RESTRUCTOR_RESTRUCTOR_GPU_H
 
-#include <Restructor/Restructor.h>
-#include <Restructor/MatrixsInfo.h>
+#include <restructor/restructor.h>
+#include <tool/matrixsInfo.h>
 
 #include <limits>
 
 #include <Eigen/Core>
 #include <opencv2/core/eigen.hpp>
+
 #include <device_launch_parameters.h>
 #include <cuda_runtime.h>
 

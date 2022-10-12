@@ -1,37 +1,33 @@
 /**
- * @file StructedLightCamera.h
+ * @file structedLightCamera.h
  * @author Liu Yunhuang (1369215984@qq.com)
- * @brief  结构光相机（双目+色彩）
- *         解相算法：1、三步五位互补格雷码   可选：CPU
- *                 2、四步五位互补格雷码   可选：CPU | GPU
- *                 3、位移格雷码+时间复用策略（3+1，3+3） 可选：GPU
- *                 4、分区间相位展开+时间复用策略（3+1,3+1,3+1,3+1) 可选：GPU
+ * @brief  结构光相机的示例类
  * @version 0.1
  * @date 2022-5-9
  *
  * @copyright Copyright (c) 2022
  *
  */
-#ifndef STRUCTEDLIGHTCAMERA_H
-#define STRUCTEDLIGHTCAMERA_H
+#ifndef STRUCTEDLIGHTCAMERA_H_
+#define STRUCTEDLIGHTCAMERA_H_
 
-#include <CameraControl/CameraControl.h>
-#include <Restructor/FourStepSixGrayCodeMaster_CPU.h>
-#include <Restructor/ThreeStepFiveGrayCodeMaster_CPU.h>
-#include <Restructor/Restructor_CPU.h>
-#include <Restructor/WrapCreator_CPU.h>
-#include <Restructor/Rectifier_CPU.h>
-#include <Restructor/NStepNGrayCodeMaster_CPU.h>
+#include <device/CameraControl.h>
+#include <phaseSolver/fourStepSixGrayCodeMaster_CPU.h>
+#include <phaseSolver/threeStepFiveGrayCodeMaster_CPU.h>
+#include <phaseSolver/nStepNGrayCodeMaster_CPU.h>
+#include <restructor/restructor_CPU.h>
+#include <wrapCreator/wrapCreator_CPU.h>
+#include <rectifier/rectifier_CPU.h>
 
 #ifdef CUDA
-#include <Restructor/Restructor_GPU.h>
-#include <Restructor/FourStepSixGrayCodeMaster_GPU.h>
-#include <Restructor/DividedSpaceTimeMulUsedMaster_GPU.h>
-#include <Restructor/ShiftGrayCodeUnwrapMaster_GPU.h>
-#include <Restructor/FourFloorFouStepMaster_GPU.h>
-#include <Restructor/FourStepRefPlainMaster_GPU.h>
-#include <Restructor/WrapCreator_GPU.h>
-#include <Restructor/Rectifier_GPU.h>
+#include <restructor/restructor_GPU.h>
+#include <phaseSolver/fourStepSixGrayCodeMaster_GPU.h>
+#include <phaseSolver/dividedSpaceTimeMulUsedMaster_GPU.h>
+#include <phaseSolver/shiftGrayCodeUnwrapMaster_GPU.h>
+#include <phaseSolver/fourFloorFouStepMaster_GPU.h>
+#include <phaseSolver/fourStepRefPlainMaster_GPU.h>
+#include <wrapCreator/wrapCreator_GPU.h>
+#include <rectifier/rectifier_GPU.h>
 #endif
 
 /** @brief 结构光相机范例类 */
@@ -145,4 +141,4 @@ private:
 #endif
 };
 
-#endif
+#endif// STRUCTEDLIGHTCAMERA_H_

@@ -1,5 +1,5 @@
 /**
- * @file Restructor.h
+ * @file restructor.h
  * @author Liu Yunhuang(1369215984@qq.com)
  * @brief  重建器
  * @version 0.1
@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2021
  *
  */
-#ifndef RESTRUCTOR_RESTRUCTOR_H
-#define RESTRUCTOR_RESTRUCTOR_H
+#ifndef RESTRUCTOR_RESTRUCTOR_H_
+#define RESTRUCTOR_RESTRUCTOR_H_
 
 #include <vector>
 #include <string>
@@ -138,4 +138,4 @@ namespace sl {
         };
     }// namespace restructor
 }// namespace sl
-#endif // RESTRUCTOR_RESTRUCTOR_H
+#endif // RESTRUCTOR_RESTRUCTOR_H_
