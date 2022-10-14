@@ -7,11 +7,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX C:/Users/LiuYunhuang/Desktop/softWare/WindowsVCLib/libStructedLightCamera)
 
 file(GLOB_RECURSE CPUHeader ./include/structedLightCamera.h ./include/*CPU.h ./include/device/*.h
-    ./include/wrapCreator.h ./include/matrixsInfo.h ./include/phaseSolver.h ./include/restructor.h
+    ./include/wrapCreator.h ./include/tool/*.h ./include/phaseSolver.h ./include/restructor.h
     ./include/rectifier.h)
 file(GLOB_RECURSE GPUHeader ./include/*GPU.h ./include/*.cuh)
 file(GLOB_RECURSE CPUSource ./src/structedLightCamera.cc ./src/*CPU.cc ./src/*.c
-    ./src/device/*.cc ./src/matrixsInfo.cc ./src/phaseSolver.cc ./src/restructor.cc)
+    ./src/device/*.cc ./src/tool/*.cc ./src/phaseSolver.cc ./src/restructor.cc)
 file(GLOB_RECURSE GPUSource ./src/*.cu ./src/*GPU.cc)
 source_group("CPUHeader" FILES ${CPUHeader})
 source_group("GPUHeader" FILES ${GPUHeader})
@@ -135,7 +135,6 @@ file(GLOB PHASESOLVER ./include/phaseSolver/*.h)
 file(GLOB WRAPCREATOR ./include/wrapCreator/*.h)
 file(GLOB RECTIFIER ./include/rectifier/*.h)
 file(GLOB TOOL ./include/tool/*.h)
-file(GLOB RESTRUCTOR ./include/restructor/*.h)
 file(GLOB RESTRUCTOR ./include/restructor/*.h)
 file(GLOB CUDAHEADER ./include/cuda/*.cuh)
 source_group("Device" FILES ${DEVICE})

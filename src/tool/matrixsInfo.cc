@@ -10,6 +10,7 @@ namespace sl {
             readYml["D2"] >> myInfo.D2;
             readYml["M3"] >> myInfo.M3;
             readYml["D3"] >> myInfo.D3;
+            readYml["K"] >> myInfo.K;
             readYml.open(extrinsicDir, cv::FileStorage::READ);
             readYml["R1"] >> myInfo.R1;
             readYml["P1"] >> myInfo.P1;

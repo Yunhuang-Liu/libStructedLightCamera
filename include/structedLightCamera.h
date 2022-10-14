@@ -18,6 +18,7 @@
 #include <restructor/restructor_CPU.h>
 #include <wrapCreator/wrapCreator_CPU.h>
 #include <rectifier/rectifier_CPU.h>
+#include <tool/tool.h>
 
 #ifdef CUDA
 #include <restructor/restructor_GPU.h>
