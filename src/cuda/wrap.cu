@@ -4,12 +4,12 @@ namespace sl {
     namespace wrapCreator {
         namespace cudaFunc {
             __global__ void wrapThreeStep(
-                    const cv::cuda::PtrStep<uchar> firstStep,
-                    const cv::cuda::PtrStep<uchar> secondStep,
-                    const cv::cuda::PtrStep<uchar> thirdStep,
-                    const int cols, const int rows,
-                    cv::cuda::PtrStep<float> wrapImg,
-                    cv::cuda::PtrStep<float> conditionImg) {
+                const cv::cuda::PtrStep<uchar> firstStep,
+                const cv::cuda::PtrStep<uchar> secondStep,
+                const cv::cuda::PtrStep<uchar> thirdStep,
+                const int cols, const int rows,
+                cv::cuda::PtrStep<float> wrapImg,
+                cv::cuda::PtrStep<float> conditionImg) {
                 const int x = blockIdx.x * blockDim.x + threadIdx.x;
                 const int y = blockIdx.y * blockDim.y + threadIdx.y;
                 if (x < cols && y < rows) {
@@ -24,13 +24,13 @@ namespace sl {
             }
 
             __global__ void wrapFourStep(
-                    const cv::cuda::PtrStep<uchar> firstStep,
-                    const cv::cuda::PtrStep<uchar> secondStep,
-                    const cv::cuda::PtrStep<uchar> thirdStep,
-                    const cv::cuda::PtrStep<uchar> fourthStep,
-                    const int cols, const int rows,
-                    cv::cuda::PtrStep<float> wrapImg,
-                    cv::cuda::PtrStep<float> conditionImg) {
+                const cv::cuda::PtrStep<uchar> firstStep,
+                const cv::cuda::PtrStep<uchar> secondStep,
+                const cv::cuda::PtrStep<uchar> thirdStep,
+                const cv::cuda::PtrStep<uchar> fourthStep,
+                const int cols, const int rows,
+                cv::cuda::PtrStep<float> wrapImg,
+                cv::cuda::PtrStep<float> conditionImg) {
                 const int x = blockIdx.x * blockDim.x + threadIdx.x;
                 const int y = blockIdx.y * blockDim.y + threadIdx.y;
                 if (x < cols && y < rows) {
@@ -45,11 +45,11 @@ namespace sl {
             }
 
             void getWrapImgSync(
-                    const std::vector<cv::cuda::GpuMat> &imgs,
-                    cv::cuda::GpuMat &wrapImg,
-                    cv::cuda::GpuMat &conditionImg, const bool isCounter = false,
-                    const cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(),
-                    const dim3 block = dim3(32, 8)) {
+                const std::vector<cv::cuda::GpuMat> &imgs,
+                cv::cuda::GpuMat &wrapImg,
+                cv::cuda::GpuMat &conditionImg, const bool isCounter = false,
+                const cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(),
+                const dim3 block = dim3(32, 8)) {
                 const int stepNum = imgs.size();
                 const int cols = imgs[0].cols;
                 const int rows = imgs[0].rows;

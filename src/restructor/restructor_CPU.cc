@@ -29,7 +29,7 @@ namespace sl {
         void Restructor_CPU::restruction(const cv::Mat &leftAbsImg,
                                          const cv::Mat &rightAbsImg, cv::Mat &depthImgOut, const bool isColor) {
             if (depthImgOut.empty())
-                depthImgOut.create(leftAbsImg.size(), CV_32FC1);
+                depthImgOut = cv::Mat(leftAbsImg.size(), CV_32FC1, cv::Scalar(0.f));
             else
                 depthImgOut.setTo(0);
             getDepthColorMap(leftAbsImg, rightAbsImg, depthImgOut, isColor);

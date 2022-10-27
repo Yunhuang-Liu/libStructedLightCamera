@@ -21,7 +21,8 @@
 #include <Eigen/Core>
 #include <opencv2/core/eigen.hpp>
 #include <opencv2/opencv.hpp>
-#ifdef  CUDA
+
+#ifdef CUDA
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
 #include <opencv2/cudastereo.hpp>

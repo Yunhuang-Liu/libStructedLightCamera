@@ -5,9 +5,20 @@ namespace sl {
         //灰度相机取流回调函数
         static void grayFrameCallback(IMV_Frame *pFrame, void *pUser) {
             CammeraUnilty *pCammerWidget = (CammeraUnilty *) pUser;
+            CFrameInfo frameInfo;
+            frameInfo.m_nWidth = (int) pFrame->frameInfo.width;
+            frameInfo.m_nHeight = (int) pFrame->frameInfo.height;
+            frameInfo.m_nBufferSize = (int) pFrame->frameInfo.size;
+            frameInfo.m_nPaddingX = (int) pFrame->frameInfo.paddingX;
+            frameInfo.m_nPaddingY = (int) pFrame->frameInfo.paddingY;
+            frameInfo.m_ePixelType = pFrame->frameInfo.pixelFormat;
+            frameInfo.m_pImageBuf = (unsigned char *) malloc(sizeof(unsigned char) *
+                                                             frameInfo.m_nBufferSize);
+            frameInfo.m_nTimeStamp = pFrame->frameInfo.timeStamp;
             if (pFrame->pData != NULL) {
-                pCammerWidget->imgs[pCammerWidget->index] = cv::Mat(pFrame->frameInfo.height, pFrame->frameInfo.width, CV_8U,
-                                                                    (uint8_t *) pFrame->pData);
+                memcpy(frameInfo.m_pImageBuf, pFrame->pData, frameInfo.m_nBufferSize);
+                pCammerWidget->imgs[pCammerWidget->index] = cv::Mat(frameInfo.m_nHeight, frameInfo.m_nWidth, CV_8U,
+                                                                    (uint8_t *) frameInfo.m_pImageBuf);
                 ++pCammerWidget->index;
             }
         }

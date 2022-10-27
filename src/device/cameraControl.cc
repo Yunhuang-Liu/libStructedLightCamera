@@ -72,7 +72,7 @@ namespace sl {
                             }
                             cameraColor->setPixelFormat("BayerRG8");
                             cameraColor->SetExposeTime(20400);
-                            cameraColor->CameraChangeTrig(cameraRight->trigLine);
+                            cameraColor->CameraChangeTrig(cameraColor->trigLine);
                             cameraColor->imgs.resize(4);
                             cameraColor->CameraStart();
                             isSuccessSearch = true;

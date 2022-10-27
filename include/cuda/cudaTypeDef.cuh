@@ -22,7 +22,7 @@
 #include <opencv2/core/cuda_stream_accessor.hpp>
 #include <cuda/std/functional>
 #include <cuda/std/cmath>
-#include <Eigen/Core>
+#include <Eigen/Eigen>
 #include <opencv2/core/eigen.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/cudastereo.hpp>

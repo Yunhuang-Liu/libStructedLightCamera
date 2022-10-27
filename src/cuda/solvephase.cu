@@ -873,14 +873,15 @@ namespace sl {
                 const int x = blockDim.x * blockIdx.x + threadIdx.x;
                 const int y = blockDim.y * blockIdx.y + threadIdx.y;
                 if (x < cols && y < rows) {
-                    if (conditionImg.ptr(y)[x] < 10.f) {
+                    if (conditionImg.ptr(y)[x] < 5.f) {
                         unwrapImg.ptr(y)[x] = -5.f;
                         return;
                     }
+                    //此处增加CV_PI以应对相位高度映射，应当注意的是，参考相位不应该增加CV_PI，徒增计算量
                     if (isFarest)
-                        unwrapImg.ptr(y)[x] = wrapImg.ptr(y)[x] + cuda::std::floorf((refPlainImg.ptr(y)[x] - wrapImg.ptr(y)[x]) / CV_2PI) * CV_2PI;
+                        unwrapImg.ptr(y)[x] = wrapImg.ptr(y)[x] + cuda::std::floorf((refPlainImg.ptr(y)[x] - wrapImg.ptr(y)[x]) / CV_2PI) * CV_2PI + CV_PI;
                     else
-                        unwrapImg.ptr(y)[x] = wrapImg.ptr(y)[x] + cuda::std::ceilf((refPlainImg.ptr(y)[x] - wrapImg.ptr(y)[x]) / CV_2PI) * CV_2PI;
+                        unwrapImg.ptr(y)[x] = wrapImg.ptr(y)[x] + cuda::std::ceilf((refPlainImg.ptr(y)[x] - wrapImg.ptr(y)[x]) / CV_2PI) * CV_2PI + CV_PI;
                 }
             }
 
@@ -1023,19 +1024,6 @@ namespace sl {
                 getUnwrapImg_ShiftGray<<<grid, block, 0, stream>>>(absolutImgWhite, rows, cols,
                                                                    wrapImg_1_, conditionImg_1_, unwrapImg_1_,
                                                                    wrapImg_2_, conditionImg_2_, unwrapImg_2_, floor_K);
-                //cudaDeviceSynchronize();
-                /*
-        cv::Mat test1(800, 1280, CV_32FC1);
-        cv::Mat test2(800, 1280, CV_32FC1);
-        cv::Mat test3(800, 1280, CV_32FC1);
-        cv::Mat test4(800, 1280, CV_32FC1);
-        cv::Mat test5(800, 1280, CV_32FC1);
-        cudaMemcpy(test1.data, absolutePhaseImg, size_molloc, cudaMemcpyDeviceToHost);
-        cudaMemcpy(test2.data, &absolutePhaseImg[rows * cols], size_molloc, cudaMemcpyDeviceToHost);
-        cudaMemcpy(test3.data, &absolutePhaseImg[2 * rows * cols], size_molloc, cudaMemcpyDeviceToHost);
-        cudaMemcpy(test4.data, &absolutePhaseImg[3 * rows * cols], size_molloc, cudaMemcpyDeviceToHost);
-        cudaMemcpy(test5.data, lower_high, size_molloc, cudaMemcpyDeviceToHost);
-        */
             }
 
             void solvePhase_ShiftGrayFourFrame(
@@ -1098,15 +1086,15 @@ namespace sl {
                         rows, cols,
                         wrapImg, conditionImg, kFloorImg_0_, kFloorImg_1_, isOdd);
                 /*
-        if(isFirstStart){
-            cv::cuda::bilateralFilter(kFloorImg_0_, kFloorImg_0_, 5, 10, 10, 4, cvStream);
-            cv::cuda::bilateralFilter(kFloorImg_1_, kFloorImg_1_, 5, 10, 10, 4, cvStream);
-        }
-        else if(isOdd)
-            cv::cuda::bilateralFilter(kFloorImg_0_, kFloorImg_0_, 5, 10, 10, 4, cvStream);
-        else
-            cv::cuda::bilateralFilter(kFloorImg_1_, kFloorImg_1_, 5, 10, 10, 4, cvStream);
-        */
+                if(isFirstStart){
+                    cv::cuda::bilateralFilter(kFloorImg_0_, kFloorImg_0_, 5, 10, 10, 4, cvStream);
+                    cv::cuda::bilateralFilter(kFloorImg_1_, kFloorImg_1_, 5, 10, 10, 4, cvStream);
+                }
+                else if(isOdd)
+                    cv::cuda::bilateralFilter(kFloorImg_0_, kFloorImg_0_, 5, 10, 10, 4, cvStream);
+                else
+                    cv::cuda::bilateralFilter(kFloorImg_1_, kFloorImg_1_, 5, 10, 10, 4, cvStream);
+                */
 
                 conditionImg.copyTo(conditionImgCopy, cvStream);
 
@@ -1131,10 +1119,10 @@ namespace sl {
                             kFloorImg_0_, conditionImg,
                             rows, cols, threshodVal, threshodAdd, count);
                 /*
-        caculateKFloorImg << <grid, block, 0, stream >> > (medianFilter_0_, medianFilter_1_, conditionImg,
-            centroid_dark, centroid_lightDark, centroid_lightWhite, centroid_white,
-            rows, cols, kFloorImg);
-        */
+                  caculateKFloorImg << <grid, block, 0, stream >> > (medianFilter_0_, medianFilter_1_, conditionImg,
+                      centroid_dark, centroid_lightDark, centroid_lightWhite, centroid_white,
+                      rows, cols, kFloorImg);
+                  */
                 caculateKFloorImg<<<grid, block, 0, stream>>>(
                         medianFilter_0_, medianFilter_1_, conditionImg,
                         threshodVal, rows, cols, kFloorImg);

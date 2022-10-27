@@ -36,18 +36,18 @@ namespace sl {
                 leftImgs.resize(leftImgs_.size());
                 rightImgs.resize(rightImgs_.size());
                 colorImgs.resize(colorImgs_.size());
-                for (int i = 0; i < leftImgs.size(); i++) {
+                for (int i = 0; i < leftImgs.size(); ++i) {
                     leftImgs[i] = leftImgs_[i];
                 }
-                for (int i = 0; i < rightImgs_.size(); i++) {
+                for (int i = 0; i < rightImgs_.size(); ++i) {
                     rightImgs[i] = rightImgs_[i];
                 }
-                for (int i = 0; i < colorImgs_.size(); i++) {
+                for (int i = 0; i < colorImgs_.size(); ++i) {
                     colorImgs[i] = colorImgs_[i];
                 }
             }
             /**
-             * @brief                带有彩色图片的构造函数
+             * @brief                不带彩色图片的构造函数
              * 
              * @param leftImgs_      输入，左相机图片
              * @param rightImgs_     输入，右相机图片
@@ -56,10 +56,10 @@ namespace sl {
                             std::vector<cv::Mat> &rightImgs_) {
                 leftImgs.resize(leftImgs_.size());
                 rightImgs.resize(rightImgs_.size());
-                for (int i = 0; i < leftImgs.size(); i++) {
+                for (int i = 0; i < leftImgs.size(); ++i) {
                     leftImgs[i] = leftImgs_[i];
                 }
-                for (int i = 0; i < rightImgs_.size(); i++) {
+                for (int i = 0; i < rightImgs_.size(); ++i) {
                     rightImgs[i] = rightImgs_[i];
                 }
             }

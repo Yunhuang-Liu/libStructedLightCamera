@@ -83,14 +83,31 @@ namespace sl {
                     }
                     sumShiftImg = _mm256_div_ps(sumShiftImg, shiftStepData);
                     _mm256_store_ps(&ptr_averageImg[j], sumShiftImg);
-
-                    bCosData = _mm256_sub_ps(dataImgs[0], sumShiftImg);
+                    if (0 == shiftStep % 2)
+                        bCosData = _mm256_sub_ps(dataImgs[0], sumShiftImg);
+                    else 
+                        bCosData = _mm256_sub_ps(dataImgs[shiftStep / 2], sumShiftImg);
                     cosData = _mm256_cos_ps(_mm256_load_ps(&ptrWrapImg[j]));
                     conditon = _mm256_div_ps(bCosData, cosData);
                     __m256 greaterZero = _mm256_and_ps(_mm256_cmp_ps(conditon, zero, _CMP_GE_OS), one);
                     __m256 lessMaxVal = _mm256_and_ps(_mm256_cmp_ps(conditon, maxVal, _CMP_LE_OS), one);
                     __m256 filterFlag = _mm256_and_ps(greaterZero, lessMaxVal);
                     _mm256_store_ps(&ptr_conditionImg[j], _mm256_mul_ps(conditon, filterFlag));
+                    //核验是否有效，进行校正
+                    /*
+                    for (int k = 0; k < 8; ++k) {
+                        int curShift = 0;
+                        float curShiftAngle = 0;
+                        while (bCosData.m256_f32[k] < 0 && curShift < shiftStep) {
+                            ++curShift;
+                            curShiftAngle = CV_2PI / shiftStep * curShift;
+                            bCosData.m256_f32[k] = dataImgs[curShift].m256_f32[k] - sumShiftImg.m256_f32[k];
+                        }
+                        if (curShift != shiftStep) {
+                            ptr_conditionImg[j + k] = bCosData.m256_f32[k] / (cos(ptrWrapImg[j + k] + curShiftAngle));
+                        }
+                    }
+                    */
                 }
             }
         }

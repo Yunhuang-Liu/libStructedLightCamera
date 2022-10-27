@@ -6,13 +6,33 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX C:/Users/LiuYunhuang/Desktop/softWare/WindowsVCLib/libStructedLightCamera)
 
-file(GLOB_RECURSE CPUHeader ./include/structedLightCamera.h ./include/*CPU.h ./include/device/*.h
-    ./include/wrapCreator.h ./include/tool/*.h ./include/phaseSolver.h ./include/restructor.h
-    ./include/rectifier.h)
-file(GLOB_RECURSE GPUHeader ./include/*GPU.h ./include/*.cuh)
-file(GLOB_RECURSE CPUSource ./src/structedLightCamera.cc ./src/*CPU.cc ./src/*.c
-    ./src/device/*.cc ./src/tool/*.cc ./src/phaseSolver.cc ./src/restructor.cc)
-file(GLOB_RECURSE GPUSource ./src/*.cu ./src/*GPU.cc)
+file(GLOB_RECURSE 
+     CPUHeader 
+     ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h 
+     ${CMAKE_SOURCE_DIR}/include/*CPU.h 
+     ${CMAKE_SOURCE_DIR}/include/device/*.h
+     ${CMAKE_SOURCE_DIR}/include/wrapCreator.h 
+     ${CMAKE_SOURCE_DIR}/include/tool/*.h 
+     ${CMAKE_SOURCE_DIR}/include/phaseSolver.h 
+     ${CMAKE_SOURCE_DIR}/include/restructor.h
+     ${CMAKE_SOURCE_DIR}/include/rectifier.h)
+file(GLOB_RECURSE 
+     GPUHeader 
+     ${CMAKE_SOURCE_DIR}/include/*GPU.h 
+     ${CMAKE_SOURCE_DIR}/include/*.cuh)
+file(GLOB_RECURSE 
+     CPUSource 
+     ${CMAKE_SOURCE_DIR}/src/structedLightCamera.cc 
+     ${CMAKE_SOURCE_DIR}/src/*CPU.cc 
+     ${CMAKE_SOURCE_DIR}/src/*.c
+     ${CMAKE_SOURCE_DIR}/src/device/*.cc 
+     ${CMAKE_SOURCE_DIR}/src/tool/*.cc 
+     ${CMAKE_SOURCE_DIR}/src/phaseSolver.cc 
+     ${CMAKE_SOURCE_DIR}/src/restructor.cc)
+file(GLOB_RECURSE 
+     GPUSource 
+     ${CMAKE_SOURCE_DIR}/src/*.cu 
+     ${CMAKE_SOURCE_DIR}/src/*GPU.cc)
 source_group("CPUHeader" FILES ${CPUHeader})
 source_group("GPUHeader" FILES ${GPUHeader})
 source_group("CPUSource" FILES ${CPUSource})
@@ -25,11 +45,10 @@ find_package(OpenCV REQUIRED)
 include_directories(
     ${EIGEN3_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
-    ${PROJECT_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include
     )
 
-link_directories(
-    ./lib)
+link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 find_package(CUDA)
 if(CUDA_FOUND)
@@ -58,7 +77,7 @@ if(CUDA_FOUND)
    add_library(libStructedLightCamera SHARED  ${CPUSource} ${GPUSource} ${CUDA_OBJS} ${CPUHeader} ${GPUHeader})
    set_target_properties(libStructedLightCamera PROPERTIES DEBUG_POSTFIX "d")
    set_target_properties(libStructedLightCamera PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./include/structedLightCamera.h)
+   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h)
    target_link_libraries(
        libStructedLightCamera
        ${OpenCV_LIBRARIES}
@@ -74,7 +93,7 @@ if(CUDA_FOUND)
    set_target_properties(libStructedLightCameraStatic PROPERTIES OUTPUT_NAME "libStructedLightCamera")
    # 使动态库和静态库同时存在
    set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./include/structedLightCamera.h)
+   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h)
    target_link_libraries(
        libStructedLightCameraStatic
        ${OpenCV_LIBRARIES}
@@ -100,8 +119,8 @@ else()
    # 使动态库和静态库同时存在
    set_target_properties(libStructedLightCamera PROPERTIES CLEAN_DIRECT_OUTPUT 1)
    set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ./include/structedLightCamera.h)
-   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ./include/structedLightCamera.h)
+   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h)
+   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h)
    target_link_libraries(
         libStructedLightCamera
         ${OpenCV_LIBRARIES}
@@ -128,15 +147,15 @@ install(
     PUBLIC_HEADER DESTINATION include
     )
 
-file(GLOB DEVICE ./include/device/*.h)
-file(GLOB DEVICE_CAMERA ./include/device/camera/*.h)
-file(GLOB DEVICE_PROJECTOR ./include/device/projector/*.h)
-file(GLOB PHASESOLVER ./include/phaseSolver/*.h)
-file(GLOB WRAPCREATOR ./include/wrapCreator/*.h)
-file(GLOB RECTIFIER ./include/rectifier/*.h)
-file(GLOB TOOL ./include/tool/*.h)
-file(GLOB RESTRUCTOR ./include/restructor/*.h)
-file(GLOB CUDAHEADER ./include/cuda/*.cuh)
+file(GLOB DEVICE ${CMAKE_SOURCE_DIR}/include/device/*.h)
+file(GLOB DEVICE_CAMERA ${CMAKE_SOURCE_DIR}/include/device/camera/*.h)
+file(GLOB DEVICE_PROJECTOR ${CMAKE_SOURCE_DIR}/include/device/projector/*.h)
+file(GLOB PHASESOLVER ${CMAKE_SOURCE_DIR}/include/phaseSolver/*.h)
+file(GLOB WRAPCREATOR ${CMAKE_SOURCE_DIR}/include/wrapCreator/*.h)
+file(GLOB RECTIFIER ${CMAKE_SOURCE_DIR}/include/rectifier/*.h)
+file(GLOB TOOL ${CMAKE_SOURCE_DIR}/include/tool/*.h)
+file(GLOB RESTRUCTOR ${CMAKE_SOURCE_DIR}/include/restructor/*.h)
+file(GLOB CUDAHEADER ${CMAKE_SOURCE_DIR}/include/cuda/*.cuh)
 source_group("Device" FILES ${DEVICE})
 source_group("Device_Camera" FILES ${DEVICE_CAMERA})
 source_group("Device_Projector" FILES ${DEVICE_PROJECTOR})
@@ -149,21 +168,21 @@ source_group("CudaHeader" FILES ${CUDAHEADER})
 
 install(
     FILES
-    ./lib/MVSDKmd.lib
+    ${CMAKE_SOURCE_DIR}/lib/MVSDKmd.lib
     DESTINATION
     lib
 )
 
 install(
     FILES
-    ./lib/cyusbserial.lib
+    ${CMAKE_SOURCE_DIR}/lib/cyusbserial.lib
     DESTINATION
     lib
 )
 
 install(
     FILES
-    ./bin/cyusbserial.dll
+    ${CMAKE_SOURCE_DIR}/bin/cyusbserial.dll
     DESTINATION
     bin
 )
@@ -218,7 +237,7 @@ install(
 
 install(
     FILES
-    ./cmake/StructedLightCameraConfig.cmake
+    ${CMAKE_SOURCE_DIR}/cmake/StructedLightCameraConfig.cmake
     DESTINATION
     ${CMAKE_INSTALL_PREFIX}
 )
