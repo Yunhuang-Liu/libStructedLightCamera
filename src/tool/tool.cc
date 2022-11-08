@@ -75,5 +75,127 @@ namespace sl {
                 }
             }
         }
+
+        void averageTexture(std::vector<cv::Mat> &imgs, cv::Mat &texture, const int phaseShiftStep, const int threads) {
+            CV_Assert(imgs.size() >= phaseShiftStep);
+            CV_Assert(imgs[0].type() == CV_8UC1 || imgs[0].type() == CV_8UC3);
+
+            const bool isColor = imgs[0].type() == CV_8UC3; 
+            if (isColor)
+                texture = cv::Mat(imgs[0].size(), imgs[0].type(), cv::Scalar(0, 0, 0));
+            else
+                texture = cv::Mat(imgs[0].size(), imgs[0].type(), cv::Scalar(0));
+
+            const int perRow = texture.rows / threads;
+            std::vector<std::thread> threadsPool(threads);
+
+            if (isColor) {
+                for (int i = 0; i < threads - 1; ++i) {
+                    threadsPool[i] = std::thread(&sl::tool::averageTextureRegionColor, std::ref(imgs), std::ref(texture), phaseShiftStep,
+                                                 perRow * i, perRow * (i + 1));
+                }
+                threadsPool[threads - 1] = std::thread(&sl::tool::averageTextureRegionColor, std::ref(imgs), std::ref(texture), phaseShiftStep,
+                                                       perRow * (threads - 1), texture.rows);
+            }
+            else {
+                for (int i = 0; i < threads - 1; ++i) {
+                    threadsPool[i] = std::thread(&sl::tool::averageTextureRegionGrey, std::ref(imgs), std::ref(texture), phaseShiftStep,
+                                                 perRow * i, perRow * (i + 1));
+                }
+                threadsPool[threads - 1] = std::thread(&sl::tool::averageTextureRegionGrey, std::ref(imgs), std::ref(texture), phaseShiftStep,
+                                                       perRow * (threads - 1), texture.rows);
+            }
+
+            for (auto &thread: threadsPool)
+                thread.join();
+        }
+
+        void averageTextureRegionGrey(std::vector<cv::Mat>& imgs, cv::Mat& texture, const int phaseShiftStep,
+            const int rowBegin, const int rowEnd) {
+            const int rows = texture.rows;
+            const int cols = texture.cols;
+
+            std::vector<uchar *> ptrImgs(phaseShiftStep);
+            for (int i = rowBegin; i < rowEnd; ++i) {
+                for (int p = 0; p < phaseShiftStep; ++p) 
+                    ptrImgs[p] = imgs[p].ptr<uchar>(i);
+                uchar *ptrTexture = texture.ptr<uchar>(i);
+                for (int j = 0; j < cols; ++j) {
+                    float imgVal = 0.f;
+                    for (int p = 0; p < phaseShiftStep; ++p)
+                        imgVal += ptrImgs[p][j];
+                    imgVal /= phaseShiftStep;
+                    ptrTexture[j] = static_cast<uchar>(imgVal);
+                }
+            }
+        }
+
+        void averageTextureRegionColor(std::vector<cv::Mat> &imgs, cv::Mat &texture, const int phaseShiftStep,
+                                      const int rowBegin, const int rowEnd) {
+            const int rows = texture.rows;
+            const int cols = texture.cols;
+
+            std::vector<cv::Vec3b *> ptrImgs(phaseShiftStep);
+            for (int i = rowBegin; i < rowEnd; ++i) {
+                for (int p = 0; p < phaseShiftStep; ++p)
+                    ptrImgs[p] = imgs[p].ptr<cv::Vec3b>(i);
+                cv::Vec3b *ptrTexture = texture.ptr<cv::Vec3b>(i);
+                for (int j = 0; j < cols; ++j) {
+                    cv::Vec3f imgVal = 0.f;
+                    for (int p = 0; p < phaseShiftStep; ++p)
+                        imgVal += ptrImgs[p][j];
+                    imgVal /= phaseShiftStep;
+                    ptrTexture[j] = static_cast<cv::Vec3b>(imgVal);
+                }
+            }
+        }
+
+        void reverseMappingTexture(cv::Mat& depth, cv::Mat& textureIn, const Info& info, cv::Mat& textureAlign, const int threads) {
+            CV_Assert(!depth.empty() && !textureIn.empty() && !info.M1.empty() && !info.M3.empty() && !info.Rlc.empty() && !info.Tlc.empty());
+            CV_Assert(depth.type() == CV_32FC1 || textureIn.type() == CV_8UC3);
+
+            textureAlign = cv::Mat(textureIn.size(), textureIn.type(), cv::Scalar(0, 0, 0));
+
+            const int perRow = depth.rows / threads;
+            std::vector<std::thread> threadsPool(threads);
+
+            for (int i = 0; i < threads - 1; ++i) {
+                threadsPool[i] = std::thread(&sl::tool::reverseMappingTextureRegion, std::ref(depth), std::ref(textureIn), std::ref(info), std::ref(textureAlign),
+                                             perRow * i, perRow * (i + 1));
+            }
+            threadsPool[threads - 1] = std::thread(&sl::tool::reverseMappingTextureRegion, std::ref(depth), std::ref(textureIn), std::ref(info), std::ref(textureAlign),
+                                                   perRow * (threads - 1), depth.rows);
+
+            for (auto &thread: threadsPool)
+                thread.join();
+        }
+
+        void reverseMappingTextureRegion(cv::Mat& depth, cv::Mat& textureIn, const Info& info, cv::Mat& textureAlign, const int rowBegin, const int rowEnd) {
+            const int rows = depth.rows;
+            const int cols = depth.cols;
+
+            const cv::Mat M1Inv = info.M1.inv();
+            const cv::Mat M3Inv = info.M3.inv();
+            for (int i = rowBegin; i < rowEnd; ++i) {
+                auto ptrDepth = depth.ptr<float>(i);
+                auto ptrTextureAlign = textureAlign.ptr<cv::Vec3b>(i);
+                for (int j = 0; j < cols; ++j) {
+                    if (ptrDepth[j] == 0.f)
+                        continue;
+
+                    cv::Mat colorCameraPoint = info.Rlc * M1Inv * (cv::Mat_<double>(3, 1) << j * ptrDepth[j], i * ptrDepth[j], 1.f) + info.Tlc;
+                    cv::Mat imgPoint = M3Inv * colorCameraPoint;
+                    const int xMapped = imgPoint.at<double>(0, 0) / imgPoint.at<double>(2, 0);
+                    const int yMapped = imgPoint.at<double>(1, 0) / imgPoint.at<double>(2, 0);
+
+                    if (xMapped < 0 || xMapped > cols || yMapped < 0 || yMapped > rows) {
+                        ptrTextureAlign[j] = cv::Vec3b(0, 0, 0);
+                        continue;
+                    }
+
+                    ptrTextureAlign[j] = textureIn.ptr(yMapped)[xMapped];
+                }
+            }
+        }
     }
 }

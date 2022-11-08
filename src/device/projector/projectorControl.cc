@@ -55,7 +55,7 @@ namespace sl {
             return SUCCESS;
         }
 
-        ProjectorControl::ProjectorControl(const DLPC34XX_ControllerDeviceId_e projectorType) : isDLPC900(false) {
+        ProjectorControl::ProjectorControl(const DLPC34XX_ControllerDeviceId_e projectorType) : isDLPC900(false), elementSize(0){
             InitConnectionAndCommandLayer();
             bool Status = CYPRESS_I2C_RequestI2CBusAccess();
             DLPC34XX_ControllerDeviceId_e DeviceId = projectorType;
@@ -70,9 +70,10 @@ namespace sl {
             DLPC34XX_WritePatternReadyConfiguration(DLPC34XX_TE_DISABLE, DLPC34XX_TP_ACTIVE_HI);
             DLPC34XX_WriteOperatingModeSelect(DLPC34XX_OM_SENS_INTERNAL_PATTERN);
             DLPC34XX_WriteInternalPatternControl(DLPC34XX_PC_START, 0x00);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
 
-        ProjectorControl::ProjectorControl(const int numLutEntries) : isDLPC900(true) {
+        ProjectorControl::ProjectorControl(const int numLutEntries) : isDLPC900(true), elementSize(numLutEntries) {
             USB_Init();
             int SLmode = 0;
             bool standBy = 0;
@@ -86,15 +87,26 @@ namespace sl {
             if (LCR_SetMode(0x1) < 0)
                 std::cout << "DLPC900 Error:Unable to switch to pattern mode" << std::endl;
             */
-            LCR_SetPatternConfig(numLutEntries, numLutEntries);
+            
             LCR_SetLedCurrents(255, 255, 255);
         }
 
-        void ProjectorControl::projecteOnce() {
+        void ProjectorControl::projecte(const bool isContinues) {
+            if (isContinues)
+                LCR_SetPatternConfig(elementSize, 0);
+            else
+                LCR_SetPatternConfig(elementSize, elementSize);
             if (!isDLPC900)
                 DLPC34XX_WriteInternalPatternControl(DLPC34XX_PC_START, 0x00);
-            else if (LCR_PatternDisplay(0x2) < 0)
-                ;
+            else {
+                if (LCR_PatternDisplay(0x2) < 0)
+                    printf("Unable to stat pattern display \n");
+            }
+        }
+
+        void ProjectorControl::stopProject() {
+            if (LCR_PatternDisplay(0x0) < 0)
+                printf("Unable to stop pattern display \n");
         }
 
         /**

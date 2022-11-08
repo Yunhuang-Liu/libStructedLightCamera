@@ -174,15 +174,14 @@ namespace sl {
              * @param b 输入，蓝色值
              */
             void setWhiteBlanceRGB(float r, float g, float b);
-            /** \所有图片 **/
-            std::vector<cv::Mat> imgs;
-            /** \图片索引 **/
-            int index;
             /** \是否彩色相机 **/
             CameraType cameraType;
             /** \相机句柄 **/
             IMV_HANDLE m_devHandle = nullptr;
-
+            /** \设置的曝光时间 **/
+            int exposureTime;
+            /** \图片队列 **/
+            std::queue<cv::Mat> imgQueue;
         private:
             /** \当前相机key **/
             std::string m_currentCameraKey;

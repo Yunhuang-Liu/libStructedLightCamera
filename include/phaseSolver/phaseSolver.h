@@ -60,7 +60,8 @@ namespace sl {
                                                 cv::cuda::GpuMat &wrapImg3_3_, cv::cuda::GpuMat &conditionImg_3_,
                                                 cv::cuda::GpuMat &wrapImg4_1_, cv::cuda::GpuMat &wrapImg4_2_,
                                                 cv::cuda::GpuMat &wrapImg4_3_, cv::cuda::GpuMat &conditionImg_4_,
-                                                cv::cuda::GpuMat &floor_K, const dim3 block, cv::cuda::Stream &cvStream);
+                                                cv::cuda::GpuMat &floor_K, 
+                                                const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //分区间相位展开解相CUDA主机端调用函数
             void solvePhase_DevidedSpace(const cv::cuda::GpuMat &absolutImgWhite,
                                          const int rows, const int cols,
@@ -85,8 +86,7 @@ namespace sl {
                                          const cv::cuda::GpuMat &conditionImg_4_,
                                          cv::cuda::GpuMat &unwrapImg_4_,
                                          cv::cuda::GpuMat &floor_K,
-                                         const dim3 block,
-                                         cv::cuda::Stream &cvStream);
+                                         const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //位移格雷码解调制CUDA主机端调用函数
             void solvePhasePrepare_ShiftGray(const cv::cuda::GpuMat &shift_0_0_,
                                              const cv::cuda::GpuMat &shift_0_1_, const cv::cuda::GpuMat &shift_0_2_,
@@ -96,7 +96,8 @@ namespace sl {
                                              const cv::cuda::GpuMat &gray_3_, const int rows, const int cols,
                                              cv::cuda::GpuMat &wrapImg1, cv::cuda::GpuMat &conditionImg_1_,
                                              cv::cuda::GpuMat &wrapImg2, cv::cuda::GpuMat &conditionImg_2_,
-                                             cv::cuda::GpuMat &floor_K, const dim3 block, cv::cuda::Stream &cvStream);
+                                             cv::cuda::GpuMat &floor_K, 
+                                             const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //位移格雷码解相CUDA主机端调用函数
             void solvePhase_ShiftGray(const cv::cuda::GpuMat &absolutImgWhite,
                                       const int rows, const int cols, const cv::cuda::GpuMat &wrapImg_1_,
@@ -104,7 +105,7 @@ namespace sl {
                                       cv::cuda::GpuMat &unwrapImg_1_, const cv::cuda::GpuMat &wrapImg_2_,
                                       const cv::cuda::GpuMat &conditionImg_2_,
                                       cv::cuda::GpuMat &unwrapImg_2_, cv::cuda::GpuMat &floor_K,
-                                      const dim3 block, cv::cuda::Stream &cvStream);
+                                      const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //四帧时间复用位移格雷码解调制CUDA主机端调用函数
             void solvePhasePrepare_ShiftGrayFourFrame(const cv::cuda::GpuMat &shift_0_0_,
                                                       const cv::cuda::GpuMat &shift_0_1_, const cv::cuda::GpuMat &shift_0_2_,
@@ -119,7 +120,8 @@ namespace sl {
                                                       cv::cuda::GpuMat &wrapImg2, cv::cuda::GpuMat &conditionImg_2_,
                                                       cv::cuda::GpuMat &wrapImg3, cv::cuda::GpuMat &conditionImg_3_,
                                                       cv::cuda::GpuMat &wrapImg4, cv::cuda::GpuMat &conditionImg_4_,
-                                                      cv::cuda::GpuMat &floor_K, const dim3 block, cv::cuda::Stream &cvStream);
+                                                      cv::cuda::GpuMat &floor_K, 
+                                                      const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //四帧时间复用位移格雷码解相CUDA主机端调用函数
             void solvePhase_ShiftGrayFourFrame(const cv::cuda::GpuMat &absolutImgWhite,
                                                const int rows, const int cols, const cv::cuda::GpuMat &wrapImg_1_,
@@ -129,14 +131,15 @@ namespace sl {
                                                const cv::cuda::GpuMat &wrapImg_3_, const cv::cuda::GpuMat &conditionImg_3_,
                                                cv::cuda::GpuMat &unwrapImg_3_, const cv::cuda::GpuMat &wrapImg_4_,
                                                const cv::cuda::GpuMat &conditionImg_4_, cv::cuda::GpuMat &unwrapImg_4_,
-                                               cv::cuda::GpuMat &floor_K, const dim3 block, cv::cuda::Stream &cvStream);
+                                               cv::cuda::GpuMat &floor_K, 
+                                               const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //四步五位互补格雷码解调制CUDA主机端调用函数
             void solvePhasePrepare_FourStepSixGray(const cv::cuda::GpuMat &shift_0_,
                                                    const cv::cuda::GpuMat &shift_1_, const cv::cuda::GpuMat &shift_2_,
                                                    const cv::cuda::GpuMat &shift_3_, const int rows, const int cols,
                                                    cv::cuda::GpuMat &wrapImg, cv::cuda::GpuMat &averageImg,
-                                                   cv::cuda::GpuMat &conditionImg, const dim3 block,
-                                                   cv::cuda::Stream &cvStream);
+                                                   cv::cuda::GpuMat &conditionImg, 
+                                                   const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //四步五位互补格雷码解相CUDA主机端调用函数
             void solvePhase_FourStepSixGray(const cv::cuda::GpuMat &Gray_0_,
                                             const cv::cuda::GpuMat &Gray_1_, const cv::cuda::GpuMat &Gray_2_,
@@ -144,7 +147,7 @@ namespace sl {
                                             const cv::cuda::GpuMat &Gray_5_, const int rows, const int cols,
                                             const cv::cuda::GpuMat &averageImg, const cv::cuda::GpuMat &conditionImg,
                                             const cv::cuda::GpuMat &wrapImg, cv::cuda::GpuMat &unwrapImg,
-                                            const dim3 block, cv::cuda::Stream &cvStream);
+                                            const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //四步四灰度时间复用格雷码解相CUDA主机端调用函数
             void solvePhasePrepare_FourFloorFourStep(const cv::cuda::GpuMat &shift_0_,
                                                      const cv::cuda::GpuMat &shift_1_, const cv::cuda::GpuMat &shift_2_,
@@ -156,17 +159,17 @@ namespace sl {
                                                      cv::cuda::GpuMat &medianFilter_1_, cv::cuda::GpuMat &kFloorImg_0_,
                                                      cv::cuda::GpuMat &kFloorImg_1_, cv::cuda::GpuMat &kFloorImg,
                                                      const bool isOdd, const bool isFirstStart,
-                                                     const dim3 block, cv::cuda::Stream &cvStream);
+                                                     const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //四步四灰度格雷码解相CUDA主机端调用函数
             void solvePhase_FourFloorFourStep(const cv::cuda::GpuMat &kFloorImg,
                                               const cv::cuda::GpuMat &conditionImg, const cv::cuda::GpuMat &wrapImg,
                                               const int rows, const int cols, cv::cuda::GpuMat &unwrapImg,
-                                              const dim3 block, cv::cuda::Stream &cvStream);
+                                              const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //四步参考相位解相器CUDA主机端调用函数
             void refPlainSolvePhase(const cv::cuda::GpuMat &wrapImg, const cv::cuda::GpuMat &conditionImg,
                                     const cv::cuda::GpuMat &refPlainImg, const int rows, const int cols,
                                     cv::cuda::GpuMat &unwrapImg, const bool isFarest,
-                                    const dim3 block, cv::cuda::Stream &cvStream); 
+                                    const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null()); 
         }// namespace cudaFunc
         #endif
         /** @brief 相位求解器 */

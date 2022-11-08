@@ -7,13 +7,13 @@ namespace sl {
     namespace restructor {
         namespace cudaFunc {
             __global__ void matchAndTriangulateColor_CUDA(
-                    cv::cuda::PtrStep<float> leftImg, cv::cuda::PtrStep<float> rightImg,
-                    const int rows, const int cols,
-                    const int minDisparity, const int maxDisparity,
-                    const float minDepth, const float maxDepth,
-                    const Eigen::Matrix4f Q, const Eigen::Matrix3f M3,
-                    const Eigen::Matrix3f R, const Eigen::Vector3f T,
-                    const Eigen::Matrix3f R1_inv, cv::cuda::PtrStep<float> mapDepth) {
+                cv::cuda::PtrStep<float> leftImg, cv::cuda::PtrStep<float> rightImg,
+                const int rows, const int cols,
+                const int minDisparity, const int maxDisparity,
+                const float minDepth, const float maxDepth,
+                const Eigen::Matrix4f Q, const Eigen::Matrix3f M3,
+                const Eigen::Matrix3f R, const Eigen::Vector3f T,
+                const Eigen::Matrix3f R1_inv, cv::cuda::PtrStep<float> mapDepth) {
                 const int x = blockIdx.x * blockDim.x + threadIdx.x;
                 const int y = blockIdx.y * blockDim.y + threadIdx.y;
                 if (x < cols && y < rows) {
@@ -72,12 +72,12 @@ namespace sl {
             }
 
             __global__ void matchAndTriangulate_CUDA(
-                    cv::cuda::PtrStep<float> leftImg, cv::cuda::PtrStep<float> rightImg,
-                    const int rows, const int cols,
-                    const int minDisparity, const int maxDisparity,
-                    const float minDepth, const float maxDepth,
-                    const Eigen::Matrix4f Q, const Eigen::Matrix3f M1,
-                    const Eigen::Matrix3f R1_inv, cv::cuda::PtrStep<float> mapDepth) {
+                cv::cuda::PtrStep<float> leftImg, cv::cuda::PtrStep<float> rightImg,
+                const int rows, const int cols,
+                const int minDisparity, const int maxDisparity,
+                const float minDepth, const float maxDepth,
+                const Eigen::Matrix4f Q, const Eigen::Matrix3f M1,
+                const Eigen::Matrix3f R1_inv, cv::cuda::PtrStep<float> mapDepth) {
                 const int x = blockIdx.x * blockDim.x + threadIdx.x;
                 const int y = blockIdx.y * blockDim.y + threadIdx.y;
                 if (x < cols && y < rows) {
@@ -138,14 +138,15 @@ namespace sl {
             }
 
             void depthColorMap(
-                    const cv::cuda::GpuMat &leftImg_, const cv::cuda::GpuMat &rightImg_,
-                    const int rows, const int cols,
-                    const int minDisparity, const int maxDisparity,
-                    const float minDepth, const float maxDepth,
-                    const Eigen::Matrix4f &Q, const Eigen::Matrix3f &M3,
-                    const Eigen::Matrix3f &R, const Eigen::Vector3f &T,
-                    const Eigen::Matrix3f &R1_inv, cv::cuda::GpuMat &depthMap,
-                    const dim3 block, cv::cuda::Stream &cvStream) {
+                const cv::cuda::GpuMat &leftImg_, const cv::cuda::GpuMat &rightImg_,
+                const int rows, const int cols,
+                const int minDisparity, const int maxDisparity,
+                const float minDepth, const float maxDepth,
+                const Eigen::Matrix4f &Q, const Eigen::Matrix3f &M3,
+                const Eigen::Matrix3f &R, const Eigen::Vector3f &T,
+                const Eigen::Matrix3f &R1_inv, cv::cuda::GpuMat &depthMap,
+                const dim3 block = dim3(32, 8),
+                cv::cuda::Stream &cvStream = cv::cuda::Stream::Null()) {
                 cudaStream_t stream = cv::cuda::StreamAccessor::getStream(cvStream);
                 dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
                 matchAndTriangulateColor_CUDA<<<grid, block, 0, stream>>>(

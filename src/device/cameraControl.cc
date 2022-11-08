@@ -6,7 +6,7 @@ namespace sl {
                                      CameraUsedState state_) : cameraLeft(nullptr),
                                                                cameraRight(nullptr), cameraColor(nullptr),
                                                                projector(nullptr), cameraUsedState(state_) {
-            projector = new ProjectorControl(projectorModuleType);
+            projector.reset(new ProjectorControl(projectorModuleType));
             int state = IMV_OK;
             IMV_DeviceList devices;
             state = IMV_EnumDevices(&devices, interfaceTypeAll);
@@ -14,7 +14,7 @@ namespace sl {
                 std::cout << "Search camera failed!" << std::endl;
             }
             if (nullptr == cameraLeft) {
-                cameraLeft = new CammeraUnilty();
+                cameraLeft.reset(new CammeraUnilty());
                 bool isSuccessSearch = false;
                 for (int i = 0; i < devices.nDevNum; i++) {
                     if (std::string(devices.pDevInfo[i].cameraName) == "Left") {
@@ -38,7 +38,7 @@ namespace sl {
                 }
             }
             if (nullptr == cameraRight) {
-                cameraRight = new CammeraUnilty();
+                cameraRight.reset(new CammeraUnilty());
                 bool isSuccessSearch = false;
                 for (int i = 0; i < devices.nDevNum; i++) {
                     if (std::string(devices.pDevInfo[i].cameraName) == "Right") {
@@ -60,7 +60,7 @@ namespace sl {
             }
             if (cameraUsedState == CameraUsedState::LeftGrayRightGrayExColor) {
                 if (nullptr == cameraColor) {
-                    cameraColor = new CammeraUnilty();
+                    cameraColor.reset(new CammeraUnilty());
                     bool isSuccessSearch = false;
                     for (int i = 0; i < devices.nDevNum; i++) {
                         if (std::string(devices.pDevInfo[i].cameraName) == "Color") {
@@ -73,7 +73,6 @@ namespace sl {
                             cameraColor->setPixelFormat("BayerRG8");
                             cameraColor->SetExposeTime(20400);
                             cameraColor->CameraChangeTrig(cameraColor->trigLine);
-                            cameraColor->imgs.resize(4);
                             cameraColor->CameraStart();
                             isSuccessSearch = true;
                         }
@@ -87,7 +86,7 @@ namespace sl {
 
         CameraControl::CameraControl(const int numLutEntries, CameraUsedState state_) : cameraLeft(nullptr), cameraRight(nullptr), cameraColor(nullptr),
                                                                                         projector(nullptr), cameraUsedState(state_) {
-            projector = new ProjectorControl(numLutEntries);
+            projector.reset(new ProjectorControl(numLutEntries));
             int state = IMV_OK;
             IMV_DeviceList devices;
             state = IMV_EnumDevices(&devices, interfaceTypeAll);
@@ -95,7 +94,7 @@ namespace sl {
                 std::cout << "Search camera failed!" << std::endl;
             }
             if (nullptr == cameraLeft) {
-                cameraLeft = new CammeraUnilty();
+                cameraLeft.reset(new CammeraUnilty());
                 bool isSuccessSearch = false;
                 for (int i = 0; i < devices.nDevNum; i++) {
                     if (std::string(devices.pDevInfo[i].cameraName) == "Left") {
@@ -119,7 +118,7 @@ namespace sl {
                 }
             }
             if (nullptr == cameraRight) {
-                cameraRight = new CammeraUnilty();
+                cameraRight.reset(new CammeraUnilty());
                 bool isSuccessSearch = false;
                 for (int i = 0; i < devices.nDevNum; i++) {
                     if (std::string(devices.pDevInfo[i].cameraName) == "Right") {
@@ -141,7 +140,7 @@ namespace sl {
             }
             if (cameraUsedState == CameraUsedState::LeftGrayRightGrayExColor) {
                 if (nullptr == cameraColor) {
-                    cameraColor = new CammeraUnilty();
+                    cameraColor.reset(new CammeraUnilty());
                     bool isSuccessSearch = false;
                     for (int i = 0; i < devices.nDevNum; i++) {
                         if (std::string(devices.pDevInfo[i].cameraName) == "Color") {
@@ -154,7 +153,6 @@ namespace sl {
                             cameraColor->setPixelFormat("BayerRG8");
                             cameraColor->SetExposeTime(20400);
                             cameraColor->CameraChangeTrig(cameraRight->trigLine);
-                            cameraColor->imgs.resize(4);
                             cameraColor->CameraStart();
                             isSuccessSearch = true;
                         }
@@ -167,66 +165,72 @@ namespace sl {
         }
 
         void CameraControl::getOneFrameImgs(RestructedFrame &imgsOneFrame) {
-            auto start = std::chrono::system_clock::now();
-            projector->projecteOnce();
-            while (cameraLeft->index < cameraLeft->imgs.size() ||
-                   cameraRight->index < cameraRight->imgs.size()) {
+            if (imgsOneFrame.leftImgs.size() <= projector->elementSize)
+                imgsOneFrame.leftImgs.resize(projector->elementSize);
+            if (imgsOneFrame.rightImgs.size() <= projector->elementSize)
+                imgsOneFrame.rightImgs.resize(projector->elementSize);
+
+            while (cameraLeft->imgQueue.size() <= projector->elementSize ||
+                   cameraRight->imgQueue.size() <= projector->elementSize) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
-            auto end = std::chrono::system_clock::now();
-            auto timeUsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() * static_cast<float>(std::chrono::milliseconds::period::num) / std::chrono::milliseconds::period::den;
-            std::cout << "capture rate: " << 4.f / timeUsed << std::endl;
-            const int imgsNumGray = cameraLeft->imgs.size();
-            imgsOneFrame.leftImgs.resize(imgsNumGray);
-            imgsOneFrame.rightImgs.resize(imgsNumGray);
-            for (int i = 0; i < cameraLeft->imgs.size(); i++) {
-                imgsOneFrame.leftImgs[i] = cameraLeft->imgs[i];
-                imgsOneFrame.rightImgs[i] = cameraRight->imgs[i];
+
+            for (int i = 0; i < projector->elementSize; ++i) {
+                imgsOneFrame.leftImgs[i] = cameraLeft->imgQueue.front();
+                cameraLeft->imgQueue.pop();
+                imgsOneFrame.rightImgs[i] = cameraRight->imgQueue.front();
+                cameraRight->imgQueue.pop();
             }
-            cameraLeft->index = 0;
-            cameraRight->index = 0;
+
             if (cameraUsedState == CameraUsedState::LeftGrayRightGrayExColor) {
-                while (cameraColor->index < cameraColor->imgs.size()) {
+                while (cameraColor->imgQueue.size() <= projector->elementSize) {
                     std::this_thread::sleep_for(std::chrono::microseconds(1));
                 }
-                imgsOneFrame.colorImgs.resize(cameraColor->imgs.size());
-                for (int i = 0; i < cameraColor->imgs.size(); i++) {
-                    imgsOneFrame.colorImgs[i] = cameraColor->imgs[i];
+
+                if (imgsOneFrame.colorImgs.size() <= projector->elementSize)
+                    imgsOneFrame.colorImgs.resize(projector->elementSize);
+
+                for (int i = 0; i < projector->elementSize; ++i) {
+                    imgsOneFrame.colorImgs[i] = cameraColor->imgQueue.front();
+                    cameraColor->imgQueue.pop();
                 }
-                cameraColor->index = 0;
             }
         }
 
-        void CameraControl::setCaptureImgsNum(const int GrayImgsNum,
-                                              const int ColorImgsNum) {
-            if (cameraUsedState == CameraUsedState::LeftColorRightGray)
-                cameraLeft->imgs.resize(ColorImgsNum);
-            else
-                cameraLeft->imgs.resize(GrayImgsNum);
-            if (cameraUsedState == CameraUsedState::LeftGrayRightGrayExColor)
-                cameraColor->imgs.resize(ColorImgsNum);
-            cameraRight->imgs.resize(GrayImgsNum);
-        }
-
-        void CameraControl::triggerColorCameraSoftCaputure() {
+        void CameraControl::triggerColorCameraSoftCaputure(const int exposureTime) {
             if (cameraUsedState == CameraUsedState::LeftColorRightGray) {
+                const int exposureTimeTrigLine = cameraLeft->exposureTime;
+
                 if (cameraLeft->isTriggerLine()) {
                     cameraLeft->CameraChangeTrig(CammeraUnilty::trigSoftware);
-                    cameraLeft->SetExposeTime(100000);
+                    cameraLeft->SetExposeTime(exposureTime);
                 }
+
                 cameraLeft->ExecuteSoftTrig();
-                while (cameraLeft->index < 1) {
+
+                while (cameraLeft->imgQueue.size() < 1) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 }
-            } else {
+
+                cameraLeft->CameraChangeTrig(CammeraUnilty::trigLine);
+                cameraLeft->SetExposeTime(exposureTimeTrigLine);
+            } 
+            else {
+                const int exposureTimeTrigLine = cameraColor->exposureTime;
+
                 if (cameraColor->isTriggerLine()) {
                     cameraColor->CameraChangeTrig(CammeraUnilty::trigSoftware);
-                    cameraColor->SetExposeTime(100000);
+                    cameraColor->SetExposeTime(exposureTime);
                 }
+
                 cameraColor->ExecuteSoftTrig();
-                while (cameraColor->index < 1) {
+
+                while (cameraColor->imgQueue.size() < 1) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 }
+
+                cameraColor->CameraChangeTrig(CammeraUnilty::trigLine);
+                cameraColor->SetExposeTime(exposureTimeTrigLine);
             }
         }
 
@@ -236,7 +240,9 @@ namespace sl {
                 cameraLeft->SetExposeTime(colorExposure);
             else
                 cameraLeft->SetExposeTime(grayExposure);
+
             cameraRight->SetExposeTime(grayExposure);
+
             if (cameraUsedState == LeftGrayRightGrayExColor)
                 cameraColor->SetExposeTime(colorExposure);
         }
@@ -249,12 +255,45 @@ namespace sl {
             if (nullptr != cameraLeft) {
                 cameraLeft->CameraClose();
             }
+
             if (nullptr != cameraRight) {
                 cameraLeft->CameraClose();
             }
+
             if (nullptr != cameraColor) {
                 cameraLeft->CameraClose();
             }
+        }
+
+        std::vector<int> CameraControl::getFrameFps() {
+            std::vector<int> fps;
+            if (nullptr != cameraLeft) {
+                IMV_StreamStatisticsInfo info;
+                IMV_GetStatisticsInfo(cameraLeft->m_devHandle, &info);
+                fps.emplace_back(info.u3vStatisticsInfo.fps);
+            }
+
+            if (nullptr != cameraRight) {
+                IMV_StreamStatisticsInfo info;
+                IMV_GetStatisticsInfo(cameraRight->m_devHandle, &info);
+                fps.emplace_back(info.u3vStatisticsInfo.fps);
+            }
+
+            if (nullptr != cameraColor) {
+                IMV_StreamStatisticsInfo info;
+                IMV_GetStatisticsInfo(cameraColor->m_devHandle, &info);
+                fps.emplace_back(info.u3vStatisticsInfo.fps);
+            }
+
+            return fps;
+        }
+        
+        void CameraControl::project(const bool isContinues) {
+            projector->projecte(isContinues);
+        }
+
+        void CameraControl::stopProject() {
+            projector->stopProject();
         }
     }// namespace device
 }// namespace sl

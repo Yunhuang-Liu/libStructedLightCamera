@@ -103,12 +103,13 @@ if(CUDA_FOUND)
        setupapi
        )
 else()
+    #[[
     add_executable(
         ${PROJECT_NAME}
         ${CPUHeader}
         ${CPUSource}
         )
-
+    ]]
    add_library(libStructedLightCamera SHARED  ${CPUSource}  ${CPUHeader})
    add_library(libStructedLightCameraStatic STATIC  ${CPUSource} ${CPUHeader})
    set(CMAKE_DEBUG_POSTFIX "d")

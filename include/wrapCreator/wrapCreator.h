@@ -27,8 +27,8 @@ namespace sl {
             void getWrapImgSync(const std::vector<cv::cuda::GpuMat> &imgs,
                                 cv::cuda::GpuMat &wrapImg,
                                 cv::cuda::GpuMat &conditionImg, const bool isCounter = false,
-                                const cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(),
-                                const dim3 block = dim3(32, 8));
+                                const dim3 block = dim3(32, 8),
+                                cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
         }
         #endif
 
@@ -79,7 +79,7 @@ namespace sl {
             virtual void getWrapImg(const std::vector<cv::cuda::GpuMat> &imgs,
                                     cv::cuda::GpuMat &wrapImg,
                                     cv::cuda::GpuMat &conditionImg, const bool isCounter = false,
-                                    const cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(),
+                                    cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(),
                                     const WrapParameter parameter = WrapParameter()) = 0;
             #endif
         };

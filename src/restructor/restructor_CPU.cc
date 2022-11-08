@@ -138,7 +138,7 @@ namespace sl {
                     cv::Mat result;
 
                     if (isColor)
-                        result = calibrationInfo.R * cameraPoints + calibrationInfo.T;
+                        result = calibrationInfo.Rlc * cameraPoints + calibrationInfo.Tlc;
                     else
                         result = cameraPoints;
 

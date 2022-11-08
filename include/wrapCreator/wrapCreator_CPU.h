@@ -46,7 +46,7 @@ namespace sl {
             void getWrapImg(const std::vector<cv::cuda::GpuMat> &imgs,
                             cv::cuda::GpuMat &wrapImg,
                             cv::cuda::GpuMat &conditionImg, const bool isCounter = false,
-                            const cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(),
+                            cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(),
                             const WrapParameter parameter = WrapParameter()) override{};
             #endif
         private:

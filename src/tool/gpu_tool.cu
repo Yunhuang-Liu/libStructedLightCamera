@@ -89,7 +89,7 @@ namespace sl {
                 const Eigen::Matrix3f RDtoFirst, const Eigen::Vector3f TDtoFirst,
                 const Eigen::Matrix3f RDtoSecond, const Eigen::Vector3f TDtoSecond,
                 const Eigen::Matrix4f PL, const Eigen::Matrix4f PR, const float threshod, 
-                const cv::cuda::PtrStep<float3> epilineA, const cv::cuda::PtrStep<float3> epilineB, const cv::cuda::PtrStep<float3> epilineC,
+                const cv::cuda::PtrStep<float> epilineA, const cv::cuda::PtrStep<float> epilineB, const cv::cuda::PtrStep<float> epilineC,
                 cv::cuda::PtrStep<float> depthRefine) {
                 const int x = blockDim.x * blockIdx.x + threadIdx.x;
                 const int y = blockDim.y * blockIdx.y + threadIdx.y;
@@ -119,7 +119,7 @@ namespace sl {
                     return;
                 }
 
-                if (firstCondition.ptr(locYF)[locXF] < 5.f || secondCondition.ptr(locYS)[locXS] < 5.f) {
+                if (firstCondition.ptr(locYF)[locXF] < 10.f || secondCondition.ptr(locYS)[locXS] < 10.f) {
                     depthRefine.ptr(y)[x] = 0.f;
                     return;
                 }
@@ -141,7 +141,7 @@ namespace sl {
                 float locXSubpixel = locXF;
                 float locYSubpixel = locYF;
                 float phaseCoarse = firstWrap.ptr(locYF)[locXF] + floorK * CV_2PI + CV_PI;
-                const float believeThreshod = 1.f;
+                const float believeThreshod = 1.5f;
                 for (int i = -5; i < 6; ++i) {
                     const int indexY = locYF + i;
                     if (indexY > rows - 1)
@@ -150,13 +150,20 @@ namespace sl {
                         const int indexX = locXF + j;
                         if (indexX > cols - 1)
                             continue;
-                        if (firstCondition.ptr(indexY)[indexX] < 5.f)
+                        if (firstCondition.ptr(indexY)[indexX] < 10.f)
                             continue;
-                        const float believeVal = cuda::std::abs(epilineA.ptr(y)[x].x * indexX + epilineB.ptr(y)[x].y * indexY + epilineC.ptr(y)[x].z);
-                        const float phaseVal = firstWrap.ptr(indexY)[indexX] + floorK * CV_2PI + CV_PI;
-                        const float diffWrap = cuda::std::abs(phaseVal - phase.ptr(y)[x]);
+                        const float believeVal = cuda::std::abs(epilineA.ptr(y)[x] * indexX + epilineB.ptr(y)[x] * indexY + epilineC.ptr(y)[x]);
 
                         if (believeVal < believeThreshod) {
+                            float phaseVal = firstWrap.ptr(indexY)[indexX] + floorK * CV_2PI + CV_PI;
+
+                            if (phaseVal - phase.ptr(y)[x] > CV_PI)
+                                phaseVal = phaseVal - CV_2PI;
+                            else if (phaseVal - phase.ptr(y)[x] < -CV_PI)
+                                phaseVal = phaseVal + CV_2PI;
+
+                            const float diffWrap = cuda::std::abs(phaseVal - phase.ptr(y)[x]);
+
                             if (diffWrap < minDiffWrap) {
                                 minDiffWrap = diffWrap;
                                 locXSubpixel = indexX;
@@ -167,19 +174,28 @@ namespace sl {
                     }
                 }
 
-                if (locXSubpixel - 1 >= 0 && locXSubpixel + 1 < cols) {
-                    float curCost = cuda::std::abs(phaseCoarse - phase.ptr(y)[x]);
-                    float preCost, afterCost;
-                    if (cuda::std::abs(firstWrap.ptr(locYSubpixel)[(int) locXSubpixel] - firstWrap.ptr(locYSubpixel)[(int) locXSubpixel - 1]) > CV_PI)
-                        preCost = cuda::std::abs(firstWrap.ptr(locYSubpixel)[(int) locXSubpixel - 1] + CV_2PI * floorK - CV_2PI + CV_PI - phase.ptr(y)[x]);
-                    else
-                        preCost = cuda::std::abs(firstWrap.ptr(locYSubpixel)[(int) locXSubpixel - 1] + CV_2PI * floorK + CV_PI - phase.ptr(y)[x]);
-                    if (cuda::std::abs(firstWrap.ptr(locYSubpixel)[(int) locXSubpixel + 1] - firstWrap.ptr(locYSubpixel)[(int) locXSubpixel]) > CV_PI)
-                        afterCost = cuda::std::abs(firstWrap.ptr(locYSubpixel)[(int) locXSubpixel + 1] + CV_2PI * floorK + CV_2PI + CV_PI - phase.ptr(y)[x]);
-                    else
-                        afterCost = cuda::std::abs(firstWrap.ptr(locYSubpixel)[(int) locXSubpixel + 1] + CV_2PI * floorK + CV_PI - phase.ptr(y)[x]);
-                    const float denom = cuda::std::fmax(0.01f, preCost + afterCost - 2.f * curCost);
-                    locXSubpixel = locXSubpixel + (preCost - afterCost) / (2.f * denom);
+                if (locXSubpixel - 1 >= 0 && locXSubpixel + 1 < cols) {              
+                    //线性拟合
+                    if (phaseCoarse > phase.ptr(y)[x]) {
+                        float phaseValLhs = firstWrap.ptr(locYSubpixel)[(int) locXSubpixel - 1] + floorK * CV_2PI + CV_PI;
+
+                        if (phaseValLhs - phase.ptr(y)[x] > CV_PI)
+                            phaseValLhs = phaseValLhs - CV_2PI;
+                        else if (phaseValLhs - phase.ptr(y)[x] < -CV_PI)
+                            phaseValLhs = phaseValLhs + CV_2PI;
+
+                        locXSubpixel = locXSubpixel - 1 + (phase.ptr(y)[x] - phaseValLhs) / (phaseCoarse - phaseValLhs);
+                    } 
+                    else {
+                        float phaseValRhs = firstWrap.ptr(locYSubpixel)[(int) locXSubpixel + 1] + floorK * CV_2PI + CV_PI;
+
+                        if (phaseValRhs - phase.ptr(y)[x] > CV_PI)
+                            phaseValRhs = phaseValRhs - CV_2PI;
+                        else if (phaseValRhs - phase.ptr(y)[x] < -CV_PI)
+                            phaseValRhs = phaseValRhs + CV_2PI;
+
+                        locXSubpixel = locXSubpixel + 1 - (phaseValRhs - phase.ptr(y)[x]) / (phaseValRhs - phaseCoarse);
+                    }
                 }
 
                 Eigen::Matrix3f LC;
@@ -192,10 +208,7 @@ namespace sl {
                         locXSubpixel * PR(2, 3) - PR(0, 3);
                 Eigen::Vector3f result = LC.inverse() * RC;
 
-                if (cuda::std::abs(result(2, 0) - depth.ptr(y)[x]) < 3.f)
-                    depthRefine.ptr(y)[x] = result(2, 0);
-                else
-                    depthRefine.ptr(y)[x] = depth.ptr(y)[x];
+                depthRefine.ptr(y)[x] = result(2, 0);
             }
 
             /**

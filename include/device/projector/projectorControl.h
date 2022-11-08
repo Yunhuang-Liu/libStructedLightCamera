@@ -22,6 +22,7 @@
 
 #include <string>
 #include <iostream>
+#include <thread>
 
 #define FLASH_WRITE_BLOCK_SIZE            1024
 #define FLASH_READ_BLOCK_SIZE             256
@@ -57,16 +58,21 @@ namespace sl {
              */
             ProjectorControl(const int numLutEntries);
             /**
-             * @brief 投影一次 
-             * @param numLutEntries 输入，图片数目
+             * @brief 开始投影
+             * @param isContinues 输入，是否连续投影
              */
-            void projecteOnce();
+            void projecte(const bool isContinues);
+            /**
+             * @brief 停止投影
+             */
+            void stopProject();
             /**
              * @brief 加载固件
              * @param firmWareAdress 输入，固件文件地址
              */
             void LoadFirmware(const std::string firmWareAdress);
-
+            /** \投影图片张数 **/
+            const int elementSize;
         private:
             /**
              * @brief 初始化I2C

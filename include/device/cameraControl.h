@@ -22,7 +22,7 @@ namespace sl {
         /** @brief 重建帧 */
         struct RestructedFrame {
         public:
-            RestructedFrame(){};
+            RestructedFrame(){}
             /**
              * @brief                带有彩色图片的构造函数
              * 
@@ -98,18 +98,19 @@ namespace sl {
             CameraControl(const int numLutEntries,
                           CameraUsedState state = LeftGrayRightGrayExColor);
             /**
+             * @brief 开始投影
+             */
+            void project(const bool isContinues);
+            /**
+             * @brief 停止投影
+             */
+            void stopProject();
+            /**
              * @brief 获取一帧图片
              * 
              * @param imgsOneFrame 输入，获取到的原始图片
              */
             void getOneFrameImgs(RestructedFrame &imgsOneFrame);
-            /**
-             * @brief 设置捕获图片数量
-             * 
-             * @param GrayImgsNum  输入，灰度相机捕获张数
-             * @param ColorImgsNum 输入，彩色相机捕获张数
-             */
-            void setCaptureImgsNum(const int GrayImgsNum, const int ColorImgsNum);
             /**
              * @brief 加载固件
              * 
@@ -118,8 +119,10 @@ namespace sl {
             void loadFirmware(const std::string firmwarePath);
             /**
              * @brief 将彩色相机设置为软触发并触发一次
+             * 
+             * @param exposureTime 输入，软触发下的相机曝光时间
              */
-            void triggerColorCameraSoftCaputure();
+            void triggerColorCameraSoftCaputure(const int exposureTime);
             /**
              * @brief 设置相机曝光时间
              * 
@@ -131,16 +134,21 @@ namespace sl {
              * @brief 关闭相机 
              */
             void closeCamera();
-
+            /**
+             * @brief 获取相机统计信息
+             * 
+             * @return 帧率
+            */
+            std::vector<int> getFrameFps();
         private:
             /** \左相机 **/
-            CammeraUnilty *cameraLeft;
+            std::unique_ptr<CammeraUnilty> cameraLeft;
             /** \右相机 **/
-            CammeraUnilty *cameraRight;
+            std::unique_ptr<CammeraUnilty> cameraRight;
             /** \彩色相机 **/
-            CammeraUnilty *cameraColor;
+            std::unique_ptr<CammeraUnilty> cameraColor;
             /** \投影仪 **/
-            ProjectorControl *projector;
+            std::unique_ptr<ProjectorControl> projector;
             /** \相机配置状态 **/
             CameraUsedState cameraUsedState;
         };

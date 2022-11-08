@@ -29,9 +29,9 @@ because of that our code is only provid Windows lib kit.**
 You can find a StructedlightCameraConfig.cmake file in your install path.  
 So you only to add your install path to your system path.  
 Then,your CMakeLists.txt can add these:  
-> find_package(StrutedLightCamera REQUIRED)  
+> find_package(StructedLightCamera REQUIRED)  
 > include_directory(${StructedLightCamera_INCLUDE_DIRS})  
-> target_link_libraries(${StructedLightCamera_Libs})  
+> target_link_libraries(${StructedLightCamera_LIBRARIES})  
 **Please be aware of that you should add CUDA defination to use CUDA.Like this:**  
 > find_package(CUDA REQUIRED)  
 > if(CUDA_FOUND)  
@@ -43,7 +43,7 @@ The system is contrusted like this:
 
 **You can be aware of that our phasesolve and restructor is a Factory mode,so you can get what you want though Polymorphism.**  
 ***  
-**You can see `StructedLightCamera.h` to learn how to use it.**  
+**You can see `structedLightCamera.h` to learn how to use it.**  
 **A document in our `doc` folder is used to explain this project.**
 
 

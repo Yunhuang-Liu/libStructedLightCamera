@@ -48,12 +48,12 @@ namespace sl {
                 const std::vector<cv::cuda::GpuMat> &imgs,
                 cv::cuda::GpuMat &wrapImg,
                 cv::cuda::GpuMat &conditionImg, const bool isCounter = false,
-                const cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(),
-                const dim3 block = dim3(32, 8)) {
+                const dim3 block = dim3(32, 8),
+                cv::cuda::Stream &cvStream = cv::cuda::Stream::Null()) {
                 const int stepNum = imgs.size();
                 const int cols = imgs[0].cols;
                 const int rows = imgs[0].rows;
-                dim3 grid((cols + block.x - 1) / block.x, (cols + block.y - 1) / block.y);
+                dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
                 cudaStream_t cudaStream = cv::cuda::StreamAccessor::getStream(cvStream);
                 switch (stepNum) {
                     case 3: {

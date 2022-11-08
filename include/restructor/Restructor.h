@@ -79,16 +79,16 @@ namespace sl {
                                const float maxDepth, const Eigen::Matrix4f &Q,
                                const Eigen::Matrix3f &M3, const Eigen::Matrix3f &R,
                                const Eigen::Vector3f &T, const Eigen::Matrix3f &R1_inv,
-                               cv::cuda::GpuMat &depthMap, const dim3 block,
-                               cv::cuda::Stream &cvStream);
+                               cv::cuda::GpuMat &depthMap, 
+                               const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             //深度映射，CUDA主机端调用函数，不进行纹理映射
             void depthMap(const cv::cuda::GpuMat &leftImg_,
                           const cv::cuda::GpuMat &rightImg_, const int rows, const int cols,
                           const int minDisparity, const int maxDisparity, const float minDepth,
                           const float maxDepth, const Eigen::Matrix4f &Q,
                           const Eigen::Matrix3f &M1, const Eigen::Matrix3f &R1_inv,
-                          cv::cuda::GpuMat &depthMap, const dim3 block,
-                          cv::cuda::Stream &cvStream);
+                          cv::cuda::GpuMat &depthMap, 
+                          const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
         }// namespace cudaFunc
         #endif
         /** @brief 重建器 */

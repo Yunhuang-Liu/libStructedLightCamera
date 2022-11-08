@@ -53,11 +53,12 @@ StructedLightCamera::StructedLightCamera(const sl::tool::Info& infoCalibraion, c
         }
         #endif
     }
+
     if (cameraSet.chipCore == DLP3010)
         camera = new CameraControl(DLPC34XX_ControllerDeviceId_e::DLPC34XX_CDI_DLPC3478, cameraSet.cameraSet);
     else
         camera = new CameraControl(trigNum, cameraSet.cameraSet);
-    camera->setCaptureImgsNum(grayCaptureImgNum, colorCaptureImgNum);
+
     switch (acceleratedMethod){
         case AcceleratedMethod::CPU : {
             restructor = new restructor::Restructor_CPU(calibrationInfo, params.minDisparity, params.maxDisparity,
@@ -133,7 +134,7 @@ void StructedLightCamera::getOneFrame(std::vector<cv::cuda::GpuMat>& depthImg, s
 
 void StructedLightCamera::getOneFrame(std::vector<cv::Mat>& depthImg, std::vector<cv::Mat>& colorImg){
     if (AcceleratedMethod::CPU == acceleratedMethod || AlgorithmType::FourStepSixGrayCode == algorithmType) {
-        camera->triggerColorCameraSoftCaputure();
+        camera->triggerColorCameraSoftCaputure(200000);
     }
     RestructedFrame restructedFrame;
     camera->getOneFrameImgs(restructedFrame);

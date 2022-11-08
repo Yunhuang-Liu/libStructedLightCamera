@@ -4,6 +4,7 @@ namespace sl {
     namespace device {
         //灰度相机取流回调函数
         static void grayFrameCallback(IMV_Frame *pFrame, void *pUser) {
+            /*
             CammeraUnilty *pCammerWidget = (CammeraUnilty *) pUser;
             CFrameInfo frameInfo;
             frameInfo.m_nWidth = (int) pFrame->frameInfo.width;
@@ -17,14 +18,23 @@ namespace sl {
             frameInfo.m_nTimeStamp = pFrame->frameInfo.timeStamp;
             if (pFrame->pData != NULL) {
                 memcpy(frameInfo.m_pImageBuf, pFrame->pData, frameInfo.m_nBufferSize);
-                pCammerWidget->imgs[pCammerWidget->index] = cv::Mat(frameInfo.m_nHeight, frameInfo.m_nWidth, CV_8U,
-                                                                    (uint8_t *) frameInfo.m_pImageBuf);
+                cv::Mat(frameInfo.m_nHeight, frameInfo.m_nWidth, CV_8U, (uint8_t *) frameInfo.m_pImageBuf).copyTo(pCammerWidget->imgs[pCammerWidget->index]);
                 ++pCammerWidget->index;
+            }
+            free((void *) frameInfo.m_pImageBuf);
+            */
+            CammeraUnilty *pCammerWidget = (CammeraUnilty *) pUser;
+            if (pFrame->pData != NULL) {
+                cv::Mat img = cv::Mat(pFrame->frameInfo.height, pFrame->frameInfo.width, CV_8U, pFrame->pData).clone();
+                pCammerWidget->imgQueue.emplace(img);
+                //img.copyTo(pCammerWidget->imgs[pCammerWidget->index]);
+                //++pCammerWidget->index;
             }
         }
 
         //彩色相机取流回调函数
         static void colorFrameCallback(IMV_Frame *pFrame, void *pUser) {
+            /*
             CammeraUnilty *pCammerWidget = (CammeraUnilty *) pUser;
             CFrameInfo frameInfo;
             frameInfo.m_nWidth = (int) pFrame->frameInfo.width;
@@ -57,10 +67,18 @@ namespace sl {
                 ++pCammerWidget->index;
             }
             free((void *) frameInfo.m_pImageBuf);
+            */
+            CammeraUnilty *pCammerWidget = (CammeraUnilty *) pUser;
+            if (pFrame->pData != NULL) {
+                cv::Mat img = cv::Mat(pFrame->frameInfo.height, pFrame->frameInfo.width, CV_8U, pFrame->pData).clone();
+                pCammerWidget->imgQueue.emplace(img);
+                //cv::cvtColor(pCammerWidget->imgs[pCammerWidget->index], pCammerWidget->imgs[pCammerWidget->index], cv::COLOR_BayerRG2BGR);
+                //++pCammerWidget->index;
+            }
         }
 
-        CammeraUnilty::CammeraUnilty() : m_currentCameraKey(""), m_devHandle(NULL), index(0), cameraType(LeftCamera) {
-            this->imgs.resize(16);
+        CammeraUnilty::CammeraUnilty() : m_currentCameraKey(""), m_devHandle(NULL), cameraType(LeftCamera), exposureTime(1000) {
+            //this->imgs.resize(16);
         }
 
         CammeraUnilty::~CammeraUnilty() {
@@ -78,6 +96,8 @@ namespace sl {
                 printf("set ExposureTime value = %0.2f fail, ErrorCode[%d]\n", dExposureTime, ret);
                 return false;
             }
+
+            exposureTime = dExposureTime;
 
             return true;
         }
@@ -119,9 +139,6 @@ namespace sl {
                 printf("open camera failed! ErrorCode[%d]\n", ret);
                 return false;
             }
-            IMV_ClearFrameBuffer(m_devHandle);
-            IMV_SetBufferCount(m_devHandle, 4);
-            IMV_SetIntFeatureValue(m_devHandle, "AcquisitionFrameRate", 2000);
             return true;
         }
 

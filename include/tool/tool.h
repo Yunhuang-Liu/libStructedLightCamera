@@ -147,6 +147,59 @@ namespace sl {
         void phaseHeightMapEigCoeRegion(const cv::Mat& phase, const cv::Mat &intrinsic, const cv::Mat &coefficient,
                                         const float minDepth, const float maxDepth,
                                         const int rowBegin, const int rowEnd, cv::Mat& depth);
+        /**
+         * @brief                由相移图片计算纹理图片           
+         * 
+         * @param imgs           输入，相移图片     
+         * @param texture        输出，纹理图片
+         * @param phaseShiftStep 输入，相移步数（@note 前N张图片为相移图片）
+         * @param threads        输入，线程块
+         */
+        void averageTexture(std::vector<cv::Mat> &imgs, cv::Mat &texture, const int phaseShiftStep = 4, const int threads = 16);
+        /**
+         * @brief                由相移图片计算纹理图片           
+         * 
+         * @param imgs           输入，相移图片     
+         * @param texture        输出，纹理图片
+         * @param phaseShiftStep 输入，相移步数（@note 前N张图片为相移图片）
+         * @param isColor        输入，是否为彩色纹理
+         * @param rowBegin       输入，起始行
+         * @param rowEnd         输入，结束行
+         */
+        void averageTextureRegionGrey(std::vector<cv::Mat> &imgs, cv::Mat &texture, const int phaseShiftStep, 
+            const int rowBegin, const int rowEnd);
+        /**
+         * @brief                由相移图片计算纹理图片           
+         * 
+         * @param imgs           输入，相移图片     
+         * @param texture        输出，纹理图片
+         * @param phaseShiftStep 输入，相移步数（@note 前N张图片为相移图片）
+         * @param isColor        输入，是否为彩色纹理
+         * @param rowBegin       输入，起始行
+         * @param rowEnd         输入，结束行
+         */
+        void averageTextureRegionColor(std::vector<cv::Mat> &imgs, cv::Mat &texture, const int phaseShiftStep,
+                                      const int rowBegin, const int rowEnd);
+
+        /**
+         * @brief 
+         * @param depth         输入，深度图
+         * @param textureIn     输入，纹理图
+         * @param info          输入，标定信息
+         * @param textureAlign  输出，对齐到深度图的纹理图
+         * @param threads       输入，线程数
+         */
+        void reverseMappingTexture(cv::Mat &depth, cv::Mat &textureIn, const Info &info, cv::Mat &textureAlign, const int threads = 16);
+        /**
+         * @brief 
+         * @param depth         输入，深度图
+         * @param textureIn     输入，纹理图
+         * @param info          输入，标定信息
+         * @param textureAlign  输出，对齐到深度图的纹理图
+         * @param rowBegin      输入，起始行
+         * @param rowEnd        输入，结束行
+        */
+        void reverseMappingTextureRegion(cv::Mat &depth, cv::Mat &textureIn, const Info &info, cv::Mat &textureAlign, const int rowBegin, const int rowEnd);
     }// tool
 }// namespace sl
 
