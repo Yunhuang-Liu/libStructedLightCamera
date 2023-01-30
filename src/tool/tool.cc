@@ -2,9 +2,9 @@
 
 namespace sl {
     namespace tool {
-        void phaseHeightMapEigCoe(const cv::Mat& phase, const cv::Mat &intrinsic, const cv::Mat &coefficient,
+        void phaseHeightMapEigCoe(const cv::Mat &phase, const cv::Mat &intrinsic, const cv::Mat &coefficient,
                                   const float minDepth, const float maxDepth,
-                                  cv::Mat& depth, const int threads) {
+                                  cv::Mat &depth, const int threads) {
             CV_Assert(intrinsic.type() == CV_64FC1);
             CV_Assert(coefficient.type() == CV_64FC1);
             depth = cv::Mat::zeros(phase.size(), CV_32FC1);
@@ -26,9 +26,9 @@ namespace sl {
                 thread.join();
         }
 
-        void phaseHeightMapEigCoeRegion(const cv::Mat& phase, const cv::Mat &intrinsic, const cv::Mat &coefficient,
+        void phaseHeightMapEigCoeRegion(const cv::Mat &phase, const cv::Mat &intrinsic, const cv::Mat &coefficient,
                                         const float minDepth, const float maxDepth,
-                                        const int rowBegin, const int rowEnd, cv::Mat& depth) {
+                                        const int rowBegin, const int rowEnd, cv::Mat &depth) {
             CV_Assert(intrinsic.type() == CV_64FC1);
             CV_Assert(coefficient.type() == CV_64FC1);
             CV_Assert(depth.type() == CV_32FC1);
@@ -63,15 +63,6 @@ namespace sl {
                     cameraPoint = mapL.inverse() * mapR;
 
                     ptrDepth[j] = cameraPoint.z();
-                    /*
-                    imgPoint = intrinsicInv * cameraPoint;
-                    int locX = imgPoint(0, 0) / imgPoint(2, 0);
-                    int locY = imgPoint(0, 0) / imgPoint(2, 0);
-
-                    if (locX > 0 && locX < depth.rows && locY > 0 && locY < depth.cols) {
-                        depth.ptr<float>(locY)[locX] = cameraPoint.z();
-                    }
-                    */
                 }
             }
         }
@@ -80,7 +71,7 @@ namespace sl {
             CV_Assert(imgs.size() >= phaseShiftStep);
             CV_Assert(imgs[0].type() == CV_8UC1 || imgs[0].type() == CV_8UC3);
 
-            const bool isColor = imgs[0].type() == CV_8UC3; 
+            const bool isColor = imgs[0].type() == CV_8UC3;
             if (isColor)
                 texture = cv::Mat(imgs[0].size(), imgs[0].type(), cv::Scalar(0, 0, 0));
             else
@@ -96,8 +87,7 @@ namespace sl {
                 }
                 threadsPool[threads - 1] = std::thread(&sl::tool::averageTextureRegionColor, std::ref(imgs), std::ref(texture), phaseShiftStep,
                                                        perRow * (threads - 1), texture.rows);
-            }
-            else {
+            } else {
                 for (int i = 0; i < threads - 1; ++i) {
                     threadsPool[i] = std::thread(&sl::tool::averageTextureRegionGrey, std::ref(imgs), std::ref(texture), phaseShiftStep,
                                                  perRow * i, perRow * (i + 1));
@@ -110,14 +100,14 @@ namespace sl {
                 thread.join();
         }
 
-        void averageTextureRegionGrey(std::vector<cv::Mat>& imgs, cv::Mat& texture, const int phaseShiftStep,
-            const int rowBegin, const int rowEnd) {
+        void averageTextureRegionGrey(std::vector<cv::Mat> &imgs, cv::Mat &texture, const int phaseShiftStep,
+                                      const int rowBegin, const int rowEnd) {
             const int rows = texture.rows;
             const int cols = texture.cols;
 
             std::vector<uchar *> ptrImgs(phaseShiftStep);
             for (int i = rowBegin; i < rowEnd; ++i) {
-                for (int p = 0; p < phaseShiftStep; ++p) 
+                for (int p = 0; p < phaseShiftStep; ++p)
                     ptrImgs[p] = imgs[p].ptr<uchar>(i);
                 uchar *ptrTexture = texture.ptr<uchar>(i);
                 for (int j = 0; j < cols; ++j) {
@@ -131,7 +121,7 @@ namespace sl {
         }
 
         void averageTextureRegionColor(std::vector<cv::Mat> &imgs, cv::Mat &texture, const int phaseShiftStep,
-                                      const int rowBegin, const int rowEnd) {
+                                       const int rowBegin, const int rowEnd) {
             const int rows = texture.rows;
             const int cols = texture.cols;
 
@@ -150,7 +140,7 @@ namespace sl {
             }
         }
 
-        void reverseMappingTexture(cv::Mat& depth, cv::Mat& textureIn, const Info& info, cv::Mat& textureAlign, const int threads) {
+        void reverseMappingTexture(cv::Mat &depth, cv::Mat &textureIn, const Info &info, cv::Mat &textureAlign, const int threads) {
             CV_Assert(!depth.empty() && !textureIn.empty() && !info.M1.empty() && !info.M3.empty() && !info.Rlc.empty() && !info.Tlc.empty());
             CV_Assert(depth.type() == CV_32FC1 || textureIn.type() == CV_8UC3);
 
@@ -170,12 +160,12 @@ namespace sl {
                 thread.join();
         }
 
-        void reverseMappingTextureRegion(cv::Mat& depth, cv::Mat& textureIn, const Info& info, cv::Mat& textureAlign, const int rowBegin, const int rowEnd) {
+        void reverseMappingTextureRegion(cv::Mat &depth, cv::Mat &textureIn, const Info &info, cv::Mat &textureAlign, const int rowBegin, const int rowEnd) {
             const int rows = depth.rows;
             const int cols = depth.cols;
 
             const cv::Mat M1Inv = info.M1.inv();
-            const cv::Mat M3Inv = info.M3.inv();
+            const cv::Mat M3 = info.M3;
             for (int i = rowBegin; i < rowEnd; ++i) {
                 auto ptrDepth = depth.ptr<float>(i);
                 auto ptrTextureAlign = textureAlign.ptr<cv::Vec3b>(i);
@@ -183,19 +173,40 @@ namespace sl {
                     if (ptrDepth[j] == 0.f)
                         continue;
 
-                    cv::Mat colorCameraPoint = info.Rlc * M1Inv * (cv::Mat_<double>(3, 1) << j * ptrDepth[j], i * ptrDepth[j], 1.f) + info.Tlc;
-                    cv::Mat imgPoint = M3Inv * colorCameraPoint;
+                    cv::Mat colorCameraPoint = info.Rlc * M1Inv * (cv::Mat_<double>(3, 1) << j * ptrDepth[j], i * ptrDepth[j], ptrDepth[j]) + info.Tlc;
+                    cv::Mat imgPoint = M3 * colorCameraPoint;
                     const int xMapped = imgPoint.at<double>(0, 0) / imgPoint.at<double>(2, 0);
                     const int yMapped = imgPoint.at<double>(1, 0) / imgPoint.at<double>(2, 0);
 
-                    if (xMapped < 0 || xMapped > cols || yMapped < 0 || yMapped > rows) {
+                    if (xMapped < 0 || xMapped > cols - 1 || yMapped < 0 || yMapped > rows - 1) {
                         ptrTextureAlign[j] = cv::Vec3b(0, 0, 0);
                         continue;
                     }
 
-                    ptrTextureAlign[j] = textureIn.ptr(yMapped)[xMapped];
+                    ptrTextureAlign[j] = textureIn.ptr<cv::Vec3b>(yMapped)[xMapped];
                 }
             }
+        }
+
+        void reverseMappingRefineNew(const cv::Mat& phase, const cv::Mat& depth,
+            const cv::Mat& wrap, const cv::Mat& condition,
+            const Eigen::Matrix3f& intrinsicInvD, const Eigen::Matrix3f& intrinsicR,
+            const Eigen::Matrix3f& RDtoR, const Eigen::Vector3f& TDtoR,
+            const Eigen::Matrix4f& PL, const Eigen::Matrix4f& PR, const float threshod,
+            const cv::cuda::GpuMat& epilineA, const cv::cuda::GpuMat& epilineB, const cv::cuda::GpuMat& epilineC,
+            cv::cuda::GpuMat& depthRefine, const int threads = 16) {
+
+        }
+
+        void reverseMappingRefineRegionNew(const cv::Mat& phase, const cv::Mat& depth,
+            const cv::Mat& wrap, const cv::Mat& condition,
+            const Eigen::Matrix3f& intrinsicInvD, const Eigen::Matrix3f& intrinsicR,
+            const Eigen::Matrix3f& RDtoR, const Eigen::Vector3f& TDtoR,
+            const Eigen::Matrix4f& PL, const Eigen::Matrix4f& PR, const float threshod,
+            const cv::Mat& epilineA, const cv::Mat& epilineB, const cv::Mat& epilineC,
+            const int rowBegin, const int rowEnd,
+            cv::Mat& depthRefine) {
+
         }
     }
 }

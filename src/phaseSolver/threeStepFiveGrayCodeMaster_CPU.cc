@@ -89,6 +89,7 @@ namespace sl {
             __m256 _Counter_PI_Div_2_ = _mm256_set1_ps(-CV_PI / 2);
             __m256 _PI_Div_2_ = _mm256_set1_ps(CV_PI / 2);
             __m256 _2PI_ = _mm256_set1_ps(CV_2PI);
+            __m256 _PI_ = _mm256_set1_ps(CV_PI);
             __m256 zero = _mm256_set1_ps(0);
             __m256 one = _mm256_set1_ps(1);
             __m256 img_0_Data;
@@ -173,7 +174,7 @@ namespace sl {
                     data_1_ = _mm256_mul_ps(lessEqualThan, _mm256_fmadd_ps(_2PI_, K2, wrapImgData));
                     data_2_ = _mm256_mul_ps(greaterEqualThan, _mm256_fmadd_ps(_2PI_, _mm256_sub_ps(K2, one), wrapImgData));
                     data = _mm256_add_ps(_mm256_add_ps(_mm256_mul_ps(less_data_greaterThan, _mm256_fmadd_ps(_2PI_, K1, wrapImgData)), data_1_), data_2_);
-                    _mm256_store_ps(&ptr_absoluteImg[j], _mm256_mul_ps(data, _mm256_and_ps(compareCondition, one)));
+                    _mm256_store_ps(&ptr_absoluteImg[j], _mm256_mul_ps(_mm256_add_ps(data, _PI_), _mm256_and_ps(compareCondition, one)));
                 }
             }
         }

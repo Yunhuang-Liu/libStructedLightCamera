@@ -53,12 +53,14 @@ namespace sl {
              * @param rightAbsImg 输入，右绝对相位
              * @param sysIndex 输入，图片索引
              * @param stream 输入，异步流
-             * @param colorImg 输入，彩色纹理
+             * @param isMap  输入，是否映射到左相机
+             * @param isColor 输入，是否映射彩色纹理
              */
             void restruction(const cv::cuda::GpuMat &leftAbsImg,
                              const cv::cuda::GpuMat &rightAbsImg,
                              const int sysIndex,
                              cv::cuda::Stream &stream,
+                             const bool isMap = false,
                              const bool isColor = false) override;
             /**
              * @brief 获取深度纹理
@@ -88,11 +90,13 @@ namespace sl {
              * @param leftImg 输入，左绝对相位
              * @param rightImg 输入，右绝对相位
              * @param depthImg 输入/输出，深度图
+             * @param isMap     输入，是否映射到左相机
              * @param pStream 输入，异步流
              */
             void getDepthMap(const cv::cuda::GpuMat &leftImg,
                              const cv::cuda::GpuMat &rightImg,
                              cv::cuda::GpuMat &depthImg,
+                             const bool isMap,
                              cv::cuda::Stream &pStream);
 
         private:
@@ -108,6 +112,7 @@ namespace sl {
             void restruction(const cv::Mat &leftAbsImg,
                              const cv::Mat &rightAbsImg,
                              cv::Mat &depthImgOut,
+                             const bool isMap = false,
                              const bool isColor = false) override {}
             /** \深度图 **/
             std::vector<cv::cuda::GpuMat> depthImg_device;

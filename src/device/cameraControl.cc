@@ -165,13 +165,14 @@ namespace sl {
         }
 
         void CameraControl::getOneFrameImgs(RestructedFrame &imgsOneFrame) {
-            if (imgsOneFrame.leftImgs.size() <= projector->elementSize)
+            if (imgsOneFrame.leftImgs.size() < projector->elementSize)
                 imgsOneFrame.leftImgs.resize(projector->elementSize);
-            if (imgsOneFrame.rightImgs.size() <= projector->elementSize)
+            if (imgsOneFrame.rightImgs.size() < projector->elementSize)
                 imgsOneFrame.rightImgs.resize(projector->elementSize);
 
-            while (cameraLeft->imgQueue.size() <= projector->elementSize ||
-                   cameraRight->imgQueue.size() <= projector->elementSize) {
+            while (cameraLeft->imgQueue.size() < projector->elementSize ||
+                   cameraRight->imgQueue.size() < projector->elementSize) {
+                std::cout << "left grub ,right grub :" << cameraLeft->imgQueue.size() << "," << cameraRight->imgQueue.size() << std::endl;
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
 
@@ -183,11 +184,12 @@ namespace sl {
             }
 
             if (cameraUsedState == CameraUsedState::LeftGrayRightGrayExColor) {
-                while (cameraColor->imgQueue.size() <= projector->elementSize) {
-                    std::this_thread::sleep_for(std::chrono::microseconds(1));
+                while (cameraColor->imgQueue.size() < projector->elementSize) {
+                    std::cout << "color grub :" << cameraColor->imgQueue.size() << std::endl;
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 }
 
-                if (imgsOneFrame.colorImgs.size() <= projector->elementSize)
+                if (imgsOneFrame.colorImgs.size() < projector->elementSize)
                     imgsOneFrame.colorImgs.resize(projector->elementSize);
 
                 for (int i = 0; i < projector->elementSize; ++i) {

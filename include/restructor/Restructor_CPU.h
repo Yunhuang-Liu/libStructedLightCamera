@@ -49,7 +49,7 @@ namespace sl {
              * @param depthImgOut 输入/输出，深度图
              */
             void restruction(const cv::Mat &leftAbsImg, const cv::Mat &rightAbsImg,
-                             cv::Mat &depthImgOut, const bool isColor = false) override;
+                             cv::Mat &depthImgOut, const bool isMap = false, const bool isColor = false) override;
 
         protected:
             /**
@@ -62,7 +62,7 @@ namespace sl {
              * @param colorImgOut 输入/输出 纹理图
              */
             void getDepthColorMap(const cv::Mat &leftAbsImg, const cv::Mat &rightAbsImg,
-                                  cv::Mat &depthImgOut, const bool isColor = false);
+                                  cv::Mat &depthImgOut, const bool isMap = false, const bool isColor = false);
 
         private:
 #ifdef CUDA
@@ -72,6 +72,7 @@ namespace sl {
                              const cv::cuda::GpuMat &rightAbsImg,
                              const int sysIndex,
                              cv::cuda::Stream &stream,
+                             const bool isMap = false,
                              const bool isColor = false) override {}
 #endif
             /** \存储线程锁 **/
@@ -93,6 +94,7 @@ namespace sl {
                                       const cv::Mat &righAbstImg,
                                       cv::Mat &depthImgOut,
                                       const cv::Point2i region,
+                                      const bool isMap = false,
                                       const bool isColor = false);
         };
     }// namespace restructor

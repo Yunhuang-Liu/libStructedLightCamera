@@ -87,7 +87,7 @@ namespace sl {
                           const int minDisparity, const int maxDisparity, const float minDepth,
                           const float maxDepth, const Eigen::Matrix4f &Q,
                           const Eigen::Matrix3f &M1, const Eigen::Matrix3f &R1_inv,
-                          cv::cuda::GpuMat &depthMap, 
+                          const bool isMap, cv::cuda::GpuMat &depthMap, 
                           const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
         }// namespace cudaFunc
         #endif
@@ -101,11 +101,14 @@ namespace sl {
              * 
              * @param leftAbsImg 输入，左绝对相位
              * @param rightAbsImg 输入，右绝对相位
-             * @param depthImgOut 输入/输出，深度图
+             * @param depthImgOut 输出，深度图
+             * @param isMap       输入，是否映射到左相机
+             * @param isColor     输入，是否映射彩色纹理
              */
             virtual void restruction(const cv::Mat &leftAbsImg,
                                      const cv::Mat &rightAbsImg,
                                      cv::Mat &depthImgOut,
+                                     const bool isMap = false,
                                      const bool isColor = false) = 0;
              #ifdef CUDA
             /**
@@ -123,11 +126,14 @@ namespace sl {
              * @param colorImg 输入，原始纹理
              * @param sysIndex 输入，图片索引
              * @param stream 输入，异步流
+             * @param isMap  输入，是否映射到左相机
+             * @param isColor 输入，是否映射纹理
              */
             virtual void restruction(const cv::cuda::GpuMat &leftAbsImg,
                                      const cv::cuda::GpuMat &rightAbsImg,
                                      const int sysIndex,
                                      cv::cuda::Stream &stream,
+                                     const bool isMap = false,
                                      const bool isColor = false) = 0;
             #endif
         protected:

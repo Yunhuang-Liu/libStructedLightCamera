@@ -12,6 +12,7 @@ namespace sl {
                                                                                     threads(threads_) {
             cv::Mat Q_CV;
             calibrationInfo_.Q.convertTo(Q_CV, CV_32FC1);
+            /*
             //如果深度值被修改且视差值保持默认，则自动进行视差值的计算
             if (-500 == minDisparity && 500 == maxDisparity &&
                 170 != minDepth && 220 != maxDepth) {
@@ -21,23 +22,24 @@ namespace sl {
                 minDisparity = -tx * f / minDepth - crj;
                 minDisparity = -tx * f / maxDepth - crj;
             }
+            */
         }
 
         Restructor_CPU::~Restructor_CPU() {
         }
 
         void Restructor_CPU::restruction(const cv::Mat &leftAbsImg,
-                                         const cv::Mat &rightAbsImg, cv::Mat &depthImgOut, const bool isColor) {
+                                         const cv::Mat &rightAbsImg, cv::Mat &depthImgOut, const bool isMap, const bool isColor) {
             if (depthImgOut.empty())
                 depthImgOut = cv::Mat(leftAbsImg.size(), CV_32FC1, cv::Scalar(0.f));
             else
                 depthImgOut.setTo(0);
-            getDepthColorMap(leftAbsImg, rightAbsImg, depthImgOut, isColor);
+            getDepthColorMap(leftAbsImg, rightAbsImg, depthImgOut, isMap, isColor);
         }
 
         void Restructor_CPU::getDepthColorMap(
                 const cv::Mat &leftAbsImg, const cv::Mat &rightAbsImg,
-                cv::Mat &depthImgOut, const bool isColor) {
+                cv::Mat &depthImgOut, const bool isMap, const bool isColor) {
             std::vector<std::thread> tasks;
             tasks.resize(threads);
             const int rows = leftAbsImg.rows / threads;
@@ -49,6 +51,7 @@ namespace sl {
                         std::ref(rightAbsImg),
                         std::ref(depthImgOut),
                         cv::Point2i(rows * i, rows * (i + 1)),
+                        isMap,
                         isColor);
             }
             tasks[threads - 1] = std::thread(
@@ -59,6 +62,7 @@ namespace sl {
                     std::ref(depthImgOut),
                     cv::Point2i(rows * (threads - 1),
                                 leftAbsImg.rows),
+                    isMap,
                     isColor);
             for (int i = 0; i < threads; i++) {
                 if (tasks[i].joinable()) {
@@ -69,14 +73,14 @@ namespace sl {
 
         void Restructor_CPU::thread_DepthColorMap(
                 const cv::Mat &leftAbsImg, const cv::Mat &righAbstImg,
-                cv::Mat &depthImgOut, const cv::Point2i region, const bool isColor) {
+                cv::Mat &depthImgOut, const cv::Point2i region, const bool isMap, const bool isColor) {
             const cv::Mat &Q = calibrationInfo.Q;
             const float f = Q.at<double>(2, 3);
             const float tx = -1.0 / Q.at<double>(3, 2);
             const float cxlr = Q.at<double>(3, 3) * tx;
             const float cx = -1.0 * Q.at<double>(0, 3);
             const float cy = -1.0 * Q.at<double>(1, 3);
-            const float threshod = 0.1;
+            const float threshod = 0.3;
             const int rows = leftAbsImg.rows;
             const int cols = leftAbsImg.cols;
             //存放线性回归的实际值
@@ -99,7 +103,7 @@ namespace sl {
                 const float *ptr_Left = leftAbsImg.ptr<float>(i);
                 const float *ptr_Right = righAbstImg.ptr<float>(i);
                 for (int j = 0; j < cols; j++) {
-                    if (-5.f >= ptr_Left[j]) {
+                    if (0.f >= ptr_Left[j]) {
                         continue;
                     }
                     minCost = FLT_MAX;
@@ -134,8 +138,11 @@ namespace sl {
                     cv::Mat recCameraPoints = (cv::Mat_<double>(3, 1) << -1.0 * tx * (j - cx) / (disparity - cxlr),
                                                -1.0 * tx * (i - cy) / (disparity - cxlr),
                                                -1.0 * tx * f / (disparity - cxlr));
-                    cv::Mat cameraPoints = r1Inv * recCameraPoints;
-                    cv::Mat result;
+                    cv::Mat cameraPoints, result;
+                    if (isMap) 
+                        cameraPoints = r1Inv * recCameraPoints;
+                    else
+                        cameraPoints = recCameraPoints;
 
                     if (isColor)
                         result = calibrationInfo.Rlc * cameraPoints + calibrationInfo.Tlc;
@@ -147,15 +154,20 @@ namespace sl {
                     if (depth < minDepth || depth > maxDepth)
                         continue;
 
-                    cv::Mat mapPicture = isColor ? calibrationInfo.M3 * result : calibrationInfo.M1 * result;
-                    int x_maped = std::round(mapPicture.at<double>(0, 0) / mapPicture.at<double>(2, 0));
-                    int y_maped = std::round(mapPicture.at<double>(1, 0) / mapPicture.at<double>(2, 0));
+                    if (isMap) {
+                        cv::Mat mapPicture = isColor ? calibrationInfo.M3 * result : calibrationInfo.M1 * result;
+                        int x_maped = std::round(mapPicture.at<double>(0, 0) / mapPicture.at<double>(2, 0));
+                        int y_maped = std::round(mapPicture.at<double>(1, 0) / mapPicture.at<double>(2, 0));
 
-                    if ((0 > x_maped) || (y_maped > rows - 1) || (0 > y_maped) || (x_maped > cols - 1))
-                        continue;
+                        if ((0 > x_maped) || (y_maped > rows - 1) || (0 > y_maped) || (x_maped > cols - 1))
+                            continue;
 
-                    std::lock_guard<std::mutex> lock(mutexMap);
-                    depthImgOut.ptr<float>(y_maped)[x_maped] = depth;
+                        std::lock_guard<std::mutex> lock(mutexMap);
+                        depthImgOut.ptr<float>(y_maped)[x_maped] = depth;
+                    } 
+                    else {
+                        depthImgOut.ptr<float>(i)[j] = depth;
+                    }
                 }
             }
         }

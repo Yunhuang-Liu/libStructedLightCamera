@@ -212,6 +212,181 @@ namespace sl {
             }
 
             /**
+             * @brief                   反向投影过滤及精度细化（CUDA加速优化核函数）
+             *
+             * @param phase             输入，相位图
+             * @param depth             输入，深度图
+             * @param firstWrap         输入，第一个辅助相机包裹相位图
+             * @param firstCondition    输入，第一个辅助相机调制图
+             * @param secondWrap        输入，第二个辅助相机包裹相位图
+             * @param secondConditon    输入，第二个辅助相机调制图
+             * @param rows              输入，行数
+             * @param cols              输入，列数
+             * @param intrinsicInvD     输入，深度相机内参矩阵逆矩阵
+             * @param intrinsicF        输入，第一个辅助相机内参
+             * @param intrinsicS        输入，第二个辅助相机内参
+             * @param RDtoFirst         输入，深度相机到第一个辅助相机旋转矩阵
+             * @param TDtoFirst         输入，深度相机到第一个辅助相机平移矩阵
+             * @param RDtoSecond        输入，深度相机到第二个辅助相机旋转矩阵
+             * @param TDtoSecond        输入，深度相机到第二个辅助相机平移矩阵
+             * @param PL                输入，深度相机投影矩阵
+             * @param PR                输入，第一个辅助相机投影矩阵
+             * @param threshod          输入，去除背景用阈值（一般为2到3个相邻相位差值）
+             * @param epilineA          输入，深度相机图像点在第一个辅助相机图片下的极线系数A
+             * @param epilineB          输入，深度相机图像点在第一个辅助相机图片下的极线系数B
+             * @param epilineC          输入，深度相机图像点在第一个辅助相机图片下的极线系数C
+             * @param depthRefine       输出，细化的深度图
+             */
+            __global__ void reverseMappingRefineTest_Device(const cv::cuda::PtrStep<float> phase, const cv::cuda::PtrStep<float> depth,
+                                                            const cv::cuda::PtrStep<float> firstWrap, const cv::cuda::PtrStep<float> firstCondition,
+                                                            const int rows, const int cols,
+                                                            const Eigen::Matrix3f intrinsicInvD, const Eigen::Matrix3f intrinsicF,
+                                                            const Eigen::Matrix3f RDtoFirst, const Eigen::Vector3f TDtoFirst,
+                                                            const Eigen::Matrix4f PL, const Eigen::Matrix4f PR, const float threshod,
+                                                            const cv::cuda::PtrStep<float> epilineA, const cv::cuda::PtrStep<float> epilineB, const cv::cuda::PtrStep<float> epilineC,
+                                                            cv::cuda::PtrStep<float> depthRefine) {
+                const int x = blockDim.x * blockIdx.x + threadIdx.x;
+                const int y = blockDim.y * blockIdx.y + threadIdx.y;
+
+                if (x > cols - 1 || y > rows - 1)
+                    return;
+
+                if (depth.ptr(y)[x] == 0.f) {
+                    depthRefine.ptr(y)[x] = 0.f;
+                    return;
+                }
+
+                Eigen::Vector3f imgPoint(x, y, 1);
+                Eigen::Vector3f cameraPointNormalized = intrinsicInvD * imgPoint * depth.ptr(y)[x];
+                Eigen::Vector3f secondCameraPoint = RDtoFirst * cameraPointNormalized + TDtoFirst;
+                Eigen::Vector3f secondImgPoint = intrinsicF * secondCameraPoint;
+                const int locXF = secondImgPoint(0, 0) / secondImgPoint(2, 0);
+                const int locYF = secondImgPoint(1, 0) / secondImgPoint(2, 0);
+
+                if (locXF < 0 || locXF > cols - 1 || locYF < 0 || locYF > rows - 1) {
+                    depthRefine.ptr(y)[x] = 0.f;
+                    return;
+                }
+                /*
+                if (x == 950 && y == 710) {
+                    printf("the loc: %d, %d \n", locXF, locYF);
+                }
+
+                if (x == 950 && y == 710) {
+                    printf("the distance: %f \n", cuda::std::abs(epilineA.ptr(y)[x] * locXF + epilineB.ptr(y)[x] * locYF + epilineC.ptr(y)[x]));
+                }
+                */
+                printf("the distance: %f \n", cuda::std::abs(epilineA.ptr(y)[x] * locXF + epilineB.ptr(y)[x] * locYF + epilineC.ptr(y)[x]));
+                //调制约束+极线约束
+                if (firstCondition.ptr(locYF)[locXF] < 10.f || cuda::std::abs(epilineA.ptr(y)[x] * locXF + epilineB.ptr(y)[x] * locYF + epilineC.ptr(y)[x]) > 5.f) {
+                    depthRefine.ptr(y)[x] = 0.f;
+                    return;
+                }
+
+                const int floorK = cuda::std::floorf(phase.ptr(y)[x] / CV_2PI);
+                const float disparityDF = cuda::std::abs(firstWrap.ptr(locYF)[locXF] + floorK * CV_2PI + CV_PI - phase.ptr(y)[x]);
+
+                if (!(disparityDF < threshod ||
+                      cuda::std::abs(disparityDF - CV_2PI) < threshod)) {
+                    depthRefine.ptr(y)[x] = 0.f;
+                    return;
+                }
+
+                //找出最有可能的点,从左到右依次为：置信度，X坐标
+                float minDiffWrap = FLT_MAX;
+                float locXSubpixel = locXF;
+                float locYSubpixel = locYF;
+                int stepLocX = locXF;
+                int stepLocY = locYF;
+
+                float phaseVal = firstWrap.ptr(stepLocY)[stepLocX] + floorK * CV_2PI + CV_PI;
+                if (phaseVal - phase.ptr(y)[x] > CV_PI)
+                    phaseVal = phaseVal - CV_2PI;
+                else if (phaseVal - phase.ptr(y)[x] < -CV_PI)
+                    phaseVal = phaseVal + CV_2PI;
+
+                float phaseCost, stepPhaseCost = FLT_MAX;
+                const int directionX = phaseVal < phase.ptr(y)[x] ? 1 : -1;
+                while (true) {
+                    phaseVal = firstWrap.ptr(stepLocY)[stepLocX] + floorK * CV_2PI + CV_PI;
+                    if (phaseVal - phase.ptr(y)[x] > CV_PI)
+                        phaseVal = phaseVal - CV_2PI;
+                    else if (phaseVal - phase.ptr(y)[x] < -CV_PI)
+                        phaseVal = phaseVal + CV_2PI;
+
+                    phaseCost = cuda::std::abs(phaseVal - phase.ptr(y)[x]);
+
+                    if (phaseCost > stepPhaseCost) {
+                        break;
+                    }
+                    else {
+                        stepPhaseCost = phaseCost;
+                        locXSubpixel = stepLocX;
+                    }
+
+                    stepLocX += directionX;
+                }
+
+                float stepEpilineCost = FLT_MAX;
+                float epilineCostVal = epilineA.ptr(y)[x] * locXSubpixel + epilineB.ptr(y)[x] * stepLocY + epilineC.ptr(y)[x];
+                const int directionY = epilineCostVal > 0 ? -1 : 1;
+                while (true) {
+                    epilineCostVal = epilineA.ptr(y)[x] * locXSubpixel + epilineB.ptr(y)[x] * stepLocY + epilineC.ptr(y)[x];
+
+                    if (cuda::std::abs(epilineCostVal) > stepEpilineCost) {
+                        break;
+                    }
+                    else {
+                        stepEpilineCost = cuda::std::abs(epilineCostVal);
+                        locYSubpixel = stepLocY;
+                    }
+
+                    stepLocY += directionY;
+                }
+
+                float phaseCoarse = firstWrap.ptr((int)locYSubpixel)[(int)locXSubpixel] + floorK * CV_2PI + CV_PI;
+                if (phaseCoarse - phase.ptr(y)[x] > CV_PI)
+                    phaseCoarse -= CV_2PI;
+                else if (phaseCoarse - phase.ptr(y)[x] < -CV_PI)
+                    phaseCoarse += CV_2PI;
+
+                if (locXSubpixel - 1 >= 0 && locXSubpixel + 1 < cols) {
+                    //线性拟合
+                    if (phaseCoarse > phase.ptr(y)[x]) {
+                        float phaseValLhs = firstWrap.ptr((int) locYSubpixel)[(int) locXSubpixel - 1] + floorK * CV_2PI + CV_PI;
+
+                        if (phaseValLhs - phase.ptr(y)[x] > CV_PI)
+                            phaseValLhs = phaseValLhs - CV_2PI;
+                        else if (phaseValLhs - phase.ptr(y)[x] < -CV_PI)
+                            phaseValLhs = phaseValLhs + CV_2PI;
+
+                        locXSubpixel = locXSubpixel - 1 + (phase.ptr(y)[x] - phaseValLhs) / (phaseCoarse - phaseValLhs);
+                    } else {
+                        float phaseValRhs = firstWrap.ptr(locYSubpixel)[(int) locXSubpixel + 1] + floorK * CV_2PI + CV_PI;
+
+                        if (phaseValRhs - phase.ptr(y)[x] > CV_PI)
+                            phaseValRhs = phaseValRhs - CV_2PI;
+                        else if (phaseValRhs - phase.ptr(y)[x] < -CV_PI)
+                            phaseValRhs = phaseValRhs + CV_2PI;
+
+                        locXSubpixel = locXSubpixel + 1 - (phaseValRhs - phase.ptr(y)[x]) / (phaseValRhs - phaseCoarse);
+                    }
+                }
+
+                Eigen::Matrix3f LC;
+                Eigen::Vector3f RC;
+                LC << PL(0, 0) - x * PL(2, 0), PL(0, 1) - x * PL(2, 1), PL(0, 2) - x * PL(2, 2),
+                        PL(1, 0) - y * PL(2, 0), PL(1, 1) - y * PL(2, 1), PL(1, 2) - y * PL(2, 2),
+                        PR(0, 0) - locXSubpixel * PR(2, 0), PR(0, 1) - locXSubpixel * PR(2, 1), PR(0, 2) - locXSubpixel * PR(2, 2);
+                RC << x * PL(2, 3) - PL(0, 3),
+                        y * PL(2, 3) - PL(1, 3),
+                        locXSubpixel * PR(2, 3) - PR(0, 3);
+                Eigen::Vector3f result = LC.inverse() * RC;
+
+                depthRefine.ptr(y)[x] = result(2, 0);
+            }
+
+            /**
              * @brief               全图像相位高度映射（CUDA加速优化核函数）
              *
              * @param depth         输入，深度图
@@ -358,6 +533,36 @@ namespace sl {
                                                                  depthRefine);
             }
 
+            void reverseMappingRefineNew(const cv::cuda::GpuMat &phase, const cv::cuda::GpuMat &depth,
+                const cv::cuda::GpuMat &wrap, const cv::cuda::GpuMat &condition,
+                const Eigen::Matrix3f &intrinsicInvD, const Eigen::Matrix3f &intrinsicR,
+                const Eigen::Matrix3f &RDtoR, const Eigen::Vector3f &TDtoR,
+                const Eigen::Matrix4f &PL, const Eigen::Matrix4f &PR, const float threshod,
+                const cv::cuda::GpuMat &epilineA, const cv::cuda::GpuMat &epilineB, const cv::cuda::GpuMat &epilineC,
+                cv::cuda::GpuMat &depthRefine,
+                const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null()) {
+                CV_Assert(!phase.empty() && phase.type() == CV_32FC1 &&
+                          !depth.empty() && depth.type() == CV_32FC1);
+
+                if (depthRefine.empty())
+                    depthRefine.create(phase.rows, phase.cols, CV_32FC1);
+                depthRefine.setTo(0.f);
+
+                const int rows = phase.rows;
+                const int cols = phase.cols;
+
+                const dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
+                auto stream = cv::cuda::StreamAccessor::getStream(cvStream);
+                reverseMappingRefineTest_Device<<<grid, block, 0, stream>>>(phase, depth,
+                                                                        wrap, condition,
+                                                                        rows, cols,
+                                                                        intrinsicInvD, intrinsicR, 
+                                                                        RDtoR, TDtoR,
+                                                                        PL, PR, threshod,
+                                                                        epilineA, epilineB, epilineC,
+                                                                        depthRefine);
+            }
+
             void reverseMappingTexture(const cv::cuda::GpuMat& depth, const cv::cuda::GpuMat& textureSrc,
                 const Eigen::Matrix3f& intrinsicInvD, const Eigen::Matrix3f& intrinsicT,
                 const Eigen::Matrix3f& rotateDToT, const Eigen::Vector3f& translateDtoT,
@@ -398,6 +603,7 @@ namespace sl {
                 if (imgs.size() == 4)
                     averageTextureFour_Device<<<grid, block, 0, stream>>>(imgs[0], imgs[1], imgs[2], imgs[3], rows, cols, texture);
             }
+
         }// namespace cudaFunc
     }// namespace tool
 }// namespace sl

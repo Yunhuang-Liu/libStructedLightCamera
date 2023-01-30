@@ -22,10 +22,14 @@ namespace sl {
             readYml["R2"] >> myInfo.R2;
             readYml["P2"] >> myInfo.P2;
             readYml["Q"] >> myInfo.Q;
-            readYml["Rlr"] >> myInfo.R;
-            readYml["Tlr"] >> myInfo.T;
+            readYml["Rlr"] >> myInfo.Rlr;
+            readYml["Tlr"] >> myInfo.Tlr;
             readYml["Rlc"] >> myInfo.Rlc;
             readYml["Tlc"] >> myInfo.Tlc;
+            readYml["Rlp"] >> myInfo.Rlp;
+            readYml["Tlp"] >> myInfo.Tlp;
+            readYml["Rrp"] >> myInfo.Rrp;
+            readYml["Trp"] >> myInfo.Trp;
             readYml["S"] >> myInfo.S;
             readYml.release();
         }
@@ -37,8 +41,8 @@ namespace sl {
             readYml["M2"] >> myInfo.M2;
             readYml["D2"] >> myInfo.D2;
             readYml["K1"] >> myInfo.K1;
-            readYml["Rlr"] >> myInfo.R;
-            readYml["Tlr"] >> myInfo.T;
+            readYml["Rlr"] >> myInfo.Rlr;
+            readYml["Tlr"] >> myInfo.Tlr;
             readYml.release();
         }
 

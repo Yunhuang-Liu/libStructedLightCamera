@@ -77,7 +77,7 @@ namespace sl {
                 const int minDisparity, const int maxDisparity,
                 const float minDepth, const float maxDepth,
                 const Eigen::Matrix4f Q, const Eigen::Matrix3f M1,
-                const Eigen::Matrix3f R1_inv, cv::cuda::PtrStep<float> mapDepth) {
+                const Eigen::Matrix3f R1_inv, const bool isMap, cv::cuda::PtrStep<float> mapDepth) {
                 const int x = blockIdx.x * blockDim.x + threadIdx.x;
                 const int y = blockIdx.y * blockDim.y + threadIdx.y;
                 if (x < cols && y < rows) {
@@ -119,20 +119,26 @@ namespace sl {
                     vertex(0, 0) = -1.0f * tx * (x - cx) / (disparity - cxlr);
                     vertex(1, 0) = -1.0f * tx * (y - cy) / (disparity - cxlr);
                     vertex(2, 0) = -1.0f * tx * f / (disparity - cxlr);
-                    const Eigen::Vector3f leftVertex = R1_inv * vertex;
-                    const float depthMapped = leftVertex(2, 0);
-                    const Eigen::Vector3f mapVec = M1 * leftVertex;
-                    const int map_x = mapVec(0, 0) / mapVec(2, 0);
-                    const int map_y = mapVec(1, 0) / mapVec(2, 0);
 
-                    if (map_x < cols && map_x >= 0 && map_y >= 0 && map_y < rows) {
-                        if (depthMapped < minDepth || depthMapped > maxDepth) {
-                            atomicExch(&mapDepth.ptr(map_y)[map_x], 0);
-                            //mapDepth.ptr(map_y)[map_x] = 0;
-                        } else {
-                            atomicExch(&mapDepth.ptr(map_y)[map_x], depthMapped);
-                            //mapDepth.ptr(map_y)[map_x] = depthMapped * 5;
+                    if (isMap) {
+                        const Eigen::Vector3f leftVertex = R1_inv * vertex;
+                        const float depthMapped = leftVertex(2, 0);
+                        const Eigen::Vector3f mapVec = M1 * leftVertex;
+                        const int map_x = mapVec(0, 0) / mapVec(2, 0);
+                        const int map_y = mapVec(1, 0) / mapVec(2, 0);
+
+                        if (map_x < cols && map_x >= 0 && map_y >= 0 && map_y < rows) {
+                            if (depthMapped < minDepth || depthMapped > maxDepth) {
+                                atomicExch(&mapDepth.ptr(map_y)[map_x], 0);
+                                //mapDepth.ptr(map_y)[map_x] = 0;
+                            } else {
+                                atomicExch(&mapDepth.ptr(map_y)[map_x], depthMapped);
+                                //mapDepth.ptr(map_y)[map_x] = depthMapped * 5;
+                            }
                         }
+                    }
+                    else {
+                        mapDepth.ptr(y)[x] = vertex(2, 0);
                     }
                 }
             }
@@ -164,7 +170,7 @@ namespace sl {
                           const int minDisparity, const int maxDisparity,
                           const float minDepth, const float maxDepth,
                           const Eigen::Matrix4f &Q, const Eigen::Matrix3f &M1,
-                          const Eigen::Matrix3f &R1_inv, cv::cuda::GpuMat &depthMap,
+                          const Eigen::Matrix3f &R1_inv, const bool isMap, cv::cuda::GpuMat &depthMap,
                           const dim3 block, cv::cuda::Stream &cvStream) {
                 cudaStream_t stream = cv::cuda::StreamAccessor::getStream(cvStream);
                 dim3 grid((cols + block.x - 1) / block.x, (rows + block.y - 1) / block.y);
@@ -174,7 +180,7 @@ namespace sl {
                         minDisparity, maxDisparity,
                         minDepth, maxDepth,
                         Q, M1,
-                        R1_inv, depthMap);
+                        R1_inv, isMap, depthMap);
             }
         }// namespace cudaFunc
     }// namespace restructor

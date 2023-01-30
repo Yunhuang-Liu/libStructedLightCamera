@@ -99,6 +99,34 @@ namespace sl {
                                       cv::cuda::GpuMat &depthRefine,
                                       const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
             /**
+             * @brief                     反向映射同时细化深度（CUDA加速优化）
+             * @warning                   默认第一个相机为细化深度相机
+             *
+             * @param phase               输入，相位图
+             * @param depth               输入，深度图
+             * @param wrap                输入，辅助相机的包裹相位
+             * @param condition           输入，辅助相机的调制图像
+             * @param intrinsicInvD       输入，深度相机的内参逆矩阵
+             * @param intrinsicR          输入，辅助相机的内参
+             * @param RDtoR               输入，深度相机到辅助相机的旋转矩阵
+             * @param TDtoR               输入，深度相机到辅助相机的平移矩阵
+             * @param PL                  输入，深度相机的投影矩阵（世界坐标系重合）
+             * @param PR                  输入，辅助相机的投影矩阵（以深度相机坐标系为世界坐标系）
+             * @param threshod            输入，去除背景所用阈值（应当为2个像素相位差）
+             * @param epiline             输入，深度相机上的点在第一个辅助相机的极线
+             * @param depthRefine         输出，细化的深度图
+             * @param block               输入，线程块
+             * @param stream              输入，异步流
+             */
+            void reverseMappingRefineNew(const cv::cuda::GpuMat &phase, const cv::cuda::GpuMat &depth,
+                                      const cv::cuda::GpuMat &wrap, const cv::cuda::GpuMat &condition,
+                                      const Eigen::Matrix3f &intrinsicInvD, const Eigen::Matrix3f &intrinsicR,
+                                      const Eigen::Matrix3f &RDtoR, const Eigen::Vector3f &TDtoR,
+                                      const Eigen::Matrix4f &PL, const Eigen::Matrix4f &PR, const float threshod,
+                                      const cv::cuda::GpuMat &epilineA, const cv::cuda::GpuMat &epilineB, const cv::cuda::GpuMat &epilineC,
+                                      cv::cuda::GpuMat &depthRefine,
+                                      const dim3 block = dim3(32, 8), cv::cuda::Stream &cvStream = cv::cuda::Stream::Null());
+            /**
              * @brief                     反向投影映射纹理（CUDA加速优化）
              *
              * @param depth               输入，相位图
@@ -200,6 +228,57 @@ namespace sl {
          * @param rowEnd        输入，结束行
         */
         void reverseMappingTextureRegion(cv::Mat &depth, cv::Mat &textureIn, const Info &info, cv::Mat &textureAlign, const int rowBegin, const int rowEnd);
+
+        /**
+         * @brief                     反向映射同时细化深度（多线程加速优化）
+         *
+         * @param phase               输入，相位图
+         * @param depth               输入，深度图
+         * @param wrap                输入，辅助相机的包裹相位
+         * @param condition           输入，辅助相机的调制图像
+         * @param intrinsicInvD       输入，深度相机的内参逆矩阵
+         * @param intrinsicR          输入，辅助相机的内参
+         * @param RDtoR               输入，深度相机到辅助相机的旋转矩阵
+         * @param TDtoR               输入，深度相机到辅助相机的平移矩阵
+         * @param PL                  输入，深度相机的投影矩阵（世界坐标系重合）
+         * @param PR                  输入，第一个辅助相机的投影矩阵（以深度相机坐标系为世界坐标系）
+         * @param threshod            输入，去除背景所用阈值（应当为2个像素相位差）
+         * @param epiline             输入，深度相机上的点在第一个辅助相机的极线
+         * @param depthRefine         输出，细化的深度图
+         * @param threads             输入，线程数
+         */
+        void reverseMappingRefineNew(const cv::Mat &phase, const cv::Mat &depth,
+                                     const cv::Mat &wrap, const cv::Mat &condition,
+                                     const Eigen::Matrix3f &intrinsicInvD, const Eigen::Matrix3f &intrinsicR,
+                                     const Eigen::Matrix3f &RDtoR, const Eigen::Vector3f &TDtoR,
+                                     const Eigen::Matrix4f &PL, const Eigen::Matrix4f &PR, const float threshod,
+                                     const cv::Mat &epilineA, const cv::Mat &epilineB, const cv::Mat &epilineC,
+                                     cv::Mat &depthRefine, const int threads = 16);
+        /**
+         * @brief                     反向映射同时细化深度（多线程加速优化）
+         *
+         * @param phase               输入，相位图
+         * @param depth               输入，深度图
+         * @param wrap                输入，辅助相机的包裹相位
+         * @param condition           输入，辅助相机的调制图像
+         * @param intrinsicInvD       输入，深度相机的内参逆矩阵
+         * @param intrinsicR          输入，辅助相机的内参
+         * @param RDtoR               输入，深度相机到辅助相机的旋转矩阵
+         * @param TDtoR               输入，深度相机到辅助相机的平移矩阵
+         * @param PL                  输入，深度相机的投影矩阵（世界坐标系重合）
+         * @param PR                  输入，第一个辅助相机的投影矩阵（以深度相机坐标系为世界坐标系）
+         * @param threshod            输入，去除背景所用阈值（应当为2个像素相位差）
+         * @param epiline             输入，深度相机上的点在第一个辅助相机的极线
+         * @param depthRefine         输出，细化的深度图
+         */
+        void reverseMappingRefineRegionNew(const cv::Mat &phase, const cv::Mat &depth,
+                                           const cv::Mat &wrap, const cv::Mat &condition,
+                                           const Eigen::Matrix3f &intrinsicInvD, const Eigen::Matrix3f &intrinsicR,
+                                           const Eigen::Matrix3f &RDtoR, const Eigen::Vector3f &TDtoR,
+                                           const Eigen::Matrix4f &PL, const Eigen::Matrix4f &PR, const float threshod,
+                                           const cv::Mat &epilineA, const cv::Mat &epilineB, const cv::Mat &epilineC,
+                                           const int rowBegin, const int rowEnd,
+                                           cv::Mat &depthRefine);
     }// tool
 }// namespace sl
 

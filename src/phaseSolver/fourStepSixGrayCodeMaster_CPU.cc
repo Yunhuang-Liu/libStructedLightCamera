@@ -100,6 +100,7 @@ namespace sl {
             __m256 _Counter_PI_Div_2_ = _mm256_set1_ps(-CV_PI / 2);
             __m256 _PI_Div_2_ = _mm256_set1_ps(CV_PI / 2);
             __m256 _2PI_ = _mm256_set1_ps(CV_2PI);
+            __m256 _PI_ = _mm256_set1_ps(CV_PI);
             __m256 _32PI_ = _mm256_set1_ps(CV_2PI * 16);
             __m256 zero = _mm256_set1_ps(0);
             __m256 one = _mm256_set1_ps(1);
@@ -151,7 +152,7 @@ namespace sl {
                 const float *ptr_Condition = conditionImg.ptr<float>(i);
                 float *ptr_absoluteImg = absolutePhaseImg.ptr<float>(i);
                 const float *ptr_refAbsImg = nullptr;
-                if (!refAbsImg.empty()) {
+                if (refAbsImg.rows > 10) {
                     ptr_refAbsImg = refAbsImg.ptr<float>(i);
                 }
                 for (int j = 0; j < cols; j += 8) {
@@ -207,7 +208,7 @@ namespace sl {
                         img_refAbs_Data = _mm256_load_ps(&ptr_refAbsImg[j]);
                         data = _mm256_add_ps(_mm256_mul_ps(_mm256_floor_ps(_mm256_div_ps(_mm256_sub_ps(img_refAbs_Data, data), _32PI_)), _32PI_), data);
                     }
-                    _mm256_store_ps(&ptr_absoluteImg[j], _mm256_mul_ps(data, _mm256_and_ps(compareCondition, one)));
+                    _mm256_store_ps(&ptr_absoluteImg[j], _mm256_mul_ps(_mm256_add_ps(data, _PI_), _mm256_and_ps(compareCondition, one)));
                 }
             }
         }

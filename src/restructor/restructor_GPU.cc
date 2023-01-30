@@ -23,12 +23,14 @@ namespace sl {
             cv::Mat T_CV;
             if (!calibrationInfo.M3.empty()) {
                 calibrationInfo_.M3.convertTo(M3_CV, CV_32FC1);
-                calibrationInfo_.R.convertTo(R_CV, CV_32FC1);
-                calibrationInfo_.T.convertTo(T_CV, CV_32FC1);
+                calibrationInfo_.Rlr.convertTo(R_CV, CV_32FC1);
+                calibrationInfo_.Tlr.convertTo(T_CV, CV_32FC1);
                 cv::cv2eigen(M3_CV, M3);
                 cv::cv2eigen(R_CV, R);
                 cv::cv2eigen(T_CV, T);
             }
+            /*
+            //由深度限制框自动计算视差
             if (-500 == minDisparity && 500 == maxDisparity &&
                 170 != minDepth && 220 != maxDepth) {
                 float tx = -1.f / Q_CV.at<float>(3, 2);
@@ -37,6 +39,7 @@ namespace sl {
                 minDisparity = -tx * f / minDepth - crj;
                 minDisparity = -tx * f / maxDepth - crj;
             }
+            */
         }
 
         Restructor_GPU::~Restructor_GPU() {
@@ -44,7 +47,7 @@ namespace sl {
 
         void Restructor_GPU::restruction(
             const cv::cuda::GpuMat &leftAbsImg, const cv::cuda::GpuMat &rightAbsImg,
-            const int sysIndex, cv::cuda::Stream &stream, const bool isColor) {
+            const int sysIndex, cv::cuda::Stream &stream, const bool isMap, const bool isColor) {
             const int rows = leftAbsImg.rows;
             const int cols = leftAbsImg.cols;
             if (depthImg_device[sysIndex].empty()) {
@@ -55,7 +58,7 @@ namespace sl {
             if (isColor) {
                 getDepthColorMap(leftAbsImg, rightAbsImg, depthImg_device[sysIndex], stream);
             } else {
-                getDepthMap(leftAbsImg, rightAbsImg, depthImg_device[sysIndex], stream);
+                getDepthMap(leftAbsImg, rightAbsImg, depthImg_device[sysIndex], isMap, stream);
             }
         }
 
@@ -71,12 +74,12 @@ namespace sl {
 
         void Restructor_GPU::getDepthMap(
             const cv::cuda::GpuMat &leftImg, const cv::cuda::GpuMat &rightImg,
-            cv::cuda::GpuMat &depthImg, cv::cuda::Stream &pStream) {
+            cv::cuda::GpuMat &depthImg, const bool isMap, cv::cuda::Stream &pStream) {
             const int rows = leftImg.rows;
             const int cols = leftImg.cols;
             restructor::cudaFunc::depthMap(leftImg, rightImg, rows, cols,
                                                minDisparity, maxDisparity, minDepth, maxDepth, Q,
-                                               M1, R1_inv, depthImg, block, pStream);
+                                           M1, R1_inv, isMap, depthImg, block, pStream);
         }
 
         void Restructor_GPU::download(const int index, cv::cuda::GpuMat &depthImg) {
