@@ -1,0 +1,14 @@
+# Package Information for pkg-config
+
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir_old=${prefix}/include/libStructedCamera
+includedir_new=${prefix}/include
+
+Name: libStructedLightCamera
+Description: A useful structed-light camera tool library
+Version: 1.0
+Libs: -L${exec_prefix}/lib -llibStructedLightCamera -lMVSDK -lcyusbserial
+Libs.private: -L/usr/lib/x86_64-linux-gnu -lz -ldl -lm -lpthread -lrt
+Cflags: -I${includedir_old} -I${includedir_new}

@@ -1,0 +1,248 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 155,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 183,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 189,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 195,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 200,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 205,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 210,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 215,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 220,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 225,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 231,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 238,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"libStructedLightCamera"
+			],
+			"targetId" : "libStructedLightCamera::@6890427a1f51a3e7e1df",
+			"targetIndex" : 0,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/device",
+			"paths" : 
+			[
+				"include/device/cameraControl.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/device/camera",
+			"paths" : 
+			[
+				"include/device/camera/IMVApi.h",
+				"include/device/camera/IMVDefines.h",
+				"include/device/camera/cammeraUnilty.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/device/projector",
+			"paths" : 
+			[
+				"include/device/projector/API.h",
+				"include/device/projector/CyUSBSerial.h",
+				"include/device/projector/common.h",
+				"include/device/projector/cypress_i2c.h",
+				"include/device/projector/dlpc347x_internal_patterns.h",
+				"include/device/projector/dlpc34xx.h",
+				"include/device/projector/dlpc34xx_dual.h",
+				"include/device/projector/dlpc_common.h",
+				"include/device/projector/dlpc_common_private.h",
+				"include/device/projector/hidapi.h",
+				"include/device/projector/projectorControl.h",
+				"include/device/projector/usb.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/phaseSolver",
+			"paths" : 
+			[
+				"include/phaseSolver/dividedSpaceTimeMulUsedMaster_GPU.h",
+				"include/phaseSolver/fourFloorFouStepMaster_GPU.h",
+				"include/phaseSolver/fourStepRefPlainMaster_GPU.h",
+				"include/phaseSolver/fourStepSixGrayCodeMaster_CPU.h",
+				"include/phaseSolver/fourStepSixGrayCodeMaster_GPU.h",
+				"include/phaseSolver/nStepNGrayCodeMaster_CPU.h",
+				"include/phaseSolver/phaseSolver.h",
+				"include/phaseSolver/shiftGrayCodeUnwrapMaster_GPU.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/wrapCreator",
+			"paths" : 
+			[
+				"include/wrapCreator/wrapCreator.h",
+				"include/wrapCreator/wrapCreator_CPU.h",
+				"include/wrapCreator/wrapCreator_GPU.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/rectifier",
+			"paths" : 
+			[
+				"include/rectifier/rectifier.h",
+				"include/rectifier/rectifier_CPU.h",
+				"include/rectifier/rectifier_GPU.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 8,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/tool",
+			"paths" : 
+			[
+				"include/tool/matrixsInfo.h",
+				"include/tool/tool.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/restructor",
+			"paths" : 
+			[
+				"include/restructor/Restructor.h",
+				"include/restructor/Restructor_CPU.h",
+				"include/restructor/Restructor_GPU.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "include/libStructedLightCamera/cuda",
+			"paths" : 
+			[
+				"include/cuda/cudaTypeDef.cuh"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 11,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/libStructedLightCamera",
+			"paths" : 
+			[
+				"cmake/StructedLightCameraConfig.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 12,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"cmake/StructedLightCamera.pc"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	}
+}
