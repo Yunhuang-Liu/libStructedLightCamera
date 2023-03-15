@@ -47,7 +47,7 @@ namespace sl {
             void remapImg(cv::Mat &imgInput, cv::cuda::GpuMat &imgOutput,
                           cv::cuda::Stream &cvStream = cv::cuda::Stream::Null(), const bool isLeft = true) {}
 #endif      
-            //图像尺寸
+	    //图像尺寸
             cv::Size m_imgSize;
             //左相机X方向映射表
             cv::Mat m_map_Lx;

@@ -208,5 +208,64 @@ namespace sl {
             cv::Mat& depthRefine) {
 
         }
+
+        void remapToDepthCamera(const cv::Mat& depthIn, const cv::Mat& Q, const cv::Mat& M, const cv::Mat& R1, cv::Mat& depthRemaped) {
+            CV_Assert(!depthIn.empty() || depthIn.type() == CV_32FC1 || !Q.empty() || Q.type() == CV_64FC1
+                      || !M.empty() || M.type() == CV_64FC1 || !R1.empty() || R1.type() == CV_64FC1);
+            if(depthIn.data == depthRemaped.data) {
+                printf("ERROR:remapToDepthCamera() is can't used when depthIn is same as depthRemaped! \n");
+                return;
+            }
+
+            depthRemaped = cv::Mat::zeros(depthIn.rows, depthIn.cols, CV_32FC1);
+
+            const float f = Q.at<double>(2, 3);
+            const float tx = -1.0 / Q.at<double>(3, 2);
+            const float cxlr = Q.at<double>(3, 3) * tx;
+            const float cx = -1.0 * Q.at<double>(0, 3);
+            const float cy = -1.0 * Q.at<double>(1, 3);
+
+            Eigen::Matrix3d MEigen, R1InvEigen;
+            cv::cv2eigen(M, MEigen);
+            cv::cv2eigen(R1, R1InvEigen);
+            R1InvEigen = R1InvEigen.inverse().eval();
+
+            std::vector<std::thread> threads(std::thread::hardware_concurrency());
+            const int rowPerThread = depthIn.rows / threads.size();
+            std::mutex mutexMap;
+            for(int i = 0; i < threads.size(); ++i) {
+                threads[i] = std::thread([&, i]{
+                    for(int rowIndex = rowPerThread * i; rowIndex < rowPerThread * (i + 1); ++rowIndex) {
+                        auto ptrDepthIn = depthIn.ptr<float>(rowIndex);
+                        for(int colIndex = 0; colIndex < depthIn.cols; ++colIndex) {
+                            if (!ptrDepthIn[colIndex]) {
+                                continue;
+                            }
+
+                            Eigen::Vector3d pointBefore;
+                            pointBefore << ptrDepthIn[colIndex] * (colIndex - cx) / f,
+                                           ptrDepthIn[colIndex] * (rowIndex - cy) / f,
+                                           ptrDepthIn[colIndex];
+                            Eigen::Vector3d pointRemaped = R1InvEigen * pointBefore;
+
+                            Eigen::Vector3d pointPixel = MEigen * pointRemaped;
+
+                            const int x_maped = std::round(pointPixel(0, 0) / pointPixel(2, 0));
+                            const int y_maped = std::round(pointPixel(1, 0) / pointPixel(2, 0));
+
+                            if ((0 > x_maped) || (y_maped > depthRemaped.rows - 1) || (0 > y_maped) || (x_maped > depthRemaped.cols - 1))
+                                continue;
+
+                            std::lock_guard<std::mutex> lock(mutexMap);
+                            depthRemaped.ptr<float>(y_maped)[x_maped] = pointRemaped(2, 0);
+                        }
+                    }
+                });
+            }
+
+            for(auto& thread : threads) {
+                thread.join();
+            }
+        }
     }
 }

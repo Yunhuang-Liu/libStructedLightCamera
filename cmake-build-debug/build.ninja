@@ -41,7 +41,7 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = /home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target libStructedLightCamera
+# Object build statements for SHARED_LIBRARY target libStructedLightCamera
 
 
 #############################################
@@ -50,177 +50,364 @@ cmake_ninja_workdir = /home/lyh/桌面/devolope/libStructedLightCamera/cmake-bui
 build cmake_object_order_depends_target_libStructedLightCamera: phony || CMakeFiles/libStructedLightCamera.dir
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/camera/cammeraUnilty.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/camera/cammeraUnilty.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/camera/cammeraUnilty.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/camera
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/cameraControl.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/cameraControl.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/cameraControl.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/API.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/API.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/API.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/cypress_i2c.c.o: C_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/cypress_i2c.c || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/cypress_i2c.c.o.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -fPIC -fdiagnostics-color=always
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc347x_internal_patterns.c.o: C_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/dlpc347x_internal_patterns.c || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc347x_internal_patterns.c.o.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -fPIC -fdiagnostics-color=always
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc34xx.c.o: C_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/dlpc34xx.c || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc34xx.c.o.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -fPIC -fdiagnostics-color=always
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc34xx_dual.c.o: C_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/dlpc34xx_dual.c || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc34xx_dual.c.o.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -fPIC -fdiagnostics-color=always
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc_common.c.o: C_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/dlpc_common.c || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc_common.c.o.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -fPIC -fdiagnostics-color=always
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/hid.c.o: C_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/hid.c || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/hid.c.o.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -fPIC -fdiagnostics-color=always
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/projectorControl.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/projectorControl.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/projectorControl.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/device/projector/usb.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/usb.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/device/projector/usb.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/device/projector
 
 build CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/phaseSolver
 
 build CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/phaseSolver
 
 build CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/phaseSolver.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/phaseSolver/phaseSolver.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/phaseSolver.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/phaseSolver
 
 build CMakeFiles/libStructedLightCamera.dir/src/rectifier/rectifier_CPU.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/rectifier/rectifier_CPU.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/rectifier/rectifier_CPU.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/rectifier
 
 build CMakeFiles/libStructedLightCamera.dir/src/restructor/restructor.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/restructor/restructor.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/restructor/restructor.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/restructor
 
 build CMakeFiles/libStructedLightCamera.dir/src/restructor/restructor_CPU.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/restructor/restructor_CPU.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/restructor/restructor_CPU.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/restructor
 
 build CMakeFiles/libStructedLightCamera.dir/src/structedLightCamera.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/structedLightCamera.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/structedLightCamera.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src
 
 build CMakeFiles/libStructedLightCamera.dir/src/tool/matrixsInfo.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/tool/matrixsInfo.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/tool/matrixsInfo.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/tool
 
 build CMakeFiles/libStructedLightCamera.dir/src/tool/tool.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/tool/tool.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/tool/tool.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/tool
 
 build CMakeFiles/libStructedLightCamera.dir/src/wrapCreator/wrapCreator_CPU.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/wrapCreator/wrapCreator_CPU.cc || cmake_object_order_depends_target_libStructedLightCamera
+  DEFINES = -DlibStructedLightCamera_EXPORTS
   DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/wrapCreator/wrapCreator_CPU.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fPIC -fdiagnostics-color=always -std=gnu++11
   INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src/wrapCreator
 
-build CMakeFiles/libStructedLightCamera.dir/src/test.cc.o: CXX_COMPILER__libStructedLightCamera_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/test.cc || cmake_object_order_depends_target_libStructedLightCamera
-  DEP_FILE = CMakeFiles/libStructedLightCamera.dir/src/test.cc.o.d
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g -fdiagnostics-color=always -std=gnu++11
-  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
-  OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
-  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCamera.dir/src
-
 
 # =============================================================================
-# Link build statements for EXECUTABLE target libStructedLightCamera
+# Link build statements for SHARED_LIBRARY target libStructedLightCamera
 
 
 #############################################
-# Link the executable libStructedLightCamera
+# Link the shared library liblibStructedLightCamerad.so
 
-build libStructedLightCamera: CXX_EXECUTABLE_LINKER__libStructedLightCamera_Debug CMakeFiles/libStructedLightCamera.dir/src/device/camera/cammeraUnilty.cc.o CMakeFiles/libStructedLightCamera.dir/src/device/cameraControl.cc.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/API.cc.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/cypress_i2c.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc347x_internal_patterns.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc34xx.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc34xx_dual.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc_common.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/hid.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/projectorControl.cc.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/usb.cc.o CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/phaseSolver.cc.o CMakeFiles/libStructedLightCamera.dir/src/rectifier/rectifier_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/restructor/restructor.cc.o CMakeFiles/libStructedLightCamera.dir/src/restructor/restructor_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/structedLightCamera.cc.o CMakeFiles/libStructedLightCamera.dir/src/tool/matrixsInfo.cc.o CMakeFiles/libStructedLightCamera.dir/src/tool/tool.cc.o CMakeFiles/libStructedLightCamera.dir/src/wrapCreator/wrapCreator_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/test.cc.o | /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_img_hash.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5
-  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -g
-  LINK_FLAGS = -rdynamic
-  LINK_LIBRARIES = -Wl,-rpath,/usr/local/cuda-11.4/lib64:/usr/local/lib:  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_img_hash.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  -lMVSDK  -lcyusbserial  -ludev  -lpthread  /usr/local/lib/libopencv_world.so.4.5.5
+build liblibStructedLightCamerad.so: CXX_SHARED_LIBRARY_LINKER__libStructedLightCamera_Debug CMakeFiles/libStructedLightCamera.dir/src/device/camera/cammeraUnilty.cc.o CMakeFiles/libStructedLightCamera.dir/src/device/cameraControl.cc.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/API.cc.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/cypress_i2c.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc347x_internal_patterns.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc34xx.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc34xx_dual.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/dlpc_common.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/hid.c.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/projectorControl.cc.o CMakeFiles/libStructedLightCamera.dir/src/device/projector/usb.cc.o CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/phaseSolver/phaseSolver.cc.o CMakeFiles/libStructedLightCamera.dir/src/rectifier/rectifier_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/restructor/restructor.cc.o CMakeFiles/libStructedLightCamera.dir/src/restructor/restructor_CPU.cc.o CMakeFiles/libStructedLightCamera.dir/src/structedLightCamera.cc.o CMakeFiles/libStructedLightCamera.dir/src/tool/matrixsInfo.cc.o CMakeFiles/libStructedLightCamera.dir/src/tool/tool.cc.o CMakeFiles/libStructedLightCamera.dir/src/wrapCreator/wrapCreator_CPU.cc.o | /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_img_hash.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5
+  LANGUAGE_COMPILE_FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g
+  LINK_LIBRARIES = -Wl,-rpath,/usr/local/cuda-11.4/lib64:/usr/local/lib:  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_img_hash.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  /usr/local/lib/libopencv_world.so.4.5.5  -lMVSDK  -lcyusbserial  -ludev  /usr/local/lib/libopencv_world.so.4.5.5
   LINK_PATH = -L/usr/local/cuda-11.4/lib64
   OBJECT_DIR = CMakeFiles/libStructedLightCamera.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = libStructedLightCamera
-  TARGET_PDB = libStructedLightCamera.dbg
+  SONAME = liblibStructedLightCamerad.so
+  SONAME_FLAG = -Wl,-soname,
+  TARGET_FILE = liblibStructedLightCamerad.so
+  TARGET_PDB = libStructedLightCamerad.so.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target libStructedLightCameraStatic
+
+
+#############################################
+# Order-only phony target for libStructedLightCameraStatic
+
+build cmake_object_order_depends_target_libStructedLightCameraStatic: phony || CMakeFiles/libStructedLightCameraStatic.dir
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/camera/cammeraUnilty.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/camera/cammeraUnilty.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/camera/cammeraUnilty.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/camera
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/cameraControl.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/cameraControl.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/cameraControl.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/API.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/API.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/API.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/cypress_i2c.c.o: C_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/cypress_i2c.c || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/cypress_i2c.c.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc347x_internal_patterns.c.o: C_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/dlpc347x_internal_patterns.c || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc347x_internal_patterns.c.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc34xx.c.o: C_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/dlpc34xx.c || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc34xx.c.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc34xx_dual.c.o: C_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/dlpc34xx_dual.c || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc34xx_dual.c.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc_common.c.o: C_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/dlpc_common.c || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc_common.c.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/hid.c.o: C_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/hid.c || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/hid.c.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/projectorControl.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/projectorControl.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/projectorControl.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/usb.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/device/projector/usb.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/usb.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/phaseSolver.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/phaseSolver/phaseSolver.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/phaseSolver.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/rectifier/rectifier_CPU.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/rectifier/rectifier_CPU.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/rectifier/rectifier_CPU.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/rectifier
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/restructor/restructor.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/restructor/restructor.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/restructor/restructor.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/restructor
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/restructor/restructor_CPU.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/restructor/restructor_CPU.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/restructor/restructor_CPU.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/restructor
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/structedLightCamera.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/structedLightCamera.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/structedLightCamera.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/tool/matrixsInfo.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/tool/matrixsInfo.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/tool/matrixsInfo.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/tool
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/tool/tool.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/tool/tool.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/tool/tool.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/tool
+
+build CMakeFiles/libStructedLightCameraStatic.dir/src/wrapCreator/wrapCreator_CPU.cc.o: CXX_COMPILER__libStructedLightCameraStatic_Debug /home/lyh/桌面/devolope/libStructedLightCamera/src/wrapCreator/wrapCreator_CPU.cc || cmake_object_order_depends_target_libStructedLightCameraStatic
+  DEP_FILE = CMakeFiles/libStructedLightCameraStatic.dir/src/wrapCreator/wrapCreator_CPU.cc.o.d
+  FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g -fdiagnostics-color=always -std=gnu++11
+  INCLUDES = -I/home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug -I/home/lyh/桌面/devolope/libStructedLightCamera -I/usr/local/include/eigen3 -I/home/lyh/桌面/devolope/libStructedLightCamera/include -isystem /usr/local/include/opencv4
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  OBJECT_FILE_DIR = CMakeFiles/libStructedLightCameraStatic.dir/src/wrapCreator
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target libStructedLightCameraStatic
+
+
+#############################################
+# Link the static library liblibStructedLightCamerad.a
+
+build liblibStructedLightCamerad.a: CXX_STATIC_LIBRARY_LINKER__libStructedLightCameraStatic_Debug CMakeFiles/libStructedLightCameraStatic.dir/src/device/camera/cammeraUnilty.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/cameraControl.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/API.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/cypress_i2c.c.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc347x_internal_patterns.c.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc34xx.c.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc34xx_dual.c.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/dlpc_common.c.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/hid.c.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/projectorControl.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/device/projector/usb.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/fourStepSixGrayCodeMaster_CPU.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/nStepNGrayCodeMaster_CPU.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/phaseSolver/phaseSolver.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/rectifier/rectifier_CPU.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/restructor/restructor.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/restructor/restructor_CPU.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/structedLightCamera.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/tool/matrixsInfo.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/tool/tool.cc.o CMakeFiles/libStructedLightCameraStatic.dir/src/wrapCreator/wrapCreator_CPU.cc.o || /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_img_hash.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5 /usr/local/lib/libopencv_world.so.4.5.5
+  LANGUAGE_COMPILE_FLAGS = -Wall -std=c++11 -march=native -mavx512f -pthread -O1 -g
+  OBJECT_DIR = CMakeFiles/libStructedLightCameraStatic.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = liblibStructedLightCamerad.a
+  TARGET_PDB = libStructedLightCamerad.a.dbg
 
 
 #############################################
@@ -290,6 +477,10 @@ build install/strip: phony CMakeFiles/install/strip.util
 # =============================================================================
 # Target aliases.
 
+build libStructedLightCamera: phony liblibStructedLightCamerad.so
+
+build libStructedLightCameraStatic: phony liblibStructedLightCamerad.a
+
 # =============================================================================
 # Folder targets.
 
@@ -298,7 +489,7 @@ build install/strip: phony CMakeFiles/install/strip.util
 #############################################
 # Folder: /home/lyh/桌面/devolope/libStructedLightCamera/cmake-build-debug
 
-build all: phony libStructedLightCamera
+build all: phony liblibStructedLightCamerad.so liblibStructedLightCamerad.a
 
 # =============================================================================
 # Unknown Build Time Dependencies.

@@ -281,6 +281,15 @@ namespace sl {
                                            const cv::Mat &epilineA, const cv::Mat &epilineB, const cv::Mat &epilineC,
                                            const int rowBegin, const int rowEnd,
                                            cv::Mat &depthRefine);
+        /**
+         * @brief 将校正后的相机坐标系下深度图映射回校正前
+         * @param depthIn 输入，校正后相机坐标系下的深度图
+         * @param Q 输入，校正后的深度映射矩阵
+         * @param M 输入，深度相机的内参
+         * @param R1 输入，校正矩阵
+         * @param depthRemaped 输出，校正前相机坐标系下的深度图
+         */
+        void remapToDepthCamera(const cv::Mat& depthIn, const cv::Mat& Q, const cv::Mat& M, const cv::Mat& R1, cv::Mat& depthRemaped);
     }// tool
 }// namespace sl
 

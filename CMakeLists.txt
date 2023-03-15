@@ -4,7 +4,7 @@ project(libStructedLightCamera)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -march=native -mavx512f -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -march=native -mavx512f -pthread -O1")
 
 file(GLOB_RECURSE 
      CPUHeader 
@@ -102,54 +102,54 @@ if(CUDA_FOUND)
        #setupapi
        )
 else()
-
-    add_executable(
-        ${PROJECT_NAME}
-        ${CPUHeader}
-        ${CPUSource}
-        ${CMAKE_SOURCE_DIR}/src/test.cc
-        )
-    target_link_libraries(
+    #[[
+        add_executable(
             ${PROJECT_NAME}
+            ${CPUHeader}
+            ${CPUSource}
+            ${CMAKE_SOURCE_DIR}/src/test.cc
+            )
+        target_link_libraries(
+                ${PROJECT_NAME}
+                ${OpenCV_LIBRARIES}
+                MVSDK
+                cyusbserial
+                #hidapi-libusb
+                udev
+                pthread
+                #setupapi
+        )
+    ]]
+
+       add_library(libStructedLightCamera SHARED  ${CPUSource}  ${CPUHeader})
+       add_library(libStructedLightCameraStatic STATIC  ${CPUSource} ${CPUHeader})
+       set(CMAKE_DEBUG_POSTFIX "d")
+       set_target_properties(libStructedLightCamera PROPERTIES DEBUG_POSTFIX "d")
+       set_target_properties(libStructedLightCameraStatic PROPERTIES DEBUG_POSTFIX "d")
+       # 指定静态库的输出名称
+       set_target_properties(libStructedLightCameraStatic PROPERTIES OUTPUT_NAME "libStructedLightCamera")
+       # 使动态库和静态库同时存在
+       set_target_properties(libStructedLightCamera PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+       set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+       set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h)
+       set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h)
+       target_link_libraries(
+            libStructedLightCamera
             ${OpenCV_LIBRARIES}
             MVSDK
             cyusbserial
-            #hidapi-libusb
             udev
-            pthread
             #setupapi
-    )
+            )
+       target_link_libraries(
+            libStructedLightCameraStatic
+            ${OpenCV_LIBRARIES}
+            MVSDK
+            cyusbserial
+            udev
+            #setupapi
+            )
 
-    #[[
-   add_library(libStructedLightCamera SHARED  ${CPUSource}  ${CPUHeader})
-   add_library(libStructedLightCameraStatic STATIC  ${CPUSource} ${CPUHeader})
-   set(CMAKE_DEBUG_POSTFIX "d")
-   set_target_properties(libStructedLightCamera PROPERTIES DEBUG_POSTFIX "d") 
-   set_target_properties(libStructedLightCameraStatic PROPERTIES DEBUG_POSTFIX "d") 
-   # 指定静态库的输出名称
-   set_target_properties(libStructedLightCameraStatic PROPERTIES OUTPUT_NAME "libStructedLightCamera")
-   # 使动态库和静态库同时存在
-   set_target_properties(libStructedLightCamera PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCameraStatic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-   set_target_properties(libStructedLightCamera PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h)
-   set_target_properties(libStructedLightCameraStatic PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/structedLightCamera.h)
-   target_link_libraries(
-        libStructedLightCamera
-        ${OpenCV_LIBRARIES}
-        MVSDK
-        cyusbserial
-        udev
-        #setupapi
-        )
-   target_link_libraries(
-        libStructedLightCameraStatic
-        ${OpenCV_LIBRARIES}
-        MVSDK
-        cyusbserial
-        udev
-        #setupapi
-        )
-    ]]#
 endif()
 
 install(

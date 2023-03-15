@@ -73,15 +73,17 @@ public:
      * @brief 获取深度纹理图
      * @param depthImg 输入/输出，深度图
      * @param colorImg 输入/输出，纹理图
+     * @param remap 输入，是否映射到矫正
      */
-    void getOneFrame(std::vector<cv::Mat>& depthImg,std::vector<cv::Mat>& colorImg);
+    void getOneFrame(std::vector<cv::Mat>& depthImg,std::vector<cv::Mat>& colorImg, const bool remap);
 #ifdef CUDA
     /**
      * @brief 获取深度纹理图
      * @param depthImg 输入/输出，深度图
      * @param colorImg 输入/输出，纹理图
+     * @param remap 输入，是否映射到矫正
      */
-    void getOneFrame(std::vector<cv::cuda::GpuMat>& depthImg, std::vector<cv::cuda::GpuMat>& colorImg);
+    void getOneFrame(std::vector<cv::cuda::GpuMat>& depthImg, std::vector<cv::cuda::GpuMat>& colorImg, const bool remap);
 #endif
     /**
      * @brief 设置相机曝光时间
@@ -112,18 +114,12 @@ private:
     sl::restructor::Restructor *restructor;
     /** \相机控制器 **/
     sl::device::CameraControl *camera;
-    /** \解相算法 **/
+    //极线矫正器
+    sl::rectifier::Rectifier_CPU *rectifierTool;
+    /** \解相算法rectifier **/
     AlgorithmType algorithmType;
     /** \加速方法 **/
     AcceleratedMethod acceleratedMethod;
-    /** \X方向映射矩阵-L **/
-    cv::Mat remap_x_L;
-    /** \Y方向映射矩阵-L **/
-    cv::Mat remap_y_L;
-    /** \X方向映射矩阵-R **/
-    cv::Mat remap_x_R;
-    /** \Y方向映射矩阵-R **/
-    cv::Mat remap_y_R;
 #ifdef CUDA
     /** \左解相非阻塞流 **/
     cudaStream_t stream_solLeft;

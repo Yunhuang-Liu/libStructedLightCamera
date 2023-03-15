@@ -12,8 +12,8 @@ StructedLightCamera::StructedLightCamera(const sl::tool::Info& infoCalibraion, c
     switch (algorithmType) {
         case AlgorithmType::FourStepSixGrayCode : {
             if(AcceleratedMethod::CPU == acceleratedMethod){
-                phaseSolverLeft = new phaseSolver::FourStepSixGrayCodeMaster_CPU(leftRefImg);
-                phaseSolverRight = new phaseSolver::FourStepSixGrayCodeMaster_CPU(rightRefImg);
+                phaseSolverLeft = new phaseSolver::FourStepSixGrayCodeMaster_CPU();
+                phaseSolverRight = new phaseSolver::FourStepSixGrayCodeMaster_CPU();
             }
             #ifdef CUDA
             else{
@@ -65,6 +65,8 @@ StructedLightCamera::StructedLightCamera(const sl::tool::Info& infoCalibraion, c
         }
         #endif
     }
+
+    rectifierTool = new sl::rectifier::Rectifier_CPU(calibrationInfo);
 }
 
 #ifdef CUDA
@@ -72,7 +74,7 @@ void StructedLightCamera::remapImg(const cv::cuda::GpuMat& src, const cv::cuda::
     cv::cuda::remap(src, outImg, remap_x, remap_y, cv::INTER_LINEAR);
 }
 
-void StructedLightCamera::getOneFrame(std::vector<cv::cuda::GpuMat>& depthImg, std::vector<cv::cuda::GpuMat>& colorImg) {
+void StructedLightCamera::getOneFrame(std::vector<cv::cuda::GpuMat>& depthImg, std::vector<cv::cuda::GpuMat>& colorImg, const bool remap) {
     RestructedFrame restructedFrame;
     camera->getOneFrameImgs(restructedFrame);
     if (remap_x_L.empty()) {
@@ -124,30 +126,43 @@ void StructedLightCamera::getOneFrame(std::vector<cv::cuda::GpuMat>& depthImg, s
 }
 #endif
 
-void StructedLightCamera::getOneFrame(std::vector<cv::Mat>& depthImg, std::vector<cv::Mat>& colorImg){
-    RestructedFrame restructedFrame;
-    camera->getOneFrameImgs(restructedFrame);
-    phaseSolverLeft->changeSourceImg(restructedFrame.leftImgs);
-    phaseSolverRight->changeSourceImg(restructedFrame.rightImgs);
-    if(remap_x_L.empty()){
-        cv::initUndistortRectifyMap(calibrationInfo.M1, calibrationInfo.D1, calibrationInfo.R1, calibrationInfo.P1, restructedFrame.leftImgs[0].size(), CV_32FC1, remap_x_L, remap_y_L);
-        cv::initUndistortRectifyMap(calibrationInfo.M2, calibrationInfo.D2, calibrationInfo.R2, calibrationInfo.P2, restructedFrame.leftImgs[0].size(), CV_32FC1, remap_x_R, remap_y_R);
-    }
-    cv::Mat unwrapLeftImg;
-    cv::Mat unwrapRightImg;
-    phaseSolverLeft->getUnwrapPhaseImg(unwrapLeftImg);
-    phaseSolverRight->getUnwrapPhaseImg(unwrapRightImg);
-    std::thread threadRemap = std::thread([&] {
-        cv::remap(unwrapLeftImg, unwrapLeftImg, remap_x_L, remap_y_L, cv::INTER_LINEAR);
-        });
-    cv::remap(unwrapRightImg, unwrapRightImg, remap_x_R, remap_y_R, cv::INTER_LINEAR);
-    if (threadRemap.joinable()) {
-        threadRemap.join();
-    }
+void StructedLightCamera::getOneFrame(std::vector<cv::Mat>& depthImg, std::vector<cv::Mat>& colorImg, const bool remap){
     depthImg.resize(1);
     colorImg.resize(1);
-    restructor->restruction(unwrapLeftImg, unwrapRightImg, depthImg[0],true);
-    sl::tool::averageTexture(restructedFrame.leftImgs, colorImg[0], 4, 16);
+    camera->project(false);
+
+    RestructedFrame restructedFrame;
+    camera->getOneFrameImgs(restructedFrame);
+
+    sl::tool::averageTexture(restructedFrame.leftImgs, colorImg[0], 4, std::thread::hardware_concurrency());
+    cv::cvtColor(colorImg[0], colorImg[0], cv::COLOR_GRAY2BGR);
+
+    std::vector<std::thread> threadsRec(restructedFrame.leftImgs.size());
+    for (int i = 0; i < threadsRec.size(); ++i)
+        threadsRec[i] = std::thread([&, i] {
+            rectifierTool->remapImg(restructedFrame.leftImgs[i], restructedFrame.leftImgs[i], true);
+            rectifierTool->remapImg(restructedFrame.rightImgs[i], restructedFrame.rightImgs[i], false);
+        });
+
+    for (auto &threadElement: threadsRec)
+        threadElement.join();
+
+    cv::Mat absLeftImg, absRightImg;
+
+    std::thread threadSolveLeft = std::thread([&] {
+        phaseSolverLeft->changeSourceImg(restructedFrame.leftImgs);
+        phaseSolverLeft->getUnwrapPhaseImg(absLeftImg);
+    });
+    std::thread threadSolveRight = std::thread([&] {
+        phaseSolverRight->changeSourceImg(restructedFrame.rightImgs);
+        phaseSolverRight->getUnwrapPhaseImg(absRightImg);
+    });
+
+    threadSolveLeft.join();
+    threadSolveRight.join();
+
+    restructor->restruction(absLeftImg, absRightImg,
+                              depthImg[0], remap, false);
 }
 
 void StructedLightCamera::setExposureTime(const int grayExposureTime, const int colorExposureTime) {

@@ -81,7 +81,7 @@ namespace sl {
             const float cxlr = Q.at<double>(3, 3) * tx;
             const float cx = -1.0 * Q.at<double>(0, 3);
             const float cy = -1.0 * Q.at<double>(1, 3);
-            const float threshod = 0.3;
+            const float threshod = 0.1;
             const int rows = leftAbsImg.rows;
             const int cols = leftAbsImg.cols;
             //存放线性回归的实际值
